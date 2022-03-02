@@ -1,4 +1,4 @@
-Simple Standardization of Language, Complex & Diverse Implementation
+Simple, but Broad Standardization of the Language, Complex & Diverse Implementation
 
 ### Feature List
 
@@ -15,7 +15,7 @@ Simple Standardization of Language, Complex & Diverse Implementation
  - Primitive Graphic Rendering
  - Math
 
-Pineapple will use a secure runtime environment for execution. I will implement a strategy that involves the ideas of "ownership", "borrowing", "loaning", and "priveleges". Implementing a form of "promises" may be pertentent as well.
+Pineapple will use a secure runtime environment for execution. I will implement a strategy that involves the ideas of "ownership", "borrowing", "loaning", and "priveleges". Implementing a form of "promises" may be viable as well.
 Built-in error handling is important.
 As few stacks will be used as possible, as fast as possible, with security in mind.
 
