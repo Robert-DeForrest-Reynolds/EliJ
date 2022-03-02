@@ -14,7 +14,6 @@ In the meantime, I need to work on Pineapple's standard more.
 
 # The Toran Suite
 
-
 ### Pineapple
 Akin to C, or OpenGL, Pineapple will be codified as a standard, and implemented as the standard describes it.
 
@@ -37,3 +36,4 @@ A virtual machine for runtime of executables, or to run Pineapple scripts on ver
  - Built-in Garbage Collection
  - Optional Manual Memory Management
 
+### Developer Notes
