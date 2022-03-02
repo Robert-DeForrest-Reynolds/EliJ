@@ -1,4 +1,6 @@
-Simple, but Broad Standardization of the Language, Complex & Diverse Implementation
+Simple Standardization of the Vernacular, Abstractions, and Output from Input; Complex & Diverse Implementation
+
+Others will be able to easily build custom compilers, or alike technology due to the incredibly simple, and concise codified standard.
 
 ### Feature List
 
