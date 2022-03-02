@@ -14,6 +14,8 @@ In the meantime, I need to work on Pineapple's standard more.
 
 # The Toran Suite
 
+
+### Pineapple
 Akin to C, or OpenGL, Pineapple will be codified as a standard, and implemented as the standard describes it.
 
 Iwa will be the official compiler for Pineapple, that will come packaged in the download.
@@ -21,3 +23,17 @@ Iwa will be the official compiler for Pineapple, that will come packaged in the 
 Iwa takes Pineapple code, and generates assembly from it, meaning that Pineapple compiles directly to assembly with no in-between.
 
 Transplires for every modern language is one of the huge goals of Pineapple.
+
+### Iwa
+Iwa's goal is to be an incredibly smart compiler.
+
+**Feature List**
+ - Optional Memory-Safety during Compilation
+
+### Lily
+A virtual machine for runtime of executables, or to run Pineapple scripts on very efficiently.
+
+**Feature List**
+ - Built-in Garbage Collection
+ - Optional Manual Memory Management
+
