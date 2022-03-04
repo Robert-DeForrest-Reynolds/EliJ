@@ -1,7 +1,12 @@
+This is the definition of "brain vomit".
+
 ### Features, Abstractions, Implementations, Vernacular & Such That Need to be Researched and Thought Upon
+**Unreadable in Markdown; Markdown file is only used for personal syntax coloring, that is already built for markdown, and I won't be rebuilding it, I'm kinda lazy**
 **Remove what isn't needed or going to be implemented**
 **Reorder to highest to lowest priority**
 **There will be copies, I'd rather have copies, than miss something, but try to remember to 'Find' duplicates**
+
+*28 spaces of separation*
 
  - Operations                 - Registers                  - String                     - Functions                  - Data Types                 - Data Structures                    
  - Classifications            - Objects                    - Decision Making            - Exception Handling         - Triggers                   - Promises
