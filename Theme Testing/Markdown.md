@@ -1,3 +1,5 @@
+**RIPPED FROM DOCS.GITHUB FOR REAL-LIFE USE CASE SAKE**
+
 ## Headings
 
 To create a heading, add one to six <kbd>#</kbd> symbols before your heading text. The number of <kbd>#</kbd> you use will determine the size of the heading.

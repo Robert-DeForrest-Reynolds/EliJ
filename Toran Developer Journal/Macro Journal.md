@@ -26,14 +26,7 @@ Transplires for every modern language is one of the huge goals of Pineapple.
 ### Iwa
 Iwa's goal is to be an incredibly smart compiler.
 
-**Feature List**
- - Optional Memory-Safety during Compilation
-
 ### Lily
 A virtual machine for runtime of executables, or to run Pineapple scripts on very efficiently.
-
-**Feature List**
- - Built-in Garbage Collection
- - Optional Manual Memory Management
 
 ### Developer Notes
