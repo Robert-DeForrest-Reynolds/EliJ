@@ -1,6 +1,7 @@
 ### Features, Abstractions, Implementations, Vernacular & Such That Need to be Researched and Thought Upon
 **Remove what isn't needed or going to be implemented**
 **Reorder to highest to lowest priority**
+**There will be copies, I'd rather have copies, than miss something, but try to remember to 'Find' duplicates**
 
  - Operations                 - Registers                  - String                     - Functions                  - Data Types                 - Data Structures                    
  - Classifications            - Objects                    - Decision Making            - Exception Handling         - Triggers                   - Promises
@@ -43,4 +44,4 @@
  - Contracts                  - Properties                 - Subscripts                 - Initialization             - Chaining                   - Access Control
  - Widgets                    - Permissions                - Pipes                      - Scripting                  - Shell Scripting            - Manual
  - Modifiers                  - Directives                 - Dialog                     - Forms                      - Web Assembly               - Bytecode
- - Intermediate Code          - 
+ - Intermediate Code          - Management Systems         - Inner-Scripting            - Placement                  - Void                       - Validations
