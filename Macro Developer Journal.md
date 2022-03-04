@@ -27,45 +27,54 @@ This is the definition of "brain vomit".
 
 ##### Standard Pineapple Language
 *This is the list of things I think I should get done to be able to consider the language "existing", and ready to be worked on more*
+
+**Environment Weapons**
  - Environment Setup
  - Program Structure
  - Preprocessing
  - Scope
  - Comments
  - Comment References
- - Operators
- - Pointers
- - References
- - Register Access
+ - Input/Output
+
+**Declaration**
  - Access Modifiers
  - Variables
  - Mutable & Immutable Variables
  - Strings
  - String Formatting
- - Booleans
- - Conditionals
  - Data Types
  - Dynamic Data Types
- - Type Conversion
- - Functions
- - Procedures
- - Iterators
  - Custom Data Types
- - Log Handling
- - Exception Handling
- - Objects
- - Input/Output
- - Command Line Arguments
- - File Management
- - Lambda
- - Regular Expressions
+
+**Functionality**
+ - Operators
+ - Booleans
+ - Conditionals
+ - Functions
+ - Lambda Functions
+ - Procedures
  - Control Flow
+ - Objects
+ - Memory Management
+ - Register Access
+ - Type Conversion
+
+**Pre-Built Advanced Functionality**
+ - Events
  - Triggers
  - Random
  - Ranges
- - Events
+ - Iterators
+ - Command Line Arguments
+
+**Debug**
+ - Log Handling
+ - Exception Handling
 
 ##### Advanced Pineapple Language Features
+ - Regular Expressions
+ - File Management
  - Embedded Runtime within the Executable, Garbage Collection
  - Asynchronous Behavior
  - Databases
