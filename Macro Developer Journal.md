@@ -1,238 +1,102 @@
 This is the definition of "brain vomit".
 
-### Features, Abstractions, Implementations, Vernacular & Such That Need to be Researched and Thought Upon
-**Unreadable in Markdown; Markdown file is only used for personal syntax coloring, that is already built for markdown, and I won't be rebuilding it, I'm kinda lazy**
-**Remove what isn't needed or going to be implemented**
-**Reorder to highest to lowest priority**
-**There will be copies, I'd rather have copies, than miss something, but try to remember to 'Find' duplicates**
+# Pineapple Eco-System Notes
 
-*28 spaces of separation*
- 
- - Triggers 
- - Promises 
- - Control Flow 
- - Encapsulation
- - Audio Programming
- - Random
- - System Calls
- - Preprocessing
- - Build System Scripting
- - Interpretation
- - Command Line Arguments
- - Changable & Unchangle
- - Mutable & Immutable
- - Methods
- - Web Programming
- - Procedures
- - Recursion
- - Iterators
- - Ranges
- - Code Blocks
- - Databases
- - Multi-threading
- - Predefined Variables
- - Predefined Constants
- - HTTP
- - Scope
- - Overloading
- - Concurrency
+**External Tools & Subjects**
  - Workflow
- - Agents
- - Watchers
- - Reference Values
- - Data Driven Paradigm
- - Object Oriented Paradigm
- - Subroutines
- - Collection
- - Packages
- - Debugging
- - Integrated Dev Environment
- - Libraries
- - Build System
- - Unit Testing
- - Asynchronous Behavior
- - DOM/HTML/CSS/ Javascript
- - Algorithms
- - Sorting- Heap
- - Queue- Data Visualization
- - Protocols
- - Dynamic Types
- - Functional Paradigm
- - Records
- - Package Manager
- - Messages
- - Notifications
- - Shell
- - Atoms
- - Maps
- - Preprocessor Files
- - Guards
- - Ports
- - Drivers
- - GUI
- - Distributed Paradigm 
- - Graphics Rendering Engine
- - Modules
- - Instrinsic Functions
- - Discriminated Data
- - Events
- - Hardware Management
- - Interfaces
- - XML
- - JSON
- - Builders
- - Constructors
- - Templates
- - Meta Object Paradigm
- - Time
- - Modeling Paradigm
- - Zippers/Conjoining
- - Polymorphism
- - Inheritance
- - Overriding
- - Virtual Environment
- - Abstraction
- - Datasets
- - Networking
- - Utilities
- - Query
- - Attributes
- - Predicates
- - Symbols
- - Structures
- - Graphical Turtle
- - Color
- - Coroutines
- - Meta Paradigm
- - Garbage Collection
- - Operating System
- - Code Generation
- - Abstract Syntax Tree
- - Parser
- - Token
- - Notation
- - Data Importing
- - Algebra
- - Calculus
- - Simulation
- - Save Data
- - Callbacks
- - Event Loop
- - Detector
- - Emitter
- - Buffers
- - Streams
- - Frameworks
- - Scaling Paradigm
- - Code Blocks
- - Composite
- - Credientials
- - Extensibility
- - Units
- - Branches
+ - Documentation
+ - Interpretation
+ - Manual
+ - Plug-ins
  - Version Control System
  - Integrated Code Editor
- - Documentation
- - Formatting
- - Comment References
- - Socket Programming
- - Common-Gateway-Interface
- - Process Management
- - Embedded Documentation
- - Cookies
- - Sessions
- - Uploading
- - Null
- - Conjuctions
- - Data Overwrite
- - Tk
- - Hooks
- - Tags
- - Metadata
- - Subjects
- - Filtering
- - Expectations
+ - Virtual Environment
+ - Package Manager
+ - Build System Scripting
+ - Integrated Dev Environment
+ - Libraries
+ - Debugging
+ - Build System
+ - Graphics Rendering Engine
  - Learning & Tutorials
- - Reference Frames
- - CSV- Excel
- - Binary
- - Charts & Graphs
- - Plots
- - Statistics
- - Machine Learning - Analysis
- - Plug-ins
- - Stacks
- - Instructions
- - Implementations
- - Ownership
- - Borrowing
- - Trading
- - Enumerations
- - Closure
- - Smart Pointers
- - Access Modifiers
- - Traits
- - Pattern Matching
- - Extractors
- - Pattern Buffer
- - Pattern Range
- - Commands
- - Generation
- - Broadcasting
- - Rooms
- - Plaforms
- - Internals
- - Assembly
- - Contracts
- - Properties
- - Subscripts
- - Initialization
- - Chaining
- - Access Control
- - Widgets
- - Permissions
- - Pipes
- - Scripting
- - Shell Scripting
- - Manual
- - Modifiers
- - Directives
- - Dialog
- - Forms
- - Web Assembly
- - Bytecode
- - Intermediate Code
- - Management Systems
- - Inner-Scripting
- - Placement
- - Void
- - Validations
- - Embedded Runtime within the Executable
+ - Packages
+ - Data Visualization
+ - Unit Testing
+ - Scaling
+ - Extensibility of Compiled Program
 
-**Semi-Valid, Kinda Compiled List**
+##### Standard Pineapple Language
 *This is the list of things I think I should get done to be able to consider the language "existing", and ready to be worked on more*
  - Environment Setup
  - Program Structure
+ - Preprocessing
+ - Scope
  - Comments
- - Variables
+ - Comment References
  - Operators
- - Pointers & References
+ - Pointers
+ - References
+ - Register Access
+ - Access Modifiers
+ - Variables
+ - Mutable & Immutable Variables
+ - Strings
+ - String Formatting
  - Booleans
  - Conditionals
- - Functions
- - Strings
  - Data Types
+ - Dynamic Data Types
  - Type Conversion
+ - Functions
+ - Procedures
+ - Iterators
  - Custom Data Types
  - Log Handling
  - Exception Handling
- - Data Structures
  - Objects
  - Input/Output
  - Command Line Arguments
  - File Management
- - Operations
- - Register Access
  - Lambda
  - Regular Expressions
- - Namespaces
+ - Control Flow
+ - Triggers
+ - Random
+ - Ranges
+ - Events
+
+##### Advanced Pineapple Language Features
+ - Embedded Runtime within the Executable, Garbage Collection
+ - Asynchronous Behavior
+ - Databases
+ - Predefined Variables
+ - Predefined Constants
+ - Embedded Documentation
+ - Agents
+ - Overloading
+ - Instrinsic Functions
+ - System Calls
+ - Reference Frames (Namespacing)
+ - Buffers
+ - Streams
+ - Branches
+ - Stacks
+ - Ownership
+ - Borrowing
+ - Trading
+ - Smart Pointers
+ - Audio Programming
+ - Time
+ - HTTP
+ - Tk
+ - XML
+ - JSON
+ - CSV
+ - Color
+
+##### Supported Source-to-Source Compilation
+ - Web Assembly
+ - DOM
+ - HTML
+ - CSS
+ - JavaScript
