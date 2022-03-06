@@ -1,15 +1,15 @@
 from os import path
-from pickle import PicklingError
-from sys import argv, exit
+from sys import argv
 from re import search
 
+# Predefined constants for utility
 NEWLINE = "\n"
 
-# We need to parse the given command
+# We need to analyze the given command
 def CommandParsing():
 
     # Stage Identification
-    print("\n-Command parsing stage-")
+    print(NEWLINE + "-Command parsing stage-")
 
     # If no commands are given
     if len(argv) == 1:
@@ -43,7 +43,7 @@ print(CommandParsingReturn)
 def PappleConfirmation():
 
     # Stage Identification
-    print("\n-Pineapple file confirmation stage-")
+    print(NEWLINE + "-Pineapple file confirmation stage-")
 
     # If CommandParsing() return a non-error result,
     # then go through confirming that we're targeting
@@ -53,14 +53,14 @@ def PappleConfirmation():
         # We're using regular expression to search through the given string
         if search("^.+\.(?:papple)", argv[1]):
             
-            return "This is indeed a .papple file\n"
+            return "This is indeed a .papple file"
 
         # If we fail to confirm that you are targeting a .papple file, 
         # return error, and use sys.exit() to abort compilation process
         else:
 
             print("Error in PappleConfirmation(), you are not using a proper .papple file, take a look at the files name, or how you typed it.")
-            return "Error in PappleConfirmation()\n"
+            return "Error in PappleConfirmation()"
 
     # This is here to keep track of out-of-bounds errors
     else:
@@ -83,7 +83,7 @@ print(PappleConfirmationReturn)
 def FileReading():
 
     # Stage Identification
-    print("\n-File Reading Stage-")
+    print(NEWLINE + "-File Reading Stage-")
 
     # If CommandParsing() and PappleConfirmation() return a non-error result, move on
     if CommandParsingReturn != "Error in CommandParsing()" and PappleConfirmationReturn != "Error in PappleConfirmation()":
@@ -96,7 +96,7 @@ def FileReading():
                 
                 # Extract the content, and print it | we'll pretty print this later, and make it optional
                 PappleFileData = PappleFile.read()
-                print("\n-Printing out source code-")
+                print(NEWLINE + "-Printing out source code-")
                 print(PappleFileData)
                 print("-End of Source Code-" + NEWLINE)
             
@@ -120,7 +120,7 @@ def FileReading():
     # This is here to keep track of out-of-bounds errors
     else:
 
-        return "FileReading() Error: I don't know how you failed enough to get this far\n"
+        return "FileReading() Error: I don't know how you failed enough to get this far"
 
 # As long as we didn't have a `None` value return by CommandParsing() and PappleConfirmation(), execute PappleConfirmation()
 if PappleConfirmationReturn:
@@ -133,6 +133,3 @@ else:
     print("Error in executing PappleConfirmation()")
 
 print(FileReadingReturn)
-
-if __name__ == "__main__":
-    print("\nIwa.py ran")
