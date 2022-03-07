@@ -6,7 +6,7 @@
  - Program Structure
  - Preprocessing
  - Scope
- - Reference Frames (Namespacing)
+ - Reference Frames
 
 **Utilities**
  - Comments
@@ -16,29 +16,18 @@
 
 **Declaration**
  - Variables
- - Mutable & Immutable Variables
- - Strings
- - String Formatting
  - Data Types
- - Dynamic Data Types
- - Custom Data Types
 
-**Functionality**
+**Standard Functionality**
  - Operators
+ - Strings
  - Booleans
  - Conditionals
  - Functions
- - Lambda Functions
- - Procedures
- - Control Flow
- - Input/Output
- - Objects/Classifications
- - Memory Management, Access Modifiers, Register Access, Ownership, Borrowing, Trading, Loaning, and Priveleges
- - Type Conversion
- - Predefined Variables
- - Predefined Constants
+ - Memory Management, Access Modifiers, Register Access
 
-**Advanced Functionality**
+**Pre-Built Importable Functionality**
+ - Input/Output
  - Events
  - Triggers
  - Random
@@ -69,6 +58,14 @@
  - CSV
  - Color
  - Data Visualization
+ - Predefined Variables
+ - Predefined Constants
+ - Objects/Classifications
+ - Dynamic Data Types
+ - Custom Data Types
+ - Procedures
+ - Control Flow
+ - Lambda Functions
 
 ##### Supported Source-to-Source Compilation
  - Web Assembly

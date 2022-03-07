@@ -26,7 +26,7 @@ Iwa is the official compiler for Pineapple, and will be capable of transplicing,
 Lily is the official interpreter for Pineapple.
 
 ## Hope :hammer_and_wrench:
-The build system for Pineapple
+The build system for Pineapple.
 
 ## HPM (Hope Package Manager) :hammer_and_wrench:
 The package manager built into Hope. Inspired by Cargo from Rust, and Pip from Python.
