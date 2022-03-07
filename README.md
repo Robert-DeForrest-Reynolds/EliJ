@@ -9,7 +9,7 @@
 <img src="https://img.icons8.com/color/48/000000/approval--v1.png" style="width:25px" align="center"/> Stable Release Viable for Production
 
 
-# Toran
+# Toran :hammer_and_wrench:	
 A suite of completely free-to-use applications for developers. Under heavy development. don't expect anything to work yet.
 
 The goal of Toran is to provide a completely, truly free, and competent set of tools for anyone to use.
