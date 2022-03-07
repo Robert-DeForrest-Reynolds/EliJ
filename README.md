@@ -1,3 +1,5 @@
+<img src="https://img.icons8.com/color/48/000000/work.png"/>
+
 # Toran
 A suite of completely free-to-use applications for developers. Under heavy development. don't expect anything to work yet.
 
