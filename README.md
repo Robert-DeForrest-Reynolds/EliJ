@@ -41,7 +41,7 @@ A custom theme explained in standardized form, that can be easily supported wher
 A minimal lightweight code editor, comes packaged with Pineapple.
 
 ## ExoFyle IDE :no_entry:
-A full integreated development environment to support Pineapple development.
+A complete integreated development environment to support Pineapple development.
 
 ## Cornelius :hammer_and_wrench:
 Toran's Overseer, and personal virtual assistant. Explicitly offline by default. An ever-running entity on top of Toran's runtime, that relies on a pre-generated dataset to assist a Toran user in largely anything. The user can optionally "push data" to Cornelius's master dataset, and optionally 'pull data' from Cornelius's master dataset. Any data pushed to the master dataset is run through heavy parsing, data anonymization, and a complex compilation process, that is then 'inserted' into the CDP (Cornelius Data Processor), where it will be fed into the master dataset carefully, to avoid overtaking, regression, and unsupervised repeated analysis.
