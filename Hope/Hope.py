@@ -4,24 +4,32 @@ from sys import argv
 
 # Analyze given commands
 def CommandParsing():
+    # hope <primary command> <commands to customize primary command>
     pass
 
 # Project Generation
-def ProjectGeneration():
+def Create():
+    # Generate project directory
+    # Generate project template files
+    # Generate project settings file
     pass
 
-# Project Prototyping
-def ProjectPrototyping():
+# Project Prototype
+def Prototype():
     pass
 
 # Project Build
-def ProjectBuild():
+def Build():
     pass
 
-# Project Run
-def ProjectRun():
+# Project build and run
+def Run():
+    pass
+
+# Project build for release
+def ReleaseBuild():
     pass
 
 # Project Clean
-def ProjectClean():
+def Clean():
     pass
