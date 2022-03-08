@@ -56,7 +56,7 @@ def PappleConfirmation():
             return "This is indeed a .papple file"
 
         # If we fail to confirm that you are targeting a .papple file, 
-        # return error, and use sys.exit() to abort compilation process
+        # return error
         else:
 
             print("Error in PappleConfirmation(), you are not using a proper .papple file, take a look at the files name, or how you typed it.")
