@@ -1,4 +1,9 @@
-Standard~PrintLine()
+~ This is a preprocessor statement
+Import{
+    Standard
+}
+
+PrintLine()
 {
     "Hello, World!"
 }
