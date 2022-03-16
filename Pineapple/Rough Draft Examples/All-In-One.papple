@@ -4,23 +4,23 @@
 This is a multi-line comment
 ~~~
 
-Import{
-    Standard
+Imports {
+    Standard;
 }
 
 User_Input;
 User_Age;
 
-Private Void "Hello"()
+Private Void Hello()
 [User_Input, User_Age]
 {
-    User_Input = Input()
-	PrintLine("Hello, " + User_Input)
+    User_Input = Input();
+	PrintLine("Hello, " + User_Input);
 
-    PrintLine("How old are you?")
+    PrintLine("How old are you?");
 
-    User_Age = Input()
-    PrintLine("You " + User_Input + "are " + User_Age + " old")
+    User_Age = Input();
+    PrintLine("You " + User_Input + "are " + User_Age + " old");
 }
 
 Hello()

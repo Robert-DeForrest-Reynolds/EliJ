@@ -4,7 +4,7 @@ from sys import argv
 
 # Analyze given commands
 def CommandParsing():
-    # hope <primary command> <commands to customize primary command>
+    # hope <primary command> <primary parameters> <secondary parameters> <tertiary-parameters>
     pass
 
 # Project Generation

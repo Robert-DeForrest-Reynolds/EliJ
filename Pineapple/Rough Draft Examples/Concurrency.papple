@@ -1,0 +1,25 @@
+~ Due to Pineapple's support for concurrency, one can control the flow of a function if they choose
+~ This makes it so one can use the same function for multitude of processes if one would like
+
+Private Bool UserInput()[]
+{
+    User_Input;
+    Return User_Input = Input();;
+} 
+
+PrintLine()
+{
+    "Hello";
+
+    Wait(UserInput)
+    {
+        If Return == "Hello" {
+            "What's you're name?";
+        }
+        Else {
+            Pass;
+        }
+    }
+}
+
+PrintLine(){"Hello"; Wait(UserInput){If Return == "Hello" {"What's you're name?";}Else {Pass;}}}
