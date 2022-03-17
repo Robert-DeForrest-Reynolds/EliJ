@@ -1,0 +1,12 @@
+Addition()
+[First_Number, Second_Number]
+{
+    Return {
+        First_Number + Second_Number;
+    }
+}
+
+PrintLine(Addition(5, 10));
+
+~ This will produce the output of:
+~ 15
