@@ -10,8 +10,10 @@ New_Project_Com_List = [
     "n"
 ]
 
-# Debugging
-print("Arguments:" + str(argv) + '\n')
+# Debugging Information
+
+def Spit_Debug_Info():
+    print("Arguments:" + str(argv) + '\n')
 
 # Project Generation Function
 def Create():
@@ -33,9 +35,11 @@ Project_Type=
 
 # Analyze given commands
 def CommandParsing():
-    Command_Given = str(argv[1])
 
-    if Command_Given in New_Project_Com_List:
+
+    Action_Command_Given = str(argv[1])
+
+    if Action_Command_Given in New_Project_Com_List:
         try:
             Create()
         except FileExistsError:
