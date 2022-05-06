@@ -1,38 +1,10 @@
 from sys import argv
-from os import mkdir
+from os import mkdir, remove, removedirs
+import glob
+from Prefabs import Information
 
 # Project Type Generation Strings
-Console_Application_Project_Type = """Import Prefabs
-Import System
 
-User_Input = Input()
-
-Print("Sanity Check")
-
-If (User_Input in Prefabs.EXIT_COMMANDS)
-{
-    System.Exit()
-}
-"""
-
-# Action Command Lists
-New_Project_Com_List = [
-    "New",
-    "new",
-    "Create",
-    "create",
-    "N",
-    "n",
-    "C",
-    "c"
-]
-
-Help_Com_List = [
-    "Help",
-    "help",
-    "H",
-    "h"
-]
 
 # Debugging Information
 
@@ -43,16 +15,7 @@ Arguments:{}
 
 # Help Print
 def Help_Print():
-    print("""
-Welcome to the Hope Build System for Pineapple
-
-Most of Hope's commands fall within this model:
-Syntax Key: Hope <action> <context> <naming>
-
-Help, help, H, h | `Hope Help` will print this information. You can attach a context to help like so: `Hope Help New`
-
-New, new, Create, create, N, n, C, c | 'Hope New <Project-Type> <project-name>'
-""")
+    print(Information.Help_Information)
 
 # Project Generation Function
 def Create():
@@ -63,7 +26,7 @@ def Create():
     mkdir(argv[3])
 
     with open(Project_Name + "\\" + '{}_Main.papple'.format(Project_Name), 'w+') as GENERATED_PAPPLE_FILE:
-        GENERATED_PAPPLE_FILE.write(Console_Application_Project_Type)
+        GENERATED_PAPPLE_FILE.write(Information.Console_Application_Project_Type)
 
     with open(Project_Name + "\\" + '.gitignore', 'w+') as IGNORE_FILE:
         IGNORE_FILE.write(".Hope_Settings" + '\n' + ".Common")
@@ -80,12 +43,12 @@ def CommandParsing():
 
     Action_Command_Given = str(argv[1])
 
-    if Action_Command_Given in New_Project_Com_List:
+    if Action_Command_Given in Information.New_Project_Com_List:
         try:
             Create()
         except FileExistsError:
             print("Project with that name already exists, so Hope failed to create the project.")
-    elif Action_Command_Given in Help_Com_List:
+    elif Action_Command_Given in Information.Help_Com_List:
         Help_Print()
 
 # Project Prototype
@@ -108,6 +71,30 @@ def ReleaseBuild():
 def Clean():
     pass
 
+# Clean Up Those Gross Files. I No Likey.
+# Also, this is the only function you are not allowed to remove if you take this source code.
+# If you do, I will beat you with a baguette.
+def PyCacheCleanUp():
+    pyCacheFiles = glob.glob("*\**\*.pyc", recursive = True)
+    pyCacheFolders = glob.glob("*\**\__pycache__", recursive = True)
+    for file in pyCacheFiles:
+        try:
+            remove(file)
+        except:
+            print("""\n\nError removing .pyc files.
+Ignore this if you do not know what it means, but do please report it.
+The files are harmless, this function is only to avoid clutter.
+""")
+    for dir in pyCacheFolders:
+        try:
+            removedirs(dir)
+        except:
+            print("""\n\nError removing _pycache__ directories.
+Ignore this if you do not know what it means, but do please report it.
+The files are harmless, this function is only for convience.
+""")
+
 if __name__ == '__main__':
     Spit_Debug_Info()
     CommandParsing()
+    PyCacheCleanUp()

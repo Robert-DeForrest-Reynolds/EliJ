@@ -1,0 +1,11 @@
+Import Prefabs
+Import System
+
+User_Input = Input()
+
+Print("Sanity Check")
+
+If (User_Input in Prefabs.EXIT_COMMANDS)
+{
+    System.Exit()
+}
