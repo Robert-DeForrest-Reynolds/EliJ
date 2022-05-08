@@ -1,6 +1,9 @@
+"""Standard Library Imports"""
 from sys import argv
 from os import mkdir, remove, removedirs
 import glob
+
+"""Prefab Imports"""
 from Prefabs import Information
 
 # Project Type Generation Strings
