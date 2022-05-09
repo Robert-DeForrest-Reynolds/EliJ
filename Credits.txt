@@ -1,6 +1,6 @@
 | Toran Credits Text File |
 
 - Pre-Packaged MinGW into Project -
-Note: Obtained self-extracting zip from Stephan T. Lavavej at https://nuwen.net/mingw.html.
+Note: Obtained self-extracting zip from Stephan T. Lavavej at https://nuwen.net/mingw.html. This pre-packaging is most likely temporary until I've built an in-house assembler, and compiler.
 Home: stl@nuwen.net
 Work: stl@microsoft.com
