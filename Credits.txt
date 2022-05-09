@@ -1,0 +1,6 @@
+| Toran Credits Text File |
+
+- Pre-Packaged MinGW into Project -
+Note: Obtained self-extracting zip from Stephan T. Lavavej at https://nuwen.net/mingw.html.
+Home: stl@nuwen.net
+Work: stl@microsoft.com

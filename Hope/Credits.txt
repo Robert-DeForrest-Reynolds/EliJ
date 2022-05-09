@@ -1,2 +1,4 @@
+| Hope Credits Text File |
+
 - Rich Python Library by Textualize -
 Note: I have not changed their source code. I've just embedded the project inside Hope so that users do not need to install it themselves.
