@@ -48,7 +48,5 @@ Toran's Overseer, and personal virtual assistant. Explicitly offline by default.
 
 Cornelius is the only 'tool' that is indeed a product, is not open-source, and largely does not come packaged with Toran. Cornelius is downloaded onto your system as a pre-compiled, obfuscated code, that you are not intended to access, so please respect that.
 
-It was a difficult decision whether or not to implement Cornelius into Toran. I'm still conflicted on it. I say now that I will not hesitate in removing Cornelius from Toran's architecture if any mis-use is detected.
-
 ## Mel :no_entry:
 Audio development environment.
