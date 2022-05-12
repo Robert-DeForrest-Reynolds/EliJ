@@ -1,10 +1,14 @@
 """Standard Library Imports"""
-from sys import argv
-from os import mkdir, remove, removedirs
+import os
+import sys
 import glob
 
-"""Prefab Imports"""
-from Prefabs import Information
+print(sys.path)
+Project_Path = sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+print(sys.path)
+
+"""Imports"""
+import Information
 
 # Project Type Generation Strings
 
@@ -14,7 +18,7 @@ from Prefabs import Information
 def Spit_Debug_Info():
     print("""--Debug Info--
 Arguments:{}
-""".format(str(argv)))
+""".format(str(sys.argv)))
 
 # Help Print
 def Help_Print():
@@ -26,7 +30,7 @@ def Create():
     Project_Type, Project_Name = str(argv[2]),str(argv[3])
     print("Project Name: " + Project_Name)
 
-    mkdir(argv[3])
+    sys.mkdir(sys.argv[3])
 
     with open(Project_Name + "\\" + '{}_Main.papple'.format(Project_Name), 'w+') as GENERATED_PAPPLE_FILE:
         GENERATED_PAPPLE_FILE.write(Information.Console_Application_Project_Type)
@@ -44,7 +48,7 @@ Iwa_Path={}
 # Analyze given commands
 def CommandParsing():
 
-    Action_Command_Given = str(argv[1])
+    Action_Command_Given = str(sys.argv[1])
 
     if Action_Command_Given in Information.New_Project_Com_List:
         try:
@@ -82,7 +86,7 @@ def PyCacheCleanUp():
     pyCacheFolders = glob.glob("*\**\__pycache__", recursive = True)
     for file in pyCacheFiles:
         try:
-            remove(file)
+            sys.remove(file)
         except:
             print("""\n\nError removing .pyc files.
 Ignore this if you do not know what it means, but do please report it.
@@ -90,7 +94,7 @@ The files are harmless, this function is only to avoid clutter.
 """)
     for dir in pyCacheFolders:
         try:
-            removedirs(dir)
+            sys.removedirs(dir)
         except:
             print("""\n\nError removing _pycache__ directories.
 Ignore this if you do not know what it means, but do please report it.
