@@ -78,29 +78,6 @@ def ReleaseBuild():
 def Clean():
     pass
 
-# Clean Up Those Gross Files. I No Likey.
-# Also, this is the only function you are not allowed to remove if you take this source code.
-# If you do, I will beat you with a baguette.
-def PyCacheCleanUp():
-    pyCacheFiles = glob.glob("*\**\*.pyc", recursive = True)
-    pyCacheFolders = glob.glob("*\**\__pycache__", recursive = True)
-    for file in pyCacheFiles:
-        try:
-            sys.remove(file)
-        except:
-            print("""\n\nError removing .pyc files.
-Ignore this if you do not know what it means, but do please report it.
-The files are harmless, this function is only to avoid clutter.
-""")
-    for dir in pyCacheFolders:
-        try:
-            sys.removedirs(dir)
-        except:
-            print("""\n\nError removing _pycache__ directories.
-Ignore this if you do not know what it means, but do please report it.
-The files are harmless, this function is only for convience.
-""")
-
 if __name__ == '__main__':
     Spit_Debug_Info()
     CommandParsing()
