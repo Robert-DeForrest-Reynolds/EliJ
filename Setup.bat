@@ -1,5 +1,4 @@
-START /wait x86_64-Setup.bat
-START /wait x86_64-Setup_2.bat
-
-ECHO "Checking for GCC by Running Version Check"
-\msys64\mingw64\bin\gcc --version
+START /WAIT Building\x86_64-Setup_1.bat
+START /WAIT Building\x86_64-Setup_2.bat
+START /WAIT Building\x86_64-Setup_3.bat
+Building\Tests\x86_64-Setup_Test.bat

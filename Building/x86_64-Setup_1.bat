@@ -7,4 +7,6 @@ ECHO "Running MSYS2 Installer"
 msys2-base-x86_64-20220503.sfx.exe
 
 ECHO "Run MSYS2 for First-Run Initialization"
-msys64\msys2_shell.cmd \exit && EXIT /B
+START /WAIT msys64\usr\bin\bash -l -c "exit"
+
+EXIT 0
