@@ -1,7 +1,0 @@
-User_Input = Input("What's your name?");
-
-If User_Input[0] == _["A", "a"] {
-	PrintLine("Your name starts with an \'A\'");
-} Else {
-	PrintLine("Your name doesn't start with an \'A\'");
-}
