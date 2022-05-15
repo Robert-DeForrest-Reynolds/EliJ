@@ -1,6 +1,7 @@
 """Standard Library Imports"""
-from os import mkdir
+from os import mkdir, remove, removedirs, getcwd
 from sys import argv
+from glob import glob
 
 # Help Information
 Help_Information = """
@@ -121,6 +122,25 @@ def ReleaseBuild():
 def Clean():
     pass
 
+def PyCacheCleanUp():
+    print("\n\nCommencing PyCache Cleanup")
+    Project_Path = getcwd()
+    pyCacheFiles = glob(Project_Path + "\**\*.pyc", recursive = True)
+    pyCacheFolders = glob(Project_Path + "\**\__pycache__", recursive = True)
+    for file in pyCacheFiles:
+        try:
+            print(file)
+            remove(file)
+        except:
+            print("Error removing .pyc files.")
+    for dir in pyCacheFolders:
+        try:
+            print(dir)
+            removedirs(dir)
+        except:
+            print("Error removing _pycache__ directories.")
+
 if __name__ == '__main__':
     Spit_Debug_Info()
     CommandParsing()
+    PyCacheCleanUp()

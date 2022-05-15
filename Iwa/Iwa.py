@@ -1,9 +1,13 @@
-from os import path
-from sys import argv
+from os import path, removedirs, remove, getcwd
+from sys import argv, dont_write_bytecode
 from re import search
+from glob import glob
 
 # Predefined constants for utility
 NEWLINE = "\n"
+
+User_Arguments = argv
+
 
 # We need to analyze the given command
 def CommandParsing():
@@ -12,19 +16,19 @@ def CommandParsing():
     print(NEWLINE + "-Command parsing stage-")
 
     # If no commands are given
-    if len(argv) == 1:
+    if len(User_Arguments) == 1:
         
         print("No commands given, you can use `py Lily.py -h` to ask for help")
         return "No commands given"
 
     # If we're doing plain compilation
-    elif len(argv) == 2:
+    elif len(User_Arguments) == 2:
         
         print("Compilation")
         return "Compilation"
 
     # If we're doing compilation with settings
-    elif len(argv) >= 3:
+    elif len(User_Arguments) >= 3:
 
         print("Interpretation with settings")
         return "Interpretation with settings"
@@ -51,7 +55,7 @@ def PappleConfirmation():
     if CommandParsingReturn != "Error in CommandParsing()" and CommandParsingReturn != "No commands given":
 
         # We're using regular expression to search through the given string
-        if search("^.+\.(?:papple)", argv[1]):
+        if search("^.+\.(?:papple)", User_Arguments[1]):
             
             return "This is indeed a .papple file"
 
@@ -133,3 +137,22 @@ else:
     print("Error in executing PappleConfirmation()")
 
 print(FileReadingReturn)
+
+def PyCacheCleanUp():
+    print("\n\nCommencing PyCache Cleanup")
+    Project_Path = getcwd()
+    pyCacheFiles = glob(Project_Path + "\**\*.pyc", recursive = True)
+    pyCacheFolders = glob(Project_Path + "\**\__pycache__", recursive = True)
+    for file in pyCacheFiles:
+        try:
+            print(file)
+            remove(file)
+        except:
+            print("Error removing .pyc files.")
+    for dir in pyCacheFolders:
+        try:
+            print(dir)
+            removedirs(dir)
+        except:
+            print("Error removing _pycache__ directories.")
+PyCacheCleanUp()
