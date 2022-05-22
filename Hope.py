@@ -1,13 +1,16 @@
 """Standard Library Imports"""
-from argparse import Action
-from os import mkdir, remove, removedirs, getcwd
+from os import mkdir, remove, removedirs, getcwd, system
 from sys import argv
 from glob import glob
 
 from Hope_Utilities.Information import *
+from Hope_Utilities.Command_Lists import *
+from Hope_Utilities.Settings_File_Default_Data import *
+from Hope_Utilities.Debug import *
+from Hope_Utilities.Utilities_Declarations import *
 
 Argument_Amount = len(argv)
-User_Arguments = argv
+Arguments = argv
 Hope_Call = argv[0]
 
 if Argument_Amount >= 2:
@@ -26,10 +29,6 @@ if Argument_Amount >= 6:
     Parameter_3 = argv[5]
 
 # Debugging
-def Spit_Debug_Info():
-    print("""--Debug Info--
-Arguments:{}
-""".format(str(User_Arguments)))
 
 # Help Print
 def Help_Print():
@@ -44,44 +43,85 @@ def Create():
     mkdir(Project_Name)
 
     with open(Project_Name + "\\" + '{}.papple'.format(Project_Name), 'w+') as GENERATED_PAPPLE_FILE:
-        GENERATED_PAPPLE_FILE.write(Console_Application_Project_Type)
+        try:
+            GENERATED_PAPPLE_FILE.write(Console_Application_Project_Type)
+        except:
+            print("Error generating papple file template")
+        GENERATED_PAPPLE_FILE.close()
 
     with open(Project_Name + "\\" + '.gitignore', 'w+') as IGNORE_FILE:
-        IGNORE_FILE.write(DefaultGitIgnore)
+        try:
+            IGNORE_FILE.write(DefaultGitIgnore)
+        except:
+            print("Error generating ignore file")
+    IGNORE_FILE.close()
 
     with open(Project_Name + "\\" + '.Hope_Settings', 'w+') as SETTINGS_FILE:
-        SETTINGS_FILE.write(DefaultProjectSettings.format(Project_Type, Project_Name))
+        try:
+            SETTINGS_FILE.write(DefaultProjectSettings.format(Project_Type, Project_Name, Project_Name))
+        except:
+            print("Error generating Hope settings file")
+    SETTINGS_FILE.close()
+
+# Project Building
+def Build():
+    Project_Path = Project_Name
+    try:
+        print("Building", Project_Name)
+        system("Iwa {}\{}.papple".format(Project_Path, Project_Name))
+        with open(Project_Name + "\.Hope_Settings", 'r') as SETTINGS_FILE:
+            for Line in SETTINGS_FILE:
+                if "Project_Path=" in Line:
+                    Project_Path = Line.replace("Project_Path=", "")
+        print(Project_Path)
+    except:
+        print("Build Error")
 
 # Analyze given commands
 def CommandParsing():
-
-    if Action_Type in New_Project_Com_List:
-        try:
-            Create()
-        except FileExistsError:
-            print("Project with that name already exists, so Hope failed to create the project.")
-    elif Action_Type in Help_Com_List:
-        Help_Print()
-    elif Action_Type == "Debug":
-        Spit_Debug_Info
+    try:
+        if Action_Type in New_Project_Command_List and Argument_Amount >= 4:
+            try:
+                Create()
+                return "Project Creation Successful"
+            except FileExistsError:
+                print("Project with that name already exists, so Hope failed to create the project.")
+                return "Project Creation Failure, Project With Name Already Exists"
+        elif Action_Type in Build_Command_List:
+            try:
+                Build()
+            except:
+                print("Failure building project for some reason")
+        elif Action_Type in Help_Command_List:
+            Help_Print()
+            return "Help Print"
+        elif Action_Type == "Debug":
+            Spit_Debug_Info(Arguments)
+            return "Debug mode"
+        else:
+            print("Error when parsing arguments")
+            return "Parsing Error"
+    except:
+        "Some kind of error in CommandParsing() function"
 
 def PyCacheCleanUp():
-    print("\n\nCommencing PyCache Cleanup")
-    Project_Path = getcwd()
-    pyCacheFiles = glob(Project_Path + "\**\*.pyc", recursive = True)
-    pyCacheFolders = glob(Project_Path + "\**\__pycache__", recursive = True)
-    for file in pyCacheFiles:
-        try:
-            print(file)
-            remove(file)
-        except:
-            print("Error removing .pyc files.")
-    for dir in pyCacheFolders:
-        try:
-            print(dir)
-            removedirs(dir)
-        except:
-            print("Error removing _pycache__ directories.")
+    try:
+        print(NEWLINE, "Commencing PyCache Cleanup from Hope")
+        Project_Path = getcwd()
+        pyCacheFiles = glob(Project_Path + "\**\*.pyc", recursive = True)
+        pyCacheFolders = glob(Project_Path + "\**\__pycache__", recursive = True)
+        for File in pyCacheFiles:
+            try:
+                remove(File)
+            except:
+                print("Error removing .pyc files.")
+        for Directory in pyCacheFolders:
+            try:
+                removedirs(Directory)
+            except:
+                print("Error removing _pycache__ directories.")
+    except:
+        "Some kind of error in PyCacheCleanup() function"
 
 if __name__ == '__main__':
     CommandParsing()

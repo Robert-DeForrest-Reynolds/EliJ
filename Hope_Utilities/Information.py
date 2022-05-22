@@ -16,36 +16,8 @@ Aliases: New, new, Create, create, N, n, C, c
 'Hope New <Project-Type> <project-name>'
 """
 
-New_Project_Com_List = [
-    "New",
-    "new",
-    "Create",
-    "create",
-    "N",
-    "n",
-    "C",
-    "c"
-]
-
-Help_Com_List = [
-    "Help",
-    "help",
-    "H",
-    "h"
-]
-
 Console_Application_Project_Type = """Import
     IO
 
 Output("I'm Alive.")
-"""
-
-DefaultProjectSettings = """# Hope Project Manager Settings
-
-Project_Type={}
-Iwa_Path={}
-"""
-
-DefaultGitIgnore = """".Hope_Settings"
-".Common"
 """

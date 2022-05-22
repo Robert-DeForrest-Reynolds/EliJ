@@ -1,9 +1,7 @@
-Private_Developer_Journal.md
-/Obsidian_Journal
-/.venv
-/Tests
-/Prototypes
-
 .vscode
 
-**/gcc-12.1.0.tar.gz
+# Remove Testing
+msys64/
+Building/*/Tests/*Affirm.exe
+test/
+Test/
