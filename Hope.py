@@ -28,13 +28,9 @@ if Argument_Amount >= 5:
 if Argument_Amount >= 6:
     Parameter_3 = argv[5]
 
-# Debugging
-
-# Help Print
 def Help_Print():
     print(Help_Information)
 
-# Project Generation Function
 def Create():
 
     Project_Type = Parameter_1
@@ -63,7 +59,6 @@ def Create():
             print("Error generating Hope settings file")
     SETTINGS_FILE.close()
 
-# Project Building
 def Build():
     Project_Path = Project_Name
     try:
@@ -77,7 +72,7 @@ def Build():
     except:
         print("Build Error")
 
-# Analyze given commands
+
 def CommandParsing():
     try:
         if Action_Type in New_Project_Command_List and Argument_Amount >= 4:
