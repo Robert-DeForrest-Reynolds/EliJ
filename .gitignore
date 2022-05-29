@@ -1,7 +1,10 @@
 .vscode
 
-# Remove Testing
+# Core Testing
 msys64/
 Building/*/Tests/*Affirm.exe
 test/
 Test/
+
+# Cornelius Related
+Cornelius/Data/*
