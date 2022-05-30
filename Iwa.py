@@ -1,68 +1,56 @@
-from ast import Import
-from os import removedirs, remove, getcwd, listdir
+from os import removedirs, remove, getcwd, system
 from sys import argv
 from glob import glob
 from re import search
 
 from Iwa_Utilities.Utilities_Declarations import *
 from Iwa_Utilities.Exceptions import *
+from Iwa_Utilities.Pineapple_Language import *
+from Iwa_Utilities.C_Language import *
 
 Argument_Count = len(argv)
 Arguments = argv
-Project_Name = Arguments[1]
 
+Project_Path = None
+Project_Name = Project_Path
 
-
-Four_Spaces = "    "
-Eight_Spaces = "        "
-
-Import_Statement = "Import"
-
-Open_Block = "("
-Close_Block = ")"
-
-String_Wrapper = "\""
-
-Output_Function = "Output"
-
-Keywords = (
-    Four_Spaces,
-    Eight_Spaces,
-    Open_Block,
-    Close_Block,
-    String_Wrapper,
-    Import_Statement,
-    Output_Function
-)
+C_Code = []
 
 def CommandParsing():
     if Argument_Count >= 2:
+        global Project_Path
+        Project_Path = Arguments[1]
         print("Compilation")
         Compilation = True
+        BuildCFile()
+        # Compile()
         return Compilation
     else:
         return ZeroArgumentsGiven(Arguments, Argument_Count)
 
 def FormString(Data):
-    Formed_String = Data
     for Keyword in Keywords:
         if Keyword in Data:
             Data = Data.replace(Keyword, "")
     return Data
 
-def Compile():
+def BuildCFile():
 
-    Papple_Files = glob(Project_Name + "\*.papple", recursive = True)
+    Papple_Files = glob(Project_Path + "\*.papple", recursive = True)
 
     File_Count = 0
     Line_Count = 0
 
     for File in Papple_Files:
         File_Count += 1
+
         with open(File, 'r') as Papple_File:
+
             Papple_File_Lines = Papple_File.readlines()
+
             for Line in Papple_File_Lines:
                 Line_Count += 1
+
                 if Line.startswith(Import_Statement):
                     Imports = []
                     Next_Line_Index = (Papple_File_Lines.index(Line)+1)
@@ -71,8 +59,25 @@ def Compile():
                         Imports.append(Next_Line.replace("    ", ""))
                         Next_Line_Index += 1
                         Next_Line = Papple_File_Lines[Next_Line_Index]
+                    for Import in Imports:
+                        print(Import)
+                        print(IO_Import)
+                        if str(Import).strip() == IO_Import:
+                            print("Found import")
+                            C_Code.append(C_IO_Import)
+
                 if Line.startswith(Output_Function):
-                    print(FormString(Line))
+                    pass
+    
+    print(C_Code)
+
+def Compile():
+    system("msys64\mingw64\\bin\\gcc {}\\temp.c -o {}\\{}".format(Project_Path, Project_Path, Project_Name))
+
+def CompileAndRun():
+    system("msys64\mingw64\\bin\\gcc {}\\temp.c".format(Project_Path))
+    system(Project_Path + "\Temp")
+    
 
 def PyCacheCleanUp():
     print("\nCommencing PyCache Cleanup from Iwa")
@@ -90,4 +95,6 @@ def PyCacheCleanUp():
         except:
             print("Error removing _pycache__ directories.")
 
-PyCacheCleanUp()
+if __name__ == '__main__':
+    CommandParsing()
+    PyCacheCleanUp()

@@ -63,12 +63,11 @@ def Build():
     Project_Path = Project_Name
     try:
         print("Building", Project_Name)
-        system("Iwa {}\{}.papple".format(Project_Path, Project_Name))
+        system("Iwa {}".format(Project_Path))
         with open(Project_Name + "\.Hope_Settings", 'r') as SETTINGS_FILE:
             for Line in SETTINGS_FILE:
                 if "Project_Path=" in Line:
                     Project_Path = Line.replace("Project_Path=", "")
-        print(Project_Path)
     except:
         print("Build Error")
 
