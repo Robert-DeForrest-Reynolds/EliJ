@@ -5,3 +5,5 @@ msys64/
 Building/*/Tests/*Affirm.exe
 test/
 Test/
+Stats.py
+lorem/
