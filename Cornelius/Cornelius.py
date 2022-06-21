@@ -40,21 +40,21 @@ class Node:
                 self.Individual_Node_Array.append(_)
         return self.Individual_Node_Array
 
-class DataContainer:
+class Data_Container:
 
     def __init__(self, Data):
         self.Data = Data
         self.ID = ""
         self.Type = ""
-        self.GenerateID()
-        self.FindDataType()
+        self._GenerateID()
+        self._FindDataType()
 
-    def GenerateID(self):
+    def _GenerateID(self):
         for _ in range(25):
             self.ID += str(randrange(0, 9))
         return self.ID
     
-    def FindDataType(self):
+    def _FindDataType(self):
         if type(self.Data) == str:
             self.Type = "String"
         elif type(self.Data) == int:
