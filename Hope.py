@@ -1,4 +1,3 @@
-"""Standard Library Imports"""
 from os import mkdir, remove, removedirs, getcwd, system
 from sys import argv
 from glob import glob
