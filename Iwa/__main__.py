@@ -3,10 +3,10 @@ from sys import argv
 from glob import glob
 from re import search
 
-from Utilities_Declarations import *
 from Exceptions import *
 from Pineapple_Language import *
 from C_Language import *
+from PyCacheCleanUp import PyCache_Clean_Up
 
 Argument_Count = len(argv)
 Arguments = argv
@@ -77,24 +77,7 @@ def Compile():
 def CompileAndRun():
     system("msys64\mingw64\\bin\\gcc {}\\temp.c".format(Project_Path))
     system(Project_Path + "\Temp")
-    
-
-def PyCacheCleanUp():
-    print("\nCommencing PyCache Cleanup from Iwa")
-    Project_Path = getcwd()
-    pyCacheFiles = glob(Project_Path + "\**\*.pyc", recursive = True)
-    pyCacheFolders = glob(Project_Path + "\**\__pycache__", recursive = True)
-    for File in pyCacheFiles:
-        try:
-            remove(File)
-        except:
-            print("Error removing .pyc files.")
-    for Directory in pyCacheFolders:
-        try:
-            removedirs(Directory)
-        except:
-            print("Error removing _pycache__ directories.")
 
 if __name__ == '__main__':
     CommandParsing()
-    PyCacheCleanUp()
+    PyCache_Clean_Up()

@@ -1,13 +1,12 @@
 """Standard Library Imports"""
-from os import mkdir, remove, removedirs, getcwd, system
+from os import mkdir, system
 from sys import argv
-from glob import glob
 
 from Information import *
 from Command_Lists import *
 from Settings_File_Default_Data import *
 from Debug import *
-from Utilities_Declarations import *
+from PyCacheCleanUp import PyCache_Clean_Up
 
 Argument_Amount = len(argv)
 Arguments = argv
@@ -98,25 +97,6 @@ def CommandParsing():
     except:
         "Some kind of error in CommandParsing() function"
 
-def PyCacheCleanUp():
-    try:
-        print(NEWLINE, "Commencing PyCache Cleanup from Hope")
-        Project_Path = getcwd()
-        pyCacheFiles = glob(Project_Path + "\**\*.pyc", recursive = True)
-        pyCacheFolders = glob(Project_Path + "\**\__pycache__", recursive = True)
-        for File in pyCacheFiles:
-            try:
-                remove(File)
-            except:
-                print("Error removing .pyc files.")
-        for Directory in pyCacheFolders:
-            try:
-                removedirs(Directory)
-            except:
-                print("Error removing _pycache__ directories.")
-    except:
-        "Some kind of error in PyCacheCleanup() function"
-
 if __name__ == '__main__':
     CommandParsing()
-    PyCacheCleanUp()
+    PyCache_Clean_Up()
