@@ -1,12 +1,13 @@
+"""Standard Library Imports"""
 from os import mkdir, remove, removedirs, getcwd, system
 from sys import argv
 from glob import glob
 
-from Hope_Utilities.Information import *
-from Hope_Utilities.Command_Lists import *
-from Hope_Utilities.Settings_File_Default_Data import *
-from Hope_Utilities.Debug import *
-from Hope_Utilities.Utilities_Declarations import *
+from Information import *
+from Command_Lists import *
+from Settings_File_Default_Data import *
+from Debug import *
+from Utilities_Declarations import *
 
 Argument_Amount = len(argv)
 Arguments = argv

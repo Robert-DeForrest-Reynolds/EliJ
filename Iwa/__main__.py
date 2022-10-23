@@ -3,10 +3,10 @@ from sys import argv
 from glob import glob
 from re import search
 
-from Iwa_Utilities.Utilities_Declarations import *
-from Iwa_Utilities.Exceptions import *
-from Iwa_Utilities.Pineapple_Language import *
-from Iwa_Utilities.C_Language import *
+from Utilities_Declarations import *
+from Exceptions import *
+from Pineapple_Language import *
+from C_Language import *
 
 Argument_Count = len(argv)
 Arguments = argv
