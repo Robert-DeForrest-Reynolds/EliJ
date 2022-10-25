@@ -8,6 +8,9 @@ from Pineapple_Language import *
 from C_Language import *
 from PyCacheCleanUp import PyCache_Clean_Up
 
+# Generate a progammatic understanding of Pineapple code
+# Generate C code dependant on that understanding
+
 Argument_Count = len(argv)
 Arguments = argv
 
