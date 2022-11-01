@@ -1,8 +1,0 @@
-Import
-    IO,
-    Math
-
-Addition(Integer X, Integer Y)
-    Return X + Y
-
-Output(Addition(5, 5))
