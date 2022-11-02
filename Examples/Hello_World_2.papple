@@ -1,0 +1,3 @@
+Str: im_a_string = "Hello, World!";
+
+Out(im_a_string)
