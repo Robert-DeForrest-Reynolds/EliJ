@@ -1,14 +1,18 @@
+# Ignore Utilities
 .vscode
 Cornelius/PythonVenv
 
 # Core Testing
-msys64/
-Building/*/Tests/*Affirm.exe
-test/
 Test/
+test/
 Stats.py
+Lorem/
 lorem/
 DevCleanup.bat
+
+#Ignore build stuff
+msys64/
+Building/*/Tests/*Affirm.exe
 
 # No executables allowed, no no.
 **/*.exe
