@@ -9,4 +9,6 @@ Test/
 Stats.py
 lorem/
 DevCleanup.bat
-**/*.[exe]
+
+# No executables allowed, no no.
+**/*.exe
