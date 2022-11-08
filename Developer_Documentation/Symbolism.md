@@ -32,3 +32,9 @@ names = [
 ```
 x = 10
 ```
+
+`==` is the equality comparison operator
+```
+if (5*2) == 10:
+    print(True)
+```
