@@ -8,7 +8,6 @@
 
 :heavy_check_mark: - Stable Release Viable for Production
 
-```Markdown
  - Toran :hammer_and_wrench:
  - Pineapple :hammer_and_wrench:
  - Iwa :hammer_and_wrench:
@@ -20,8 +19,8 @@
  - ExoFyle :no_entry:
  - Cornelius :hammer_and_wrench:
  - Mel :no_entry:
-```
 
+---
 
 ### Toran
 A suite of completely free-to-use applications for developers. Under heavy development. don't expect anything to work yet.
