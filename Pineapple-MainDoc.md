@@ -1,8 +1,84 @@
+# Chapters
+ - [Operators](#operators)
+ - [Keywords](#keywords)
+	 - [Type Delcarations](#type-declaration)
+	 - [Decision Making](#decision-making)
+ - [Standard Library](#standard-library)
+ - [Developer Notation](#developer-notation)
+
+---
+
+## Operators
+
+`+` - Add
+
+`-` - Minus
+
+`/` - Divide
+
+`*` - Multiply
+
+`=` - Variable declaration
+
+`==` - Equality comparison
+
+`>` - Greater than comparison
+
+`>=` - Greater than or equal to comparison
+
+`<` - Lesser than comparison
+
+`<=` Lesser than or equal to comparison
+
+[Chapters](#chapters) - [Top of page](#iwa-reference)
+
+---
+
+## Keywords
+
+### Type Declaration
+
+**`String` - String Type**
+
+Example: `String greeting = "Hello";`
+
+
+**`Integer` - Integer Type**
+
+Example: `Integer age = 18;`
+
+
+**`Float` - Float Type**
+
+Example: `Float Pi = 3.141;`
+
+
+### Decision Making
+
+`If` - Begin an If conditional
+
+`Else` - Begin an Else Conditional
+
+[Chapters](#chapters) - [Top of page](#iwa-reference)
+
+---
+
+## Standard Library
+
+`In()` - Take in input from the user
+
+`Out()` - Output something to the console
+
+[Chapters](#chapters) - [Top of page](#iwa-reference)
+
+## Developer Notation
+
 #### Core Ideas:
  - Graphical Implementations should be accessible within the Standard Library
  - There are many ways to say something, there is only one best way to do something, and it has to be obvious.
  - Complexity florishes with creative simplicity.
  - Higher-Level Abstractions are never a bad thing.
+ 
 # Declare, Allocate, Operate
 
 ```
@@ -69,75 +145,3 @@ Output(im_a_string)
 ```
 
 The sole purpose of this feature is to provide more comfortability when reading peer's programs, while allowing an individual to make their own personal decisions on representation, and convention.
-
-# Chapters
- - [Operators](#operators)
- - [Keywords](#keywords)
-	 - [Type Delcarations](#type-declaration)
-	 - [Decision Making](#decision-making)
- - [Standard Library](#standard-library)
-
----
-
-## Operators
-
-`+` - Add
-
-`-` - Minus
-
-`/` - Divide
-
-`*` - Multiply
-
-`=` - Variable declaration
-
-`==` - Equality comparison
-
-`>` - Greater than comparison
-
-`>=` - Greater than or equal to comparison
-
-`<` - Lesser than comparison
-
-`<=` Lesser than or equal to comparison
-
-[Chapters](#chapters) - [Top of page](#iwa-reference)
-
----
-
-## Keywords
-
-### Type Declaration
-
-**`String` - String Type**
-
-Example: `String greeting = "Hello";`
-
-
-**`Integer` - Integer Type**
-
-Example: `Integer age = 18;`
-
-
-**`Float` - Float Type**
-
-Example: `Float Pi = 3.141;`
-
-
-### Decision Making
-
-`If` - Begin an If conditional
-
-`Else` - Begin an Else Conditional
-
-[Chapters](#chapters) - [Top of page](#iwa-reference)
-
----
-
-## Standard Library
-
-`In()` - Take in input from the user
-
-`Out()` - Output something to the console
-
-[Chapters](#chapters) - [Top of page](#iwa-reference)
