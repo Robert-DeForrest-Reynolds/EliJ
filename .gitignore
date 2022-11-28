@@ -16,3 +16,9 @@ Building/*/Tests/*Affirm.exe
 
 # No executables allowed, no no.
 **/*.exe
+
+# Ignore any leftover PyCache files
+
+__pycache__/
+*/.pyc
+**/pycache

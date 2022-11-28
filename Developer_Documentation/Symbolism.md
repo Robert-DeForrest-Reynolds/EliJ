@@ -1,13 +1,13 @@
 ### Separators
 `;` represents the end of a statement:
 ```
-print("Hello, World");
+Out("Hello, World");
                      ^
 ```
 
 `()` comes after the call of a function to pass parameters into it:
 ```
-print("Hello, World");
+Out("Hello, World");
      ^              ^
 ```
 

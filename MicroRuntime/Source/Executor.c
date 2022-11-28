@@ -10,7 +10,8 @@ void Executor(char* instruction)
     if (strncmp(instruction, "Output", 6) == 0)
     {
         opening_brace = *(instruction+6);
-        if (strcmp(opening_brace, "(") != 0) printf("Invalid Syntax");
+        if (strcmp(opening_brace, "(") != 0)
+            printf("Invalid Syntax");
         printf("%c", opening_brace);
     }
 
