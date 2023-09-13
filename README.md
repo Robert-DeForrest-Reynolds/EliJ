@@ -38,6 +38,9 @@ Iwa is the official compiler for Pineapple, and will be capable of transplicing,
 ### Lily :no_entry:
 Lily is the official interpreter for Pineapple.
 
+### Peach :warning:
+Peach is the parser written in Python to generate Intermediate Data Files from Pineapple source code.
+
 ### Hope :hammer_and_wrench:
 The build system for Pineapple.
 
