@@ -3,92 +3,90 @@ from os import mkdir, system
 from sys import argv
 
 from Information import *
-from Command_Lists import *
-from Settings_File_Default_Data import *
+from CommandLists import *
+from DefaultData import *
 from Debug import *
-from PyCacheCleanUp import PyCache_Clean_Up
 
-Argument_Amount = len(argv)
+ArgumentAmount = len(argv)
 Arguments = argv
-Hope_Call = argv[0]
+HopeCall = argv[0]
 
-if Argument_Amount >= 2:
-    Action_Type = argv[1]
+if ArgumentAmount >= 2:
+    ActionType = argv[1]
 
-if Argument_Amount >= 3:
-    Project_Name = argv[2]
+if ArgumentAmount >= 3:
+    ProjectName = argv[2]
 
-if Argument_Amount >= 4:
+if ArgumentAmount >= 4:
     Parameter_1 = argv[3]
 
-if Argument_Amount >= 5:
+if ArgumentAmount >= 5:
     Parameter_2 = argv[4]
 
-if Argument_Amount >= 6:
+if ArgumentAmount >= 6:
     Parameter_3 = argv[5]
 
 def Help_Print():
     print(Help_Information)
 
 def Create():
+    ProjectType = Parameter_1
+    print("Project Name: " + ProjectName)
 
-    Project_Type = Parameter_1
-    print("Project Name: " + Project_Name)
+    mkdir(ProjectName)
 
-    mkdir(Project_Name)
-
-    with open(Project_Name + "\\" + '{}.papple'.format(Project_Name), 'w+') as GENERATED_PAPPLE_FILE:
+    with open(ProjectName + "\\" + '{}.papple'.format(ProjectName), 'w+') as GENERATED_PAPPLE_FILE:
         try:
             GENERATED_PAPPLE_FILE.write(Console_Application_Project_Type)
         except:
             print("Error generating papple file template")
         GENERATED_PAPPLE_FILE.close()
 
-    with open(Project_Name + "\\" + '.gitignore', 'w+') as IGNORE_FILE:
+    with open(ProjectName + "\\" + '.gitignore', 'w+') as IGNORE_FILE:
         try:
             IGNORE_FILE.write(DefaultGitIgnore)
         except:
             print("Error generating ignore file")
     IGNORE_FILE.close()
 
-    with open(Project_Name + "\\" + '.Hope_Settings', 'w+') as SETTINGS_FILE:
+    with open(ProjectName + "\\" + '.Hope_Settings', 'w+') as SETTINGSFILE:
         try:
-            SETTINGS_FILE.write(DefaultProjectSettings.format(Project_Type, Project_Name, Project_Name))
+            SETTINGSFILE.write(DefaultProjectSettings.format(ProjectType, ProjectName, ProjectName))
         except:
             print("Error generating Hope settings file")
-    SETTINGS_FILE.close()
+    SETTINGSFILE.close()
 
 def Build():
-    Project_Path = Project_Name
+    ProjectPath = ProjectName
     try:
-        print("Building", Project_Name)
-        system("Iwa {}".format(Project_Path))
-        with open(Project_Name + "\.Hope_Settings", 'r') as SETTINGS_FILE:
-            for Line in SETTINGS_FILE:
-                if "Project_Path=" in Line:
-                    Project_Path = Line.replace("Project_Path=", "")
+        print("Building", ProjectName)
+        system("Iwa {}".format(ProjectPath))
+        with open(ProjectName + "\.Hope_Settings", 'r') as SETTINGSFILE:
+            for Line in SETTINGSFILE:
+                if "ProjectPath=" in Line:
+                    ProjectPath = Line.replace("ProjectPath=", "")
     except:
         print("Build Error")
 
 
 def CommandParsing():
     try:
-        if Action_Type in New_Project_Command_List and Argument_Amount >= 4:
+        if ActionType in NewProjectCommandList and ArgumentAmount >= 4:
             try:
                 Create()
                 return "Project Creation Successful"
             except FileExistsError:
                 print("Project with that name already exists, so Hope failed to create the project.")
                 return "Project Creation Failure, Project With Name Already Exists"
-        elif Action_Type in Build_Command_List:
+        elif ActionType in BuildCommandList:
             try:
                 Build()
             except:
                 print("Failure building project for some reason")
-        elif Action_Type in Help_Command_List:
+        elif ActionType in HelpCommandList:
             Help_Print()
             return "Help Print"
-        elif Action_Type == "Debug":
+        elif ActionType == "Debug":
             Spit_Debug_Info(Arguments)
             return "Debug mode"
         else:
@@ -99,4 +97,3 @@ def CommandParsing():
 
 if __name__ == '__main__':
     CommandParsing()
-    PyCache_Clean_Up()

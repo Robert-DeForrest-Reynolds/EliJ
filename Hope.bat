@@ -1,1 +1,1 @@
-msys64\mingw64\bin\python Hope %*
+py -B Hope %*

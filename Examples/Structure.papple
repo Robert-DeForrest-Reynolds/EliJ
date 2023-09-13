@@ -1,0 +1,11 @@
+Type Person{
+    >New(Self, Name, Age){
+        String Self.Name = Name;
+        Integer Self.Age = Age;
+    }
+}
+
+Jack = Person("Jack");
+
+Out(Jack.Name);
+Out(Jack.Age);

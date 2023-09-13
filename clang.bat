@@ -1,0 +1,1 @@
+msys64\mingw64\bin\clang.exe %* -static

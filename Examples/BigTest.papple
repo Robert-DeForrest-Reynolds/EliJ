@@ -1,0 +1,60 @@
+# This is a comment #
+
+# 
+This
+is
+a multi-line
+comment
+#
+
+# Everything between two pound/hash symbols #
+
+list Names;
+
+integer Health = 50;
+
+from ImportExample import *;
+
+Names = ["Lani",
+         "Lily",
+         "Eleanor"];
+
+
+dictionary People = {"Lani": 23,
+                     "Lily": 6};
+
+Out(Health);
+
+task Addition(X, Y) {
+    return X + Y;
+}
+
+task Subtraction(X, Y) {
+    return X - Y;
+}
+
+task Read_File(File) {
+    Contents = Open(File).Read_Lines();
+    Out(Contents);
+}
+
+task Is_Even(Number) {
+    if Number % 2 == 0{
+        return True;
+    }else{
+        return False;
+    }
+}
+
+integer Counter = 0;
+while{
+    Counter += 1;
+    Out("I'm a loop");
+    if Counter == 3{
+        break
+    }
+}
+
+Out(Addition(5, 2));
+
+Out(Subtraction(5, 2));

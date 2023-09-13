@@ -1,0 +1,32 @@
+type Node {
+    >New(){
+        Integer|String Self.Value;
+        Node Self.Next;
+    }
+}
+
+type LinkedList {
+    >New(){
+        Node Self.Head;
+    }
+}
+
+LinkedList Example;
+Node Head;
+Example.Head = Head;
+
+ExampleList = [4, 2, 0];
+
+Cursor = Head;
+for Integer Number in ExampleList {
+    Cursor.Value = Number;
+    Cursor.Next = Node();
+    Cursor = Cursor.Next;
+}
+
+Cursor = Head;
+while{
+    Out(Cursor.Value)
+    if Cursor.Next == None {break}
+    Cursor = Cursor.Next
+}

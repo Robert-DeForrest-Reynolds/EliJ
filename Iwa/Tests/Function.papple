@@ -1,0 +1,7 @@
+Import
+    IO
+
+Addition(Integer x, Integer y)
+    Return x + y
+
+Output(Addition(5, 5))

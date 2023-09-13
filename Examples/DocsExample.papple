@@ -1,0 +1,10 @@
+# Variable Prototyping #
+#   <Type> <Delcarative-Name>;  #
+
+# Variable Delcaration #
+#   <Type> <Delcarative-Name> = <Value>;    #
+
+
+# Importing #
+#   @<File-Name>.<Module>   #
+#   @<File-Name>.<Structure>   #

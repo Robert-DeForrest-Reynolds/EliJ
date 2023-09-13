@@ -1,2 +1,2 @@
-Pineapple Source Code -> Iwa Compiler -> LLVM IR -> Clang -> Executable
+Pineapple Source Code -> Iwa Compiler -> Cross-Platform Intermediate Language -> C++ -> Clang -> Executable
 Pineapple Source Code -> Lily -> Output
