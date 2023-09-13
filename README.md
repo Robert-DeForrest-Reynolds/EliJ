@@ -11,13 +11,14 @@
  - Toran :hammer_and_wrench:
  - Pineapple :hammer_and_wrench:
  - Iwa :hammer_and_wrench:
- - Lily :no_entry:
+ - Lily :hammer_and_wrench:
+ - Peach :warning:
  - Hope :hammer_and_wrench:
  - HPM (Hope Package Manager) :hammer_and_wrench:
- - Pim :hammer_and_wrench:
- - Toran's Syntax Highlighting Theme :hammer_and_wrench:
+ - Pim :no_entry:
+ - Toran's Syntax Highlighting Theme :no_entry:
  - ExoFyle :no_entry:
- - Cornelius :hammer_and_wrench:
+ - Cornelius :no_entry:
  - Mel :no_entry:
 
 ---
@@ -32,37 +33,37 @@ Optionally comes in VM form to run underneath host OS.
 ### Pineapple
 Pineapple is a programming language.
 
-### Iwa :hammer_and_wrench:
+### Iwa
 Iwa is the official compiler for Pineapple, and will be capable of transplicing, and recompling other languages into Pineapple, or Pineapple into other languages.
 
-### Lily :no_entry:
+### Lily
 Lily is the official interpreter for Pineapple.
 
-### Peach :warning:
+### Peach
 Peach is the parser written in Python to generate Intermediate Data Files from Pineapple source code.
 
-### Hope :hammer_and_wrench:
+### Hope
 The build system for Pineapple.
 
-### HPM (Hope Package Manager) :hammer_and_wrench:
+### HPM (Hope Package Manager)
 The package manager built into Hope. Inspired by Cargo from Rust, and Pip from Python.
 
-### Pim :hammer_and_wrench:
+### Pim
 A terminal-based text editor written in Python.
 
-### Toran's Syntax Highlighting Theme :hammer_and_wrench:
+### Toran's Syntax Highlighting Theme
 A custom theme explained in standardized form, that can be easily supported whereever may be needed.
 
-### ExoFyle :no_entry:
+### ExoFyle
 A minimal lightweight code editor, comes packaged with Pineapple.
 
-### ExoFyle IDE :no_entry:
+### ExoFyle IDE
 A complete integreated development environment to support Pineapple development.
 
-### Cornelius :hammer_and_wrench:
+### Cornelius
 Toran's Overseer, and personal virtual assistant. Explicitly offline by default. An ever-running entity on top of Toran's runtime, that relies on a pre-generated dataset to assist a Toran user in largely anything. The user can optionally "push data" to Cornelius's master dataset, and optionally 'pull data' from Cornelius's master dataset. Any data pushed to the master dataset is run through heavy parsing, data anonymization, and a complex compilation process, that is then 'inserted' into the CDP (Cornelius Data Processor), where it will be fed into the master dataset carefully, to avoid overtaking, regression, and unsupervised repeated analysis.
 
 Cornelius is the only 'tool' that is indeed a product, is not open-source, and largely does not come packaged with Toran. Cornelius is downloaded onto your system as a pre-compiled, obfuscated code, that you are not intended to access, so please respect that.
 
-### Mel :no_entry:
+### Mel
 Audio development environment.
