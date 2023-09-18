@@ -7,11 +7,9 @@ a multi-line
 comment
 #
 
-# Everything between two pound/hash symbols #
-
 list Names;
 
-integer Health = 50;
+integer Health: 50;
 
 from ImportExample import *;
 
@@ -20,8 +18,8 @@ Names = ["Lani",
          "Eleanor"];
 
 
-dictionary People = {"Lani": 23,
-                     "Lily": 6};
+pairs People: {"Lani": 23,
+               "Lily": 6};
 
 Out(Health);
 
@@ -34,7 +32,7 @@ task Subtraction(X, Y) {
 }
 
 task Read_File(File) {
-    Contents = Open(File).Read_Lines();
+    String Contents: Open(File).Read_Lines();
     Out(Contents);
 }
 

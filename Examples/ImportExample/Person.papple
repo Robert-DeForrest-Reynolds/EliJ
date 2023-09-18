@@ -1,0 +1,6 @@
+type Person{
+    task New(Name, Age){
+        Self.Name = Name
+        Self.Age = Age
+    }
+}

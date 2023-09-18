@@ -72,7 +72,13 @@ class Peach:
             - EntryFile Search
                 - Comment Search
                 - Import Search
+                    - Errors:
+                        - Syntax Errors:
+                            - 
                 - Resolve Import(s)
+                    - Errors:
+                        - Cannot find import
+                        - Import has error
                 - Function Search
                     - Comment Inner Search
                     - Find Search

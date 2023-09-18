@@ -1,0 +1,11 @@
+type Person{
+    task New(Name, Age){
+        String Self.Name: Name;
+        Integer Self.Age: Age;
+    }
+}
+
+Person Jack: "Jack";
+
+Out: Jack.Name;
+Out: Jack.Age;
