@@ -232,6 +232,16 @@ Addition(5, 10)
 ```
 
 [Chapters](#chapters) - [Top of page](#iwa-reference)
+## Import & Find
+find is used to import code from another file.
+
+```
+find <File-Name>.<Declarative-Name>
+
+find Graphs.2DPlot
+```
+
+[Chapters](#chapters) - [Top of page](#iwa-reference)
 
 ## Built-Ins
 
