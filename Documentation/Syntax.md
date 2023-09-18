@@ -246,7 +246,7 @@ Addition(5, 10)
 #### Core Ideas:
  - Graphical Implementations should be accessible within the Standard Library
  - There are many ways to say something, there is only one best way to do something, and it has to be obvious.
- - Complexity florishes with creative simplicity.
+ - Complexity flourishes with creative simplicity.
  - Higher-Level Abstractions are never a bad thing.
 
 [Chapters](#chapters) - [Top of page](#iwa-reference)
