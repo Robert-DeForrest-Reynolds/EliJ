@@ -1,3 +1,5 @@
+from Log import Log
+
 class FunctionModule:
     def __init__(Self):
         Self.Functions = {}

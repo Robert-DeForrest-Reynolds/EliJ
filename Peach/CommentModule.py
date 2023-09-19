@@ -1,3 +1,5 @@
+from Log import Log
+
 class CommentModule:
     def __init__(Self):
         Self.Comments = []

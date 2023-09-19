@@ -15,12 +15,11 @@ class Peach:
         Self.Arguments = None
         Self.ArgumentCount = None
         Self.EntryFile = None
-        
+
         Self.Parse_Arguments()
         Self.Extract_Contents()
         Self.Clear_Whitespace()
 
-        
 
         """Turn SourceContent into a string, and then remove any whitespaces greater than 1."""
         Self.SourceContent = "".join(Self.SourceContent)

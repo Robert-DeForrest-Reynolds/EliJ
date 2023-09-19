@@ -1,3 +1,5 @@
+from Log import Log
+
 class FindModule:
     def __init__(Self):
         Self.Finds = []

@@ -5,11 +5,14 @@ Code blocks are started and ended with curly brackets.
 
 All of this info is to be migrated elsewhere, and this file deleted
 
+
+ - [Comments](#comments)
  - [Operators](#operators)
- - [Keywords](#keywords)
-	 - [Type Delcarations](#type-declaration)
-	 - [Decision Making](#decision-making)
- - [Functions](#Functions)
+ - [Type Declarations](#type-declaration)
+ - [Decision Making](#decision-making)
+ - [Objects](#objects)
+ - [Functions](#functions)
+ - [Import & Find](#import-&-find)
  - [Standard Library](#standard-library)
  - [Developer Notation](#developer-notation)
 
@@ -27,7 +30,7 @@ for multi-line
 comments as well
 #
 ```
-[Chapters](#chapters) - [Top of page](#iwa-reference)
+[Chapters](#chapters)
 # Operators
 `+` - Add
 ```
@@ -125,7 +128,7 @@ if Hunger <= 50{
 ```
 > I'm hungry
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
+[Chapters](#chapters)
 # Type Declaration
 
 **`string` - String Type**
@@ -143,7 +146,7 @@ int Age = 18;
 float Pi = 3.141;
 ```
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
+[Chapters](#chapters)
 # Decision Making
 
 `if` - Use specified code block if condition is met
@@ -191,13 +194,13 @@ pair Colors = [Red:Stop,
 Colors[Red];
 ```
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
-## Types
-Types have built-in functions that can be utilized to implement your own behavior on top of. Below are the built-ins described.
+[Chapters](#chapters)
+# Objects
+Objects have built-in functions that can be utilized to implement your own behavior on top of. Below are the built-ins described.
 
-`New` - Called when a type is instantiated
-`Destroy` - Called when a type is destroyed
-`Name` - Utility function used to 
+`New` - Called when a object is instantiated
+`Destroy` - Called when a object is destroyed
+`Name` - Utility function used to easily get name of object as string
 
 ```
 Obj <DelcarativeName>{
@@ -215,8 +218,8 @@ Obj Human{
 }
 ```
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
-## Functions
+[Chapters](#chapters)
+# Functions
 
 ```
 Func <DeclarativeName>(Parameters){
@@ -231,8 +234,8 @@ Func Addition(X, Y){
 Addition(5, 10)
 ```
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
-## Import & Find
+[Chapters](#chapters)
+# Import & Find
 find is used to import code from another file.
 
 ```
@@ -241,17 +244,17 @@ find <File-Name>.<Declarative-Name>
 find Graphs.2DPlot
 ```
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
+[Chapters](#chapters)
 
-## Built-Ins
+# Built-Ins
 
 `In()` - Take in input from the user
 
 `Out()` - Output something to the console
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
+[Chapters](#chapters)
 
-## Developer Notation
+# Developer Notation
 
 #### Core Ideas:
  - Graphical Implementations should be accessible within the Standard Library
@@ -259,4 +262,4 @@ find Graphs.2DPlot
  - Complexity flourishes with creative simplicity.
  - Higher-Level Abstractions are never a bad thing.
 
-[Chapters](#chapters) - [Top of page](#iwa-reference)
+[Chapters](#chapters)

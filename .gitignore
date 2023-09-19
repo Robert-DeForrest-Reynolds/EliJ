@@ -25,3 +25,10 @@ __pycache__/
 # Developer Documentation
 Documentation/Developer.md
 Documentation/.obsidian
+
+# Ignore Bat Scripts
+Save.bat
+clang.bat
+clang++.bat
+Hope.bat
+Lily.bat
