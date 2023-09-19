@@ -7,6 +7,7 @@ from CommentModule import CommentModule
 from FindModule import FindModule
 from FunctionModule import FunctionModule
 
+"""I'm a test comment"""
 
 class Peach:
     def __init__(Self):
