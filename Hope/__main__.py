@@ -67,6 +67,18 @@ def Build():
                     ProjectPath = Line.replace("ProjectPath=", "")
     except:
         print("Build Error")
+        
+
+def Run():
+    ProjectPath = ProjectName
+    if ArgumentAmount > 3:
+        Flags = " ".join(Arguments[3::])
+        print(Flags)
+        print("Running", ProjectName)
+        system(f"Lily {ProjectPath} {Flags}")
+    else:
+        print("Running", ProjectName)
+        system(f"Lily {ProjectPath}")
 
 
 def CommandParsing():
@@ -81,6 +93,11 @@ def CommandParsing():
         elif ActionType in BuildCommandList:
             try:
                 Build()
+            except:
+                print("Failure building project for some reason")
+        elif ActionType in RunCommandList:
+            try:
+                Run()
             except:
                 print("Failure building project for some reason")
         elif ActionType in HelpCommandList:

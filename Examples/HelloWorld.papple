@@ -1,0 +1,3 @@
+string ImAString = "Hello, World!";
+
+Out(ImAString);

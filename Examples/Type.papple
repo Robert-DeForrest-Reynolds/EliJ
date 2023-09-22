@@ -1,4 +1,4 @@
-type Person{
+obj Person{
     task New(Name, Age){
         String Self.Name: Name;
         Integer Self.Age: Age;
@@ -7,5 +7,5 @@ type Person{
 
 Person Jack: "Jack";
 
-Out: Jack.Name;
-Out: Jack.Age;
+Out(Jack.Name);
+Out(Jack.Age);

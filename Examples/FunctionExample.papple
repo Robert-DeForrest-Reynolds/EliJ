@@ -1,0 +1,19 @@
+func Addition(int X, int Y) {
+    return X + Y;
+}
+
+func Subtraction(int X, int Y) {
+    return X - Y;
+}
+
+func Read_File(string FileName) {
+    string Contents: Open(File).Read_Lines();
+    Out(Contents);
+}
+
+func Is_Even(int Number) {
+    if Number % 2 == 0:
+        return True;
+    else:
+        return False;
+}

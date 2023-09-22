@@ -1,6 +1,57 @@
 from Log import Log
 
-class FunctionModule:
+
+def Find_Functions(Peach):
+    while Peach.FunctionFound:
+        Peach.FunctionStartIndex = Find_Function_Start(Peach)
+        if Peach.FunctionStartIndex != "Not Found":
+            Peach.FunctionEndIndex = Find_Function_End(Peach)
+            if Peach.FunctionEndIndex != "Not Found":
+                Peach.RawFunctions.append(Peach.SourceContent[Peach.FunctionStartIndex:Peach.FunctionEndIndex])
+                Peach.SourceContent = Peach.SourceContent.replace(Peach.SourceContent[Peach.FunctionStartIndex:Peach.FunctionEndIndex], "")
+        else:
+            Peach.FunctionFound = False
+        break
+
+    
+def Find_Function_Start(Peach):
+    Fillable = ""
+    Counter = 0
+    for Index, Character in enumerate(Peach.SourceContent):
+        if Counter >= 1: # Has the counter started? If so, continue to add the character in iteration, and counter += 1
+            Fillable += Character
+            Counter += 1
+            
+        if Character == "f": # Is the character equal to f? If so, add character to fillable, and counter += 1
+            Fillable += Character
+            Counter += 1
+
+        if Fillable == "func": # Is the fillable equal to the keyword 'func'? If so, Index += 2, log information, and return the Index
+            FunctionStart = Index - 3 # We're at the 'c' character in 'func', so we need to index backwards 3 letter to 'f'
+            Log(Context=Find_Function_Start.__name__,
+                FoundIndex=Index)
+            return FunctionStart
+
+        if Counter >= 4: # Has counter reached 4, or somehow exceeded it? If so, reset.
+            Fillable = ""
+            Counter = 0
+
+    return "Not Found"
+
+
+def Find_Function_End(Peach):
+    StartIndex = Peach.FunctionStartIndex + 1
+    for Index, Character in enumerate(Peach.SourceContent[StartIndex::]):
+        if Character == "}":
+            Peach.FunctionEndIndex = Index + StartIndex
+            Peach.FunctionInHand = Peach.SourceContent[StartIndex:Peach.FunctionEndIndex]
+            Log(Context=Find_Function_End.__name__,
+                FoundIndex=Index)
+            return Index + StartIndex + 1
+    return "Not Found"
+
+
+class Old:
     def __init__(Self):
         Self.Functions = {}
         Self.FunctionFound = True
@@ -25,7 +76,7 @@ class FunctionModule:
         for Index, Character in enumerate(Self.SourceContent):
             if Character == ">":
                 Self.FunctionStartIndex = Index + 1
-                Self.Output_Data(Function_Name=Self.Find_Function.__name__,
+                Self.Output_Data(Context=Self.Find_Function.__name__,
                                  functionStartIndex = Self.FunctionStartIndex)
                 Self.FunctionFound = True
                 return True

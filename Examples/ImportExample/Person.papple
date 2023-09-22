@@ -1,5 +1,5 @@
-type Person{
-    task New(Name, Age){
+obj Person{
+    func New(Name, Age){
         Self.Name = Name
         Self.Age = Age
     }

@@ -5,7 +5,6 @@ Code blocks are started and ended with curly brackets.
 
 All of this info is to be migrated elsewhere, and this file deleted
 
-
  - [Comments](#comments)
  - [Operators](#operators)
  - [Type Declarations](#type-declaration)
@@ -261,5 +260,10 @@ find Graphs.2DPlot
  - There are many ways to say something, there is only one best way to do something, and it has to be obvious.
  - Complexity flourishes with creative simplicity.
  - Higher-Level Abstractions are never a bad thing.
+ - You cannot declare multiple variables that have a variable, and multiple variables that are null in one statement. For example: `int X, Y, Z = 0, 1;` is invalid code. Below is:
+```
+int X, Y = 0, 1;
+int Z;
+```
 
 [Chapters](#chapters)

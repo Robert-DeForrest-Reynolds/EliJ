@@ -16,8 +16,4 @@ Aliases: New, new, Create, create, N, n, C, c
 'Hope New <Project-Type> <project-name>'
 """
 
-Console_Application_Project_Type = """Import
-    IO
-
-Output("I'm Alive.")
-"""
+Console_Application_Project_Type = """Out("I'm Alive.")"""

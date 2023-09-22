@@ -23,3 +23,9 @@ HelpCommandList = [
     "h"
 ]
 
+RunCommandList = [
+    "Run",
+    "run",
+    "R",
+    "r"
+]

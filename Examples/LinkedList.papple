@@ -1,12 +1,12 @@
-type Node {
-    >New(){
+obj Node {
+    Func New() {
         Integer|String Self.Value;
         Node Self.Next;
     }
 }
 
-type LinkedList {
-    >New(){
+obj LinkedList {
+    Func New() {
         Node Self.Head;
     }
 }
@@ -25,7 +25,7 @@ for Integer Number in ExampleList {
 }
 
 Cursor = Head;
-while{
+while {
     Out(Cursor.Value)
     if Cursor.Next == None {break}
     Cursor = Cursor.Next

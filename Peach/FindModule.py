@@ -14,6 +14,7 @@ class FindModule:
                 Self.Find_Find_End()
                 Self.Resolve_Find()
 
+
     # Find Finds
     def Find_Find(Self):
         Fillable = ""
@@ -29,7 +30,7 @@ class FindModule:
                 Counter += 1
             if Fillable == "From":
                 Self.FindStartIndex = Index + 2
-                Self.Output_Data(Function_Name=Self.Find_Find.__name__,
+                Self.Output_Data(Context=Self.Find_Find.__name__,
                                  FindStartIndex = Self.FindStartIndex)
                 return True
         Self.FindFound = False
@@ -40,7 +41,7 @@ class FindModule:
         for Index, Character in enumerate(Self.SourceContent[Self.FindStartIndex::]):
             if Character == ";":
                 Self.FindEndIndex = Index + Self.FindStartIndex
-                Self.Output_Data(Function_Name=Self.Find_Find_End.__name__,
+                Self.Output_Data(Context=Self.Find_Find_End.__name__,
                                  FindEndIndex = Self.FindEndIndex)
                 break
 
@@ -56,11 +57,11 @@ class FindModule:
             FindContent = sub(" +", " ", FindContent)
             Self.SourceContent = Self.SourceContent.replace("~", FindContent)
         else:
-            Self.Resolve_Namespace_Find()
-        Self.Output_Data(Function_Name=Self.Resolve_Find.__name__,
+            Self.Resolve_Context_Find()
+        Self.Output_Data(Context=Self.Resolve_Find.__name__,
                          FindData = Self.FindInHandData,
                          SourceContentAfterReplace = Self.SourceContent)
 
 
-    def Resolve_Namespace_Find(Self):
+    def Resolve_Context_Find(Self):
         pass

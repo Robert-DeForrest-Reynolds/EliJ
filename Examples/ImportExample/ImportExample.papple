@@ -1,4 +1,6 @@
-from Person import Person
+imports {
+    Person
+}
 
-Person Jack: "Jack", 27;
-Person Sally: "Sally", 27;
+Person Jack = "Jack", 27;
+Person Sally = "Sally", 27;

@@ -9,7 +9,7 @@ comment
 
 list Names;
 
-integer Health: 50;
+int Health: 50;
 
 from ImportExample import *;
 
@@ -23,35 +23,32 @@ pairs People: {"Lani": 23,
 
 Out(Health);
 
-task Addition(X, Y) {
+func Addition(X, Y) {
     return X + Y;
 }
 
-task Subtraction(X, Y) {
+func Subtraction(X, Y) {
     return X - Y;
 }
 
-task Read_File(File) {
-    String Contents: Open(File).Read_Lines();
+func Read_File(File) {
+    string Contents: Open(File).Read_Lines();
     Out(Contents);
 }
 
-task Is_Even(Number) {
-    if Number % 2 == 0{
+func Is_Even(Number) {
+    if Number % 2 == 0:
         return True;
-    }else{
+    else:
         return False;
-    }
 }
 
-integer Counter = 0;
-while{
+int Counter = 0;
+while:
     Counter += 1;
     Out("I'm a loop");
-    if Counter == 3{
-        break
-    }
-}
+    if Counter == 3:
+        break;
 
 Out(Addition(5, 2));
 
