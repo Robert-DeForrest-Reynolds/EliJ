@@ -25,8 +25,8 @@ class Peach:
         Self.CommentEndIndex = None
 
         Self.FlagsMap = {
-            '-B': Self.Output_Breakdown,
-            '-O': Self.Output_Intermediate_Language
+            '-b': Self.Output_Breakdown,
+            '-o': Self.Output_Intermediate_Language
         }
 
         Self.Parse_Arguments()
