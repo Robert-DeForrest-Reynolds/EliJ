@@ -2,7 +2,7 @@ from os import mkdir, system, path
 from sys import argv
 
 from Information import Help_Information
-from Prefabs import DefaultProjectSettings, DefaultGitIgnore, Console_Application_Project_Type_Prefab
+from Prefabs import DefaultProjectSettings, DefaultGitIgnore, Console_Application_Project_Type_Prefab, DevTest_Application_Project_Type_Prefab
 
 
 
@@ -35,6 +35,11 @@ class Hope:
         print(Help_Information)
 
     def Create(Self):
+        ProjectPrefabMapping = {
+            "console": Console_Application_Project_Type_Prefab,
+            "test": DevTest_Application_Project_Type_Prefab
+        }
+
         if Self.ArgumentAmount == 4:
             ProjectType = Self.Arguments[2]
             ProjectName = Self.Arguments[3]
@@ -43,7 +48,7 @@ class Hope:
 
         with open(path.join(ProjectName, f'{ProjectName}.papple'), 'w+') as GENERATED_PAPPLE_FILE:
             try:
-                GENERATED_PAPPLE_FILE.write(Console_Application_Project_Type_Prefab)
+                GENERATED_PAPPLE_FILE.write(ProjectPrefabMapping[ProjectType])
             except:
                 print("Error generating papple file template")
             GENERATED_PAPPLE_FILE.close()
