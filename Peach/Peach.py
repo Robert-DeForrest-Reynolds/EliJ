@@ -1,14 +1,18 @@
 from sys import argv as Arguments, exit
+from os import remove
 from re import sub
 
 from Log import Log
 
 class Peach:
     def __init__(Self):
+        Self.RawContent:str = None
         Self.SourceContent:str = None
 
         Self.CommentFound = True
         Self.FunctionFound = True
+        Self.ImportFound = True
+        Self.ObjectFound = True
 
         Self.Arguments = None
         Self.Flags = None
@@ -17,11 +21,9 @@ class Peach:
         Self.EntryFile = None
 
         Self.Comments = []
-        Self.CommentInHand = None
-        Self.CommentStartIndex = None
-        Self.CommentEndIndex = None
-
         Self.RawFunctions = []
+        Self.Imports = []
+        Self.Objects = []
 
         Self.FlagsMap = {
             '-b': Self.Output_Breakdown,
@@ -33,11 +35,8 @@ class Peach:
         if Self.EntryFile != None:
             Self.ExtractContents()
 
-        if len(Self.SourceContent) > 1:
-            Self.Find_Comments()
+        Self.Delimiters = [" ", ":", "<-"]
 
-        if len(Self.SourceContent) > 1:
-            Self.Find_Functions()
 
         Self.Execute_Flags()
 
@@ -87,7 +86,6 @@ class Peach:
                     Self.SourceContent = Self.SourceContent.replace(Self.SourceContent[Self.CommentStartIndex-1:Self.CommentEndIndex+1], "")
             else:
                 Self.CommentFound = False
-            break
     
 
     def Find_Functions(Self):
@@ -100,45 +98,62 @@ class Peach:
                     Self.SourceContent = Self.SourceContent.replace(Self.SourceContent[Self.FunctionStartIndex:Self.FunctionEndIndex], "")
             else:
                 Self.FunctionFound = False
-            break
+
+
+    def Find_Imports(Self):
+        while Self.ImportFound:
+            Self.ImportStartIndex = Self.Find_Keyword("from", "Find Start of Import")
+            if Self.ImportStartIndex != "Not Found":
+                Self.ImportEndIndex = Self.Find_Symbol(";", "Find End of Import", StartIndex=Self.ImportStartIndex)
+                if Self.ImportEndIndex != "Not Found":
+                    Self.Imports.append(Self.SourceContent[Self.ImportStartIndex:Self.ImportEndIndex])
+                    Self.SourceContent = Self.SourceContent.replace(Self.SourceContent[Self.ImportStartIndex:Self.ImportEndIndex], "")
+            else:
+                Self.ImportFound = False
+
+
+    def Find_Objects(Self):
+        while Self.ObjectFound:
+            Self.ObjectStartIndex = Self.Find_Keyword("obj", "Find Start of Object")
+            if Self.ObjectStartIndex != "Not Found":
+                Self.ObjectEndIndex = Self.Find_Newline("|", "Find End of Object", StartIndex=Self.ObjectStartIndex)
+                if Self.ObjectEndIndex != "Not Found":
+                    Self.Objects.append(Self.SourceContent[Self.ObjectStartIndex:Self.ObjectEndIndex])
+                    Self.SourceContent = Self.SourceContent.replace(Self.SourceContent[Self.ObjectStartIndex:Self.ObjectEndIndex], "")
+            else:
+                Self.ObjectFound = False
+
+
+    def Find_Newline(Self, Context:str, StartIndex:int=0):
+        for Index, Character in enumerate(Self.SourceContent[StartIndex::]):
+            if Character == "\n":
+                Log(Context=Context + " " + Self.Find_Symbol.__name__,
+                    FoundIndex=Index)
+                return Index + 1 + StartIndex
+        return "Not Found"
 
 
     def Find_Symbol(Self, Symbol:str, Context:str, StartIndex:int=0):
-        for Index, Character in enumerate(Self.SourceContent[StartIndex::]):
-            if Character == Symbol:
+        for Index, Token in enumerate(Self.SourceContent[StartIndex::]):
+            print(Token)
+            if Token == Symbol:
                 Log(Context=Context + " " + Self.Find_Symbol.__name__,
                     FoundIndex=Index)
-                return Index + 1
+                return Index + 1 + StartIndex
         return "Not Found"
 
 
     def Find_Keyword(Self, Keyword:str, Context:str, StartIndex:int=0):
-        Fillable = ""
-        Counter = 0
-        for Index, Character in enumerate(Self.SourceContent[StartIndex::]):
-            if Counter >= 1: # Has the counter started? If so, continue to add the character in iteration, and counter += 1
-                Fillable += Character
-                Counter += 1
-                
-            if Character == Keyword[0]: # Is the character equal to f? If so, add character to fillable, and counter += 1
-                Fillable += Character
-                Counter += 1
-
-            if Fillable == Keyword: # Is the fillable equal to the keyword 'func'? If so, Index += 2, log information, and return the Index
+        for Index, Token in enumerate(Self.SourceContent[StartIndex::]):
+            if Token == Keyword:
                 Log(Context=Context + " " + Self.Find_Keyword.__name__,
-                    FoundIndex=Index)
-                return Index - len(Keyword) # Account for the length of keyword, we want this keyword in our parse
-
-            if Counter >= 4: # Has counter reached 4, or somehow exceeded it? If so, reset.
-                Fillable = ""
-                Counter = 0
+                FoundIndex=Index)
 
         return "Not Found"
 
-
     def ExtractContents(Self):
-        Self.RawContent = open(Self.EntryFile).readlines()
-        Self.SourceContent = "".join(Self.RawContent)
+        with open(Self.EntryFile) as SourceFile:
+            Self.SourceContent = SourceFile.readlines()
     
 
     def Output_Breakdown(Self):
@@ -147,15 +162,24 @@ class Peach:
 
 
     def Output_Intermediate_Language(Self):
+        try:
+            remove(f"{Self.EntryFile}.Source.peach")
+            remove(f"{Self.EntryFile}.Comments.peach")
+            remove(f"{Self.EntryFile}.RawFunctions.peach")
+            remove(f"{Self.EntryFile}.Imports.peach")
+        except:
+            print("Failure to remove a previous Intermediate File for some reason.")
+
         with open(f"{Self.EntryFile}.Source.peach", 'w+') as OutputFile:
-            OutputFile.write(str(Self.SourceContent))
+            OutputFile.write(str(Self.SourceContent).strip("\n"))
         with open(f"{Self.EntryFile}.Comments.peach", 'w+') as CommentsFile:
             CommentsFile.write(str(Self.Comments))
         with open(f"{Self.EntryFile}.RawFunctions.peach", 'w+') as OutputFile:
             OutputFile.write(str(Self.RawFunctions))
-        # with open(f"{Self.EntryFile}.Finds.peach", 'w+') as OutputFile:
-        #     OutputFile.write(str(Self.Finds))
-        
+        with open(f"{Self.EntryFile}.Imports.peach", 'w+') as OutputFile:
+            OutputFile.write(str(Self.Imports))
+        with open(f"{Self.EntryFile}.Objects.peach", 'w+') as OutputFile:
+            OutputFile.write(str(Self.Objects))
 
     # Print out the functions in a readable way
     def Show_Functions(Self):

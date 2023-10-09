@@ -1,0 +1,7 @@
+### What Did I Personally Want, That Nothing Else Gave Altogether?
+- Customizability without bloat. I don't want to spend 30 minutes learning how to make a plugin project, distribute it, and what not before even writing any code. I want to be able to jump into a file, hopefully knowing the scripting language provided, if not, hopefully it's simple, and getting through obtaining what I want line by line, referencing an API. Internal API's, bloat in documentation, and much more leads to a horrible experience in making something feel exactly like *you* want. Also, I don't want to use JavaScript or Lua, that's just painful.
+- Shortcuts. They should be easy to customize and put thousands in if a user should want to, but there should be a very simple, and concise set of shortcuts that come by default.
+- Built by community plugins. Implement a simple application, and allow the users to extend it to their desire.
+- I want to be able to organize my folders into multiple locations, and attach them together. This allows me to call to all of the documentation in my projects, or just any other kind of separated contained notes. Implementation idea: A root folder that is the central location for opening the notes.
+- I want to be able to write my notes, and edit code in the same application, and I wanted the application to be capable. VS Code, and Vim meet Obsidian, and QOwnNotes.
+- Live collaboration, and version control built-in, that works very, very well. We live in 2023 as of me writing this. These features are just quality of life, they are required.

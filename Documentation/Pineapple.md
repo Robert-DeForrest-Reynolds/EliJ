@@ -1,3 +1,9 @@
+Pineapple is slower to compile, but creates a very efficient program.
+
+All Pineapple does is hold your hand in writing systems code better. There are a lot of things about C that make is unreadable, and therefore unusable, as well, the fact that you can send code through a.
+
+Creating a new programming language isn't about adoption, it's about portability. Adoption will come with portability.
+
 Pineapple is the name of the language. Iwa is the name of the compiler I built for it.
 Iwa utilizes C++, and Clang
 

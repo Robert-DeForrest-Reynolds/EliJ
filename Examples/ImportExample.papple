@@ -1,2 +1,2 @@
-String Name = "Jack";
-Integer Age = 25;
+str Name = "Jack";
+int Age = 25;

@@ -7,49 +7,71 @@ a multi-line
 comment
 #
 
+# Variable declaration should feel pretty familiar #
 list Names;
 
-int Health: 50;
+int Health = 50;
 
+# Imports should feel pretty familiar #
 from ImportExample import *;
 
+# We have lists
 Names = ["Lani",
          "Lily",
          "Eleanor"];
 
+# And we have dictionaries
+dict People = ["Lani": 23,
+                "Lily": 6];
 
-pairs People: {"Lani": 23,
-               "Lily": 6};
-
+# Out is a built-in function to output to the CLI #
 Out(Health);
 
-func Addition(X, Y) {
+# Functions should feel pretty familiar #
+func Addition(int X, int Y){
     return X + Y;
 }
 
-func Subtraction(X, Y) {
-    return X - Y;
-}
-
-func Read_File(File) {
-    string Contents: Open(File).Read_Lines();
+func Read_File (string FilePath) {
+    with Open (FilePath) as OpenedFile {
+        string Contents = OpenedFile.Read_Lines();
+    }
     Out(Contents);
 }
 
-func Is_Even(Number) {
-    if Number % 2 == 0:
+# Conditionals
+func Is_Even(Number){
+    if Number % 2 == 0 {
         return True;
-    else:
+    } else {
         return False;
+    }
 }
 
-int Counter = 0;
-while:
+# Loops
+int Counter = 0
+while {
     Counter += 1;
     Out("I'm a loop");
-    if Counter == 3:
+    if Counter == 3 {
         break;
+    }
+}
+
+# Objects, I don't want them, but they'll be implemented in the interest of encapsulation, not inheritance, or polymorphism #
+obj Person{
+    func New(Name, Age){
+        String Self.Name: Name;
+        Integer Self.Age: Age;
+    }
+}
+
+Person Jack: "Jack", 21;
+
+Out(Jack.Name);
+Out(Jack.Age);
+
+Jack.Age = 22;
 
 Out(Addition(5, 2));
-
 Out(Subtraction(5, 2));

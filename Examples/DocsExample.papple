@@ -1,8 +1,8 @@
 # Variable Prototyping #
-#   <Type> <Delcarative-Name>;  #
+#   <Type> <Declarative-Name>;  #
 
-# Variable Delcaration #
-#   <Type> <Delcarative-Name> = <Value>;    #
+# Variable Declaring #
+#   <Type> <Declarative-Name> = <Value>;    #
 
 
 # Importing #
