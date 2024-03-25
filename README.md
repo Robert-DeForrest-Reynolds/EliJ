@@ -56,10 +56,5 @@ A minimal lightweight code editor, comes packaged with Pineapple.
 ### ExoFyle IDE
 A complete integreated development environment to support Pineapple development.
 
-### Cornelius
-EliJ's Overseer, and personal virtual assistant. Explicitly offline by default. An ever-running entity on top of EliJ's runtime, that relies on a pre-generated dataset to assist a EliJ user in largely anything. The user can optionally "push data" to Cornelius's master dataset, and optionally 'pull data' from Cornelius's master dataset. Any data pushed to the master dataset is run through heavy parsing, data anonymization, and a complex compilation process, that is then 'inserted' into the CDP (Cornelius Data Processor), where it will be fed into the master dataset carefully, to avoid overtaking, regression, and unsupervised repeated analysis.
-
-Cornelius is the only 'tool' that is indeed a product, is not open-source, and largely does not come packaged with EliJ. Cornelius is downloaded onto your system as a pre-compiled, obfuscated code, that you are not intended to access, so please respect that.
-
 ### Mel
 Audio development environment.
