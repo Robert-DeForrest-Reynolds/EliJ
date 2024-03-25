@@ -1,11 +1,19 @@
 Import
+{
     IO
+}
 
-Integer User_Input = Input("How old are you?")
+Int User_Input = Input("How old are you?")
 
-If User_Input <= 18
+If(User_Input <= 18)
+{
     Output("You are younger than 18.")
-Or User_Input == 18
+}
+Or(User_Input == 18)
+{
     Output("You are 18.")
-Else User_Input >= 18
+}
+Else(User_Input >= 18)
+{
     Output("Assumably you are older than 18.")
+}

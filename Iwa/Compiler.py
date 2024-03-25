@@ -1,5 +1,4 @@
 from sys import argv
-from Exceptions import ZeroArgumentsGiven
 
 ArgumentCount = len(argv)
 Arguments = argv
@@ -16,4 +15,4 @@ def Command_Parsing():
         # Compile()
         return Compilation
     else:
-        return ZeroArgumentsGiven(Arguments, ArgumentCount)
+        return "Zero Arguements Given"

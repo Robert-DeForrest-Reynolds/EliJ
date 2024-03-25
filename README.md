@@ -12,7 +12,6 @@
  - Pineapple :hammer_and_wrench:
  - Iwa :hammer_and_wrench:
  - Lily :hammer_and_wrench:
- - Peach :warning:
  - Hope :hammer_and_wrench:
  - HPM (Hope Package Manager) :hammer_and_wrench:
  - Pim :no_entry:
@@ -38,9 +37,6 @@ Iwa is the official compiler for Pineapple, and will be capable of transplicing,
 
 ### Lily
 Lily is the official interpreter for Pineapple.
-
-### Peach
-Peach is the parser written in Python to generate Intermediate Data Files from Pineapple source code.
 
 ### Hope
 The build system for Pineapple.

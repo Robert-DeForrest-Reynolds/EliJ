@@ -1,8 +1,10 @@
 Import
-    IO
+{
+    IO,
     FileIO
+}
 
-Open("Textfile.txt", "Create,Write", "Test_File")
+File Test_File = Open("Textfile.txt", "Create,Write")
 
 Test_File.Write("Lorem")
 

@@ -4,8 +4,34 @@ def Output_Raw_String(string):
 def Output_Reference():
     pass
 
-lexicon = {
-    "Output("" : Output
+Keywords = {
+    "Out": ...,
+    "In": ...,
+    "If": ...,
+    "Or": ...,
+    "Else": ...,
+    "Func": ...,
+    "Obj": ...,
+    "Assert": ...,
+    "While": ...,
+    "For": ...,
+    "Int": ...,
+    "Str": ...,
+    "Flt": ...,
+    "Const": ...,
+    "Type": ...,
+    "Try": ...,
+    "Except": ...,
+    "Pass": ...,
+    "...": ...,
+    "Lambda": ...,
+    "Import": ...,
+    "None": ...,
+    "Allocate": ...,
+    "Destroy": ...,
+    "Continue": ...,
+    "Size": ...,
+    "True": ...,
+    "False": ...,
+    "In":...,
 }
-
-print(lexicon["Output"]("Hello"))
