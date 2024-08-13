@@ -1,0 +1,1 @@
+msys64\mingw64\bin\python3.exe -B %* 
