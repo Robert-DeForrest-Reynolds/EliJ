@@ -1,7 +1,6 @@
 # Type ignore comments are because VSCode kinda sucks.
 from io import TextIOWrapper # type: ignore
 from typing import List # type: ignore
-from typing import Tuple # type: ignore
 from typing import Dict # type:  ignore
 from sys import argv as Arguments
 from os import system
