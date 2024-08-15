@@ -27,5 +27,5 @@ def Write_Instruction(ProjectInstance, Instruction) -> None:
             CurrentLines:List[str] = CFile.readlines()
         with open("untitled.c", 'w') as CFile:
             EndLineIndex:int = len(CurrentLines)-1
-            CurrentLines.insert(EndLineIndex, Instruction)
+            CurrentLines.insert(EndLineIndex, Instruction+"\n")
             CFile.write("".join(CurrentLines))

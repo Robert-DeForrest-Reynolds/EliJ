@@ -1,0 +1,5 @@
+Int X = 3;
+Int Y = 2;
+Int Z = X + Y;
+
+Out(Z);

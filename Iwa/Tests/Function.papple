@@ -1,0 +1,3 @@
+Func Sum(Int X, Int Y){
+    Return X + Y;
+}
