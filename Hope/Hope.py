@@ -76,7 +76,7 @@ class Hope:
         if Self.ArgumentAmount == 3:
             ProjectName = Self.Arguments[2]
             print("Building", ProjectName)
-            system(f"iwa c {ProjectName}\{ProjectName}.papple")
+            system(f"iwa c {ProjectName}\{ProjectName}")
             with open(ProjectName + "\.Hope_Settings", 'r') as SETTINGSFILE:
                 for Line in SETTINGSFILE:
                     if "ProjectPath=" in Line:

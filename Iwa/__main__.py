@@ -161,8 +161,15 @@ def Parse_Source_File(SourceFilePath:str) -> str | List[str]:
 
 
 def Compile_Source_File() -> bool:
-    if ProjectInstance.Name is not None:
-        pass
+    if ProjectInstance.Name != None:
+        print("Woah, we got a project name")
+        if exists(f"{ProjectInstance.Name}.exe"):
+            remove(f"{ProjectInstance.Name}.exe")
+        system(f"clang {ProjectInstance.Name}.c -o {ProjectInstance.Name}.exe")
+        if exists(f"{ProjectInstance.Name}.exe"):
+            return True
+        else:
+            return False
     else:
         if exists("test.exe"):
             remove("test.exe")
@@ -178,9 +185,16 @@ def Parse_Arguments(Arguments:List[str]) -> None:
     print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Arguments]}")
     if len(Arguments) == 3:
         if Arguments[1] in ["c", "compile"]:
-            FilePath = Arguments[2]
-            print(f"Building {FilePath}")
-            Build()
+            if Arguments[2].endswith(".papple"):
+                FilePath = Arguments[2]
+                print(f"Building {FilePath}")
+                Build()
+            else:
+                print("Iwa is presuming that Hope is calling it.")
+                FilePath = Arguments[2]+".papple"
+                ProjectInstance.Name = Arguments[2]
+                print(f"Building {ProjectInstance.Name}")
+                Build()
     elif len(Arguments) == 2:
         if Check_For_Config():
             print("Using project configuration.")
@@ -198,12 +212,19 @@ def Check_For_Config() -> bool:
 
 def Build():
     print("Compiling from given path.")
-    print(f"Treating {FilePath} as main file.")
-    print(f"Mutable Copy:\n{(Parse_Source_File(FilePath))}\n")
+    if ProjectInstance.Name == None:
+        print(f"Treating {FilePath} as main file.")
+        print(f"Mutable Copy:\n{(Parse_Source_File(FilePath))}\n")
+    else:
+        print(f"Treating {ProjectInstance.Name} as main file.")
+        print(f"Mutable Copy:\n{(Parse_Source_File(FilePath))}\n")
     print(f"Compiling...")
     if Compile_Source_File() == True:
         print(f"Running...")
-        system("test")
+        if ProjectInstance.Name != None:
+            system(ProjectInstance.Name)
+        else:
+            system("test")
 
 
 if __name__ == "__main__":
