@@ -4,10 +4,15 @@ from sys import argv
 from Information import Help_Information
 from Prefabs import DefaultProjectSettings, DefaultGitIgnore, Console_Application_Project_Type_Prefab, DevTest_Application_Project_Type_Prefab
 
-
+# Import EliJ Utility Files
+from os.path import dirname, realpath
+from sys import path
+path.append(dirname(dirname(realpath(__file__))))
+from Helpers import Pretty_Wrap
 
 class Hope:
     def __init__(Self):
+        Pretty_Wrap("~~~ Always Have Hope ~~~")
         Self.Arguments = [Argument.lower() for Argument in argv]
         Self.ArgumentAmount = len(argv)
 
@@ -31,7 +36,7 @@ class Hope:
             except KeyError:
                 print("Whatever you gave is not a command.")
 
-    def Help_Print():
+    def Help_Print(Self):
         print(Help_Information)
 
     def Create(Self):
@@ -69,21 +74,17 @@ class Hope:
 
     def Build(Self):
         if Self.ArgumentAmount == 3:
-            ProjectType = Self.Arguments[2]
-            ProjectName = Self.Arguments[3]
-        try:
+            ProjectName = Self.Arguments[2]
             print("Building", ProjectName)
-            system("-B Iwa {}".format(ProjectPath))
+            system(f"iwa c {ProjectName}\{ProjectName}.papple")
             with open(ProjectName + "\.Hope_Settings", 'r') as SETTINGSFILE:
                 for Line in SETTINGSFILE:
                     if "ProjectPath=" in Line:
                         ProjectPath = Line.replace("ProjectPath=", "")
-        except:
-            print("Build Error")
             
 
     def Run(Self):
-        print("Hi")
+        print("Always have hope.")
         if Self.ArgumentAmount == 3:
             ProjectName = Self.Arguments[2]
             print("Running", ProjectName)

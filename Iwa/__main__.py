@@ -1,5 +1,4 @@
 # Type ignore comments are because VSCode kinda sucks.
-from io import TextIOWrapper # type: ignore
 from typing import List # type: ignore
 from typing import Dict # type:  ignore
 from sys import argv as Arguments
@@ -7,9 +6,14 @@ from os import system, remove
 from os.path import exists # type:ignore
 from Error import ERROR
 from Generators import Generate_Printf_Function, Generate_Integer_Variable
-from Helpers import Pretty_Wrap
 from Writers import Write_Instruction, Write_Prefab
 from Project import Project
+
+# Import EliJ Utility Files
+from os.path import dirname, realpath
+from sys import path
+path.append(dirname(dirname(realpath(__file__))))
+from Helpers import Pretty_Wrap
 
 
 global ProjectInstance
@@ -32,7 +36,7 @@ Variables:List[str] = {
 
 StringPositions:Dict[str,List[int]] = {}
 
-def Cut_Tabspace(SourceFileData:List[str]) -> str:
+def Cut_Tabspace(SourceFileData:List[str]) -> List[str]:
     for LineIndex, Line in enumerate(SourceFileData):
         for CharacterIndex, Character in enumerate(Line):
             if Character != " " and CharacterIndex == 0:
@@ -69,10 +73,10 @@ def Check_For_Instructions(SourceFileData:List[str]) -> None:
 def Cut_Functions(SourceFileDataAsString:str) -> List[str]:
     FunctionStartIndex = None
     for Index, Character in enumerate(SourceFileDataAsString):
-        if Index > 2:
-            Cursor = "".join([SourceFileDataAsString[Index-3], SourceFileDataAsString[Index-2], SourceFileDataAsString[Index-1], Character])
-            if Cursor == "Func":
-                FunctionStartIndex = Index-3
+        if Index > 1:
+            Cursor = "".join([SourceFileDataAsString[Index-2], SourceFileDataAsString[Index-1], Character])
+            if Cursor == "Fnc":
+                FunctionStartIndex = Index-2
         if FunctionStartIndex != None:
             if Character == "}":
                 FunctionEndIndex = Index
@@ -109,6 +113,24 @@ def Verify_Function(Function:str) -> bool:
     return True
 
 
+def Cut_Comments(MutableCopyDataAsString:str) -> List[str]:
+    CommentStart = None
+    for CharacterIndex, Character in enumerate(MutableCopyDataAsString):
+        if Character == "#" and CommentStart == None:
+            CommentStart = CharacterIndex
+        elif Character == "#" and CommentStart != None:
+            CommentEnd = CharacterIndex
+            if CommentStart == 0:
+                MutableCopyDataAsString = MutableCopyDataAsString[CommentEnd+1:]
+            else:
+                # Comment = MutableCopyDataAsString[CommentStart:CommentEnd]
+                FirstHalf = MutableCopyDataAsString[CommentStart:]
+                SecondHalf = MutableCopyDataAsString[:CommentEnd]
+                print("Commentless: ", FirstHalf)
+    return MutableCopyDataAsString
+
+
+
 def Parse_Source_File(SourceFilePath:str) -> str | List[str]:
     with open(SourceFilePath, 'r') as SourceFile:
         SourceFileLines:List[str] = SourceFile.readlines()
@@ -121,14 +143,17 @@ def Parse_Source_File(SourceFilePath:str) -> str | List[str]:
 
     SourceFileDataAsString = "".join(SourceFileLines).replace("\n", "")
     SourceFileDataAsString = Cut_Functions(SourceFileDataAsString)
-    SourceFileData = [Line for Line in "".join(SourceFileLines).replace("\n", "").split(";") if Line != ""]
-
     print(f"Source File Data String: {SourceFileDataAsString}")
+
+
+    SourceFileData = [Line for Line in "".join(SourceFileLines).replace("\n", "").split(";") if Line != ""]
 
     MutableCopy = SourceFileData
     MutableCopy = Cut_Tabspace(SourceFileData)
+    MutableCopy = "".join(SourceFileLines).replace("\n", "")
+    MutableCopy = Cut_Comments(MutableCopy)
 
-    Check_For_Instructions(SourceFileData)
+    Check_For_Instructions([Line for Line in MutableCopy.split(";") if Line != ""])
 
     if type(MutableCopy) is ERROR: return MutableCopy.Report
     

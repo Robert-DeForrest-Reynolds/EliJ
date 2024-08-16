@@ -1,1 +1,1 @@
-py -B Hope %*
+mpy -B Hope %*

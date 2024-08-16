@@ -14,8 +14,8 @@ Out("I'm Alive.")"""
 
 DevTest_Application_Project_Type_Prefab = """# This is the prefab code for a DevTest project #
 from lorem import ipsum;
-
-func Addition(int X, int y){
+````````````
+fnc Addition(int X, int y){````````````
     return X + Y;
 }
 
@@ -26,7 +26,7 @@ obj Person
     }
 |
 
->Person Jack: "Jack", 23;
+Person Jack("Jack", 23);
 
 Out(Addition(5, 5))
 """
