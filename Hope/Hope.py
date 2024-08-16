@@ -6,8 +6,8 @@ from Prefabs import DefaultProjectSettings, DefaultGitIgnore, Console_Applicatio
 
 # Import EliJ Utility Files
 from os.path import dirname, realpath
-from sys import path
-path.append(dirname(dirname(realpath(__file__))))
+from sys import path as SystemPath
+SystemPath.append(dirname(dirname(realpath(__file__))))
 from Helpers import Pretty_Wrap
 
 class Hope:
@@ -50,7 +50,7 @@ class Hope:
             ProjectName = Self.Arguments[3]
 
         mkdir(ProjectName)
-
+        print(ProjectName)
         with open(path.join(ProjectName, f'{ProjectName}.papple'), 'w+') as GENERATED_PAPPLE_FILE:
             try:
                 GENERATED_PAPPLE_FILE.write(ProjectPrefabMapping[ProjectType])
