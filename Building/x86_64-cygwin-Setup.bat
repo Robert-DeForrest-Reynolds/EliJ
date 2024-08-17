@@ -1,1 +1,0 @@
-START /WAIT Building\x86_64-cygwin\x86_64-cygwin-64-Setup.bat
