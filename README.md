@@ -91,6 +91,7 @@ Welcome to functional programming done right.
 % # Get Remainder
 != # Not Equals
 == # Equals
+is # Equals
 & # And
 \ # Or
 ' # String Wrapper
@@ -117,7 +118,7 @@ Size
 
 I want to talk about the language I've been designing and exposé the syntax of it, and my thoughts behind it. I want to get opinions on the syntax, and motivations. I've been making this language for a while now, and something I've had great troubles with is the syntax. **I firmly believe the syntax makes the language.** Everything else people will either roll themselves, or force their project to conform to. I do not want to cater to either of those tendencies, but I do want to recognize that syntax seems to be most crucial to success. The ability to learn the syntax, understand, and utilize is paramount to the success of the user, and everything else comes after. Let's go.
 
-Let's start in the beginning. C is a beautiful language, I started with Java, and made my way through many languages, eventually reaching C, where I came to understand what other developers were talking about. It is, by far, the strongest language anyone has access to currently. C is the default palette of a computer scientist. It is the toolbelt compatible with any job, and it can access anything that it wants to access. The core weakness: it's taken over 50 years to get where we are with it now, and it is very difficult to teach, and practice C, as it is insanely complex. An argument immediately thrown is that a majority of people are just bad computer scientists, which I won't necessarily deny. I will acknowledge it, not necessarily believing it's true, but acknowledging that there's a problem. Python has a very strong community because of it's simplicity to learn, and ability to practice. As well, the ability to teach it. Python has it's own weaknesses. Every language so far seems to have their own weaknesses. I propose accepting weaknesses purposefully to strengthen what feels like matters. Pineapple's core weakness will be it's 
+Let's start in the beginning. C is a beautiful language, I started with Java, and made my way through many languages, eventually reaching C, where I came to understand what other developers were talking about. It is, by far, the strongest language anyone has access to currently. C is the default palette of a computer scientist. It is the toolbelt compatible with any job, and it can access anything that it wants to access. The core weakness: it's taken over 50 years to get where we are with it now, and it is very difficult to teach, and practice C, as it is insanely complex, simple as the keywords are. C compiler implementations, and specifications are *not* simple. An argument immediately thrown is that a majority of people are just bad computer scientists, which I won't necessarily deny. I will acknowledge it, not necessarily believing it's true, but acknowledging that there's a problem. Python has a very strong community because of it's simplicity to learn, and ability to practice. As well, the ability to teach it. (WIP)
 
 Pineapple parses line-by-line, and does not care about indentation. Whitespace between keywords is required, but is not required between symbols. You can think of every line as a statement.
 ```
@@ -395,15 +396,15 @@ Objects have built-in functions that can be utilized to implement your own behav
 ```
 Obj <DelcarativeName>{
 	Fnc New(Parameters){
-		<CodeBlock>
+		<Statement>;
 	}
 }
 ```
 ```
 Obj Human{
 	Fnc New(Name, Age){
-		Self.Name = Name
-		Self.Age = Age
+		Self.Name = Name;
+		Self.Age = Age;
 	}
 }
 ```
@@ -412,8 +413,8 @@ Obj Human{
 # Functions
 
 ```
-Fnc<DeclarativeName>(Parameters){
-	<CodeBlock>
+Fnc <DeclarativeName>(Parameters){
+	<Statement>
 }
 ```
 ```
@@ -426,12 +427,11 @@ Addition(5, 10)
 
 [Chapters](#chapters)
 # Import & Find
-`Find` is used to import code from another file.
+`~` is used to import code from another file.
 
 ```
-Find <File-Name>.<Declarative-Name>
-
-Find Graphs.2DPlot
+~<File-Name>.<Declarative-Name>
+~<File-Name>.<Declarative-Name>.<Sub-Declarative-Name>
 ```
 
 [Chapters](#chapters)
