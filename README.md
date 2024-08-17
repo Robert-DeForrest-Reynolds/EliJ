@@ -141,60 +141,54 @@ is a comment
 # Import is a direct copy and paste of code
 ~Lorem
 # If you want to import a specific function or variable, just use . notation
-~Lorem.SomeVariable
-~Lorem.SomeFunction
-~Lorem.(SomeFunction,Variable)
+~Lorem.SomeVariable;
+~Lorem.SomeFunction;
+~Lorem.(SomeFunction,Variable);
 # There is an automatic warning for importing a whole file afterward taking a portion of it
-~Lorem.SomeVariable
+~Lorem.SomeVariable;
 ~Lorem # Produces Warning
-# You can blacklist things from a whole file import with second import
-~Lorem.SomeVariable
-~Lorem~(SomeVariable)
 
 # Printing out information to the console
 Out("Hello")
 
 # Wait for input from the user
-Str UserInput = In()
+Str UserInput = In();
 
 # Built-in Constants
-Out(PI) # Outputs: 3.14159
+Out(PI) # Outputs: 3.14159;
 
 # Integers
-Int Health = 20
+Int Health = 20;
 # Float
-Flt Wallet = 3.33
+Flt Wallet = 3.33;
 
 # Math
 
 # Increment & Assignment Operators uses References
 # Meaning that you variables will be directly changed
-Health += 20
-Health -= 20
-Health = Health + 20
-Health = Health - 20
+Health += 20;
+Health -= 20;
+Health = Health + 20;
+Health = Health - 20;
 
-Out(5/2) # Outputs: 2.5
+Out(5/2) # Outputs: 2.5;
 # Floor Division
-Out(5//2)
+Out(5//2);
 
 # Float Rounding
-Round(2.5)
+Round(2.5);
 
 # Nicknaming/Rereferencing
-Ref Rnd = Round
+Ref Rnd = Round;
 
 # Copying/Duplicating
-Int Total = 50
-New Total
+Int Total = 50;
+New Total;
 
 # Functions
 # Parameters are passed by reference by default, or you can decide to make a copy
-Fnc Sum(Number1, Number2):
-	return Number1 + Number2
-
-# Variables not declared in place will be held as anonymous in memory
-Some_Function(Int 5, Int 6)
+Fnc Sum(Int Number1, Int Number2):
+	Return Number1 + Number2;
 
 Obj Person:
 	Fnc Init(Ref Name):
@@ -418,12 +412,12 @@ Obj Human{
 # Functions
 
 ```
-Func <DeclarativeName>(Parameters){
+Fnc<DeclarativeName>(Parameters){
 	<CodeBlock>
 }
 ```
 ```
-Func Addition(Int X, Int Y){
+FncAddition(Int X, Int Y){
     Return X + Y;
 }
 
