@@ -58,3 +58,407 @@ A complete integreated development environment to support Pineapple development.
 
 ### Mel
 Audio development environment.
+
+
+# Chapters
+
+Statements are ended with semi-colons.
+Code blocks are started and ended with curly brackets.
+
+All of this info is to be migrated elsewhere, and this file deleted
+
+Welcome to functional programming done right.
+
+ - [Comments](#comments)
+ - [Operators](#operators)
+ - [Type Declarations](#type-declaration)
+ - [Decision Making](#decision-making)
+ - [Objects](#objects)
+ - [Functions](#functions)
+ - [Import & Find](#import-&-find)
+ - [Standard Library](#standard-library)
+ - [Developer Notation](#developer-notation)
+
+# Defining Syntax Character Names
+#### Operators
+```
++ # Addition
+- # Subtraction
++= # Increment and assign
+-= # Decrement and assign
+* # Multiply
+/ # Division
+% # Get Remainder
+!= # Not Equals
+== # Equals
+& # And
+\ # Or
+' # String Wrapper
+~ # Import
+, # List Separator
+() # Multi-line Data Wrappers
+{} # Multi-line Data Wrappers
+```
+
+#### Reserved Keywords
+```
+Str
+Int
+Flt
+Fnc
+Obj
+```
+#### Built-Ins
+```
+Sum
+Size
+```
+# Language Descriptions, and Developer Commentary
+
+I want to talk about the language I've been designing and exposé the syntax of it, and my thoughts behind it. I want to get opinions on the syntax, and motivations. I've been making this language for a while now, and something I've had great troubles with is the syntax. **I firmly believe the syntax makes the language.** Everything else people will either roll themselves, or force their project to conform to. I do not want to cater to either of those tendencies, but I do want to recognize that syntax seems to be most crucial to success. The ability to learn the syntax, understand, and utilize is paramount to the success of the user, and everything else comes after. Let's go.
+
+Let's start in the beginning. C is a beautiful language, I started with Java, and made my way through many languages, eventually reaching C, where I came to understand what other developers were talking about. It is, by far, the strongest language anyone has access to currently. C is the default palette of a computer scientist. It is the toolbelt compatible with any job, and it can access anything that it wants to access. The core weakness: it's taken over 50 years to get where we are with it now, and it is very difficult to teach, and practice C, as it is insanely complex. An argument immediately thrown is that a majority of people are just bad computer scientists, which I won't necessarily deny. I will acknowledge it, not necessarily believing it's true, but acknowledging that there's a problem. Python has a very strong community because of it's simplicity to learn, and ability to practice. As well, the ability to teach it. Python has it's own weaknesses. Every language so far seems to have their own weaknesses. I propose accepting weaknesses purposefully to strengthen what feels like matters. Pineapple's core weakness will be it's 
+
+Pineapple parses line-by-line, and does not care about indentation. Whitespace between keywords is required, but is not required between symbols. You can think of every line as a statement.
+```
+# As `=` and `"` are 
+Str Name="Sirley"
+```
+
+This will allow ease of parsing.
+### Large Form Example Script
+```
+# I'm a comment #
+
+#
+Anything between
+two pound signs
+is a comment
+#
+
+# Importing another file; uses name of file, excluding .papple extension
+# So the file name would be Lorem.papple
+# Import is a direct copy and paste of code
+~Lorem
+# If you want to import a specific function or variable, just use . notation
+~Lorem.SomeVariable
+~Lorem.SomeFunction
+~Lorem.(SomeFunction,Variable)
+# There is an automatic warning for importing a whole file afterward taking a portion of it
+~Lorem.SomeVariable
+~Lorem # Produces Warning
+# You can blacklist things from a whole file import with second import
+~Lorem.SomeVariable
+~Lorem~(SomeVariable)
+
+# Printing out information to the console
+Out("Hello")
+
+# Wait for input from the user
+Str UserInput = In()
+
+# Built-in Constants
+Out(PI) # Outputs: 3.14159
+
+# Integers
+Int Health = 20
+# Float
+Flt Wallet = 3.33
+
+# Math
+
+# Increment & Assignment Operators uses References
+# Meaning that you variables will be directly changed
+Health += 20
+Health -= 20
+Health = Health + 20
+Health = Health - 20
+
+Out(5/2) # Outputs: 2.5
+# Floor Division
+Out(5//2)
+
+# Float Rounding
+Round(2.5)
+
+# Nicknaming/Rereferencing
+Ref Rnd = Round
+
+# Copying/Duplicating
+Int Total = 50
+New Total
+
+# Functions
+# Parameters are passed by reference by default, or you can decide to make a copy
+Fnc Sum(Number1, Number2):
+	return Number1 + Number2
+
+# Variables not declared in place will be held as anonymous in memory
+Some_Function(Int 5, Int 6)
+
+Obj Person:
+	Fnc Init(Ref Name):
+		Str Name
+```
+
+
+Everything largely translates directly into some kind of C derivative, whether that's a keyword, operators, or function.
+
+```
+Out("Hello")
+```
+
+
+```
+char* Print()
+{
+
+}
+```
+# Comments
+```
+# <Text> #
+```
+
+```
+# Comments are anything between two pound/hash symbols #
+
+#
+This rule works
+for multi-line
+comments as well
+#
+```
+[Chapters](#chapters)
+# Operators
+`+` - Add
+```
+Out(5 + 5);
+```
+>10
+
+`-` - Minus
+```
+Out(10 - 5);
+```
+>5
+
+`/` - Float Division
+```
+Out(9 / 2);
+```
+>4.5
+
+`/`/ - Float Division
+```
+Out(10 // 2);
+```
+>5
+
+`*` - Multiply
+```
+Out(10 *//* 2);
+```
+>20
+
+`=` - Assignment
+```
+integer Health = 50;
+```
+>5
+
+`is` - Equality comparison
+```
+Answer = "Purple"
+
+UserInput = In("What's my favorite color?")
+if UserInput is Answer{
+	Out("You it got right!")
+} else {
+	Out("You got it wrong!")
+}
+```
+
+`>` - Greater than comparison
+```
+Hunger = 50
+
+if Hunger > 50{
+	Out("I'm hungry")
+} else {
+	Out("I'm not hungry")
+}
+```
+>I'm not hungry
+
+`>=` - Greater than or equal to comparison
+```
+Hunger = 50
+
+if Hunger >= 50{
+	Out("I'm hungry")
+} else {
+	Out("I'm not hungry")
+}
+```
+> I'm hungry
+
+`<` - Lesser than comparison
+```
+Hunger = 50
+
+if Hunger < 50{
+	Out("I'm hungry")
+} else {
+	Out("I'm not hungry")
+}
+```
+> I'm not hungry
+
+`<=` Lesser than or equal to comparison
+```
+Hunger = 50
+
+if Hunger <= 50{
+	Out("I'm hungry")
+} else {
+	Out("I'm not hungry")
+}
+```
+> I'm hungry
+
+[Chapters](#chapters)
+# Type Declaration
+
+**`string` - String Type**
+```
+string Greeting = "Hello";
+```
+
+**`integer` - Integer Type**
+```
+int Age = 18;
+```
+
+**`float` - Float Type**
+```
+float Pi = 3.141;
+```
+
+[Chapters](#chapters)
+# Decision Making
+
+`if` - Use specified code block if condition is met
+```
+if <Conditional>{
+	<CodeBlock>
+}
+
+
+
+if Food is Expired{
+	Food.Throw_Away();
+}
+```
+
+`else` - Use after `if` statement to use specified code block if condition in `if` is not met.
+```
+if <Conditional>{
+	<CodeBlock>
+} else {
+	<CodeBlock>
+}
+
+
+
+if Food is Expired{
+	Food.Throw_Away();
+}else{
+	Food.Store();
+}
+```
+
+There is no `Else If`, or `Or` conditional. Instead with Pineapple, you're expected to use pair indexing, as it's faster.
+```
+pair <DelcarativeName> = [Potentional:Outcome,
+						  Potentional:Outcome,
+						  Potential:Outcome,]
+
+<DeclarativeName>[ConditionalData]
+
+pair Colors = [Red:Stop,
+			   Yellow:SlowForRed,
+			   Green:Go,];
+
+Colors[Red];
+```
+
+[Chapters](#chapters)
+# Objects
+Objects have built-in functions that can be utilized to implement your own behavior on top of. Below are the built-ins described.
+
+`New` - Called when a object is instantiated
+`Destroy` - Called when a object is destroyed
+`Name` - Utility function used to easily get name of object as string
+
+```
+Obj <DelcarativeName>{
+	>New(Parameters){
+		<CodeBlock>
+	}
+}
+```
+```
+Obj Human{
+	>New(Name, Age){
+		Self.Name = Name
+		Self.Age = Age
+	}
+}
+```
+
+[Chapters](#chapters)
+# Functions
+
+```
+Func <DeclarativeName>(Parameters){
+	<CodeBlock>
+}
+```
+```
+Func Addition(X, Y){
+    return X + Y;
+}
+
+Addition(5, 10)
+```
+
+[Chapters](#chapters)
+# Import & Find
+find is used to import code from another file.
+
+```
+find <File-Name>.<Declarative-Name>
+
+find Graphs.2DPlot
+```
+
+[Chapters](#chapters)
+
+# Built-Ins
+
+`In()` - Take in input from the user
+
+`Out()` - Output something to the console
+
+[Chapters](#chapters)
+
+# Developer Notation
+
+#### Core Ideas:
+ - Graphical Implementations should be accessible within the Standard Library
+ - There are many ways to say something, there is only one best way to do something, and it has to be obvious.
+ - Complexity flourishes with creative simplicity.
+ - Higher-Level Abstractions are never a bad thing.
+
+[Chapters](#chapters)
