@@ -257,36 +257,36 @@ Out(10 // 2);
 
 `*` - Multiply
 ```
-Out(10 *//* 2);
+Out(10 \* 2);
 ```
 >20
 
 `=` - Assignment
 ```
-integer Health = 50;
+Int Health = 50;
 ```
 >5
 
-`is` - Equality comparison
+`Is` - Equality comparison
 ```
-Answer = "Purple"
+Str Answer = "Purple"
 
 UserInput = In("What's my favorite color?")
-if UserInput is Answer{
-	Out("You it got right!")
-} else {
-	Out("You got it wrong!")
+If (UserInput is Answer){
+	Out("You it got right!");
+} Else {
+	Out("You got it wrong!");
 }
 ```
 
 `>` - Greater than comparison
 ```
-Hunger = 50
+Int Hunger = 50;
 
-if Hunger > 50{
-	Out("I'm hungry")
-} else {
-	Out("I'm not hungry")
+If (Hunger > 50){
+	Out("I'm hungry");
+} Else {
+	Out("I'm not hungry");
 }
 ```
 >I'm not hungry
@@ -295,10 +295,10 @@ if Hunger > 50{
 ```
 Hunger = 50
 
-if Hunger >= 50{
-	Out("I'm hungry")
-} else {
-	Out("I'm not hungry")
+If (Hunger >= 50){
+	Out("I'm hungry");
+} Else {
+	Out("I'm not hungry");
 }
 ```
 > I'm hungry
@@ -307,22 +307,22 @@ if Hunger >= 50{
 ```
 Hunger = 50
 
-if Hunger < 50{
-	Out("I'm hungry")
-} else {
-	Out("I'm not hungry")
+If (Hunger < 50){
+	Out("I'm hungry");
+} Else {
+	Out("I'm not hungry");
 }
 ```
 > I'm not hungry
 
 `<=` Lesser than or equal to comparison
 ```
-Hunger = 50
+Str Hunger = 50;
 
-if Hunger <= 50{
-	Out("I'm hungry")
-} else {
-	Out("I'm not hungry")
+If (Hunger <= 50){
+	Out("I'm hungry");
+} Else {
+	Out("I'm not hungry");
 }
 ```
 > I'm hungry
@@ -330,65 +330,62 @@ if Hunger <= 50{
 [Chapters](#chapters)
 # Type Declaration
 
-**`string` - String Type**
+**`Str` - String Type**
 ```
-string Greeting = "Hello";
-```
-
-**`integer` - Integer Type**
-```
-int Age = 18;
+Str Greeting = "Hello";
 ```
 
-**`float` - Float Type**
+**`Int` - Integer Type**
 ```
-float Pi = 3.141;
+Int Age = 18;
+```
+
+**`Flt` - Float Type**
+```
+Flt Pi = 3.141;
 ```
 
 [Chapters](#chapters)
 # Decision Making
 
-`if` - Use specified code block if condition is met
+`If` - Use specified code block if condition is met
 ```
-if <Conditional>{
-	<CodeBlock>
+If (<Conditional>){
+	<Statements>;
 }
 
 
 
-if Food is Expired{
+If (Food is Expired){
 	Food.Throw_Away();
 }
 ```
 
-`else` - Use after `if` statement to use specified code block if condition in `if` is not met.
+`Else` - Use after `If` statement to use specified code block if condition in `If` is not met.
 ```
-if <Conditional>{
-	<CodeBlock>
-} else {
-	<CodeBlock>
+If (<Conditional>){
+	<Statements>l
+} Else {
+	<Statements>;
 }
 
 
 
-if Food is Expired{
+If (Food is Expired){
 	Food.Throw_Away();
-}else{
+}Else{
 	Food.Store();
 }
 ```
 
-There is no `Else If`, or `Or` conditional. Instead with Pineapple, you're expected to use pair indexing, as it's faster.
+If (Food is Grapefruit){
+    Throw_Away(Food);
+} Or (Food is Strawberries){
+    Eat(Food);
+} Else {
+	Store(Food);
+}
 ```
-pair <DelcarativeName> = [Potentional:Outcome,
-						  Potentional:Outcome,
-						  Potential:Outcome,]
-
-<DeclarativeName>[ConditionalData]
-
-pair Colors = [Red:Stop,
-			   Yellow:SlowForRed,
-			   Green:Go,];
 
 Colors[Red];
 ```
@@ -403,14 +400,14 @@ Objects have built-in functions that can be utilized to implement your own behav
 
 ```
 Obj <DelcarativeName>{
-	>New(Parameters){
+	Fnc New(Parameters){
 		<CodeBlock>
 	}
 }
 ```
 ```
 Obj Human{
-	>New(Name, Age){
+	Fnc New(Name, Age){
 		Self.Name = Name
 		Self.Age = Age
 	}
@@ -426,8 +423,8 @@ Func <DeclarativeName>(Parameters){
 }
 ```
 ```
-Func Addition(X, Y){
-    return X + Y;
+Func Addition(Int X, Int Y){
+    Return X + Y;
 }
 
 Addition(5, 10)
@@ -435,12 +432,12 @@ Addition(5, 10)
 
 [Chapters](#chapters)
 # Import & Find
-find is used to import code from another file.
+`Find` is used to import code from another file.
 
 ```
-find <File-Name>.<Declarative-Name>
+Find <File-Name>.<Declarative-Name>
 
-find Graphs.2DPlot
+Find Graphs.2DPlot
 ```
 
 [Chapters](#chapters)
