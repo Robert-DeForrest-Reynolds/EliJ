@@ -337,7 +337,7 @@ If Iterator < -1{
 Everything largely translates directly into some kind of C derivative, whether that's a keyword, operators, or function.
 
 ```
-Out: "Hello";
+Out("Hello");
 ```
 
 
@@ -459,17 +459,17 @@ If Hunger <= 50{
 [Chapters](#chapters)
 # Type Declaration
 
-**`string` - String Type**
+**`Str` - String Type**
 ```
 Str Greeting = "Hello";
 ```
 
-**`integer` - Integer Type**
+**`Int` - Integer Type**
 ```
 Int Age = 18;
 ```
 
-**`float` - Float Type**
+**`Flt` - Float Type**
 ```
 Flt Pi = 3.141;
 ```
