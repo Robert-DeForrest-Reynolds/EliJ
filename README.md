@@ -358,7 +358,7 @@ for multi-line
 comments as well
 #
 ```
-[Chapters](#chapters)
+
 # Operators
 `+` - Add
 ```
@@ -456,7 +456,7 @@ If Hunger <= 50{
 ```
 > I'm hungry
 
-[Chapters](#chapters)
+
 # Type Declaration
 
 **`Str` - String Type**
@@ -474,7 +474,7 @@ Int Age = 18;
 Flt Pi = 3.141;
 ```
 
-[Chapters](#chapters)
+
 # Decision Making
 
 `If` - Use specified code block if condition is met
@@ -518,7 +518,7 @@ If Food is Grapefruit {
 
 ```
 
-[Chapters](#chapters)
+
 # Objects
 Objects have built-in functions that can be utilized to implement your own behavior on top of. Below are the built-ins described.
 
@@ -547,7 +547,7 @@ Jerry.Destroy();
 Out(Jerry.Name)
 ```
 
-[Chapters](#chapters)
+
 # Functions
 
 ```
@@ -565,7 +565,7 @@ Fnc Addition: X, Y
 Addition: 5, 10;
 ```
 
-[Chapters](#chapters)
+
 # Importing
 find is used to import code from another file.
 
@@ -575,7 +575,7 @@ find is used to import code from another file.
 ~Graphs:2DPlot
 ```
 
-[Chapters](#chapters)
+
 
 # Built-Ins
 
@@ -583,7 +583,7 @@ find is used to import code from another file.
 
 `Out()` - Output something to the console
 
-[Chapters](#chapters)
+
 
 # Developer Notation
 
@@ -593,4 +593,4 @@ find is used to import code from another file.
  - Complexity flourishes with creative simplicity.
  - Higher-Level Abstractions are never a bad thing.
 
-[Chapters](#chapters)
+
