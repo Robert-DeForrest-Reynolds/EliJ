@@ -1,0 +1,2 @@
+START /B /WAIT msys64\usr\bin\env MSYSTEM=MINGW64 msys64\usr\bin\bash -l -c "cd ../../../.. & echo %cd% && clang Building/msys2-64/Tests/msys2-64_Affirm.c -o Building/msys2-64/Tests/msys2-64_Affirm.exe"
+START /B /WAIT msys64\usr\bin\env MSYSTEM=MINGW64 msys64\usr\bin\bash -l -c "cd ../../../.. & clang++ Building/msys2-64/Tests/msys2-64_Affirm-CPP.cpp -o Building/msys2-64/Tests/msys2-64_Affirm-CPP.exe"

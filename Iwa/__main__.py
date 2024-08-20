@@ -36,6 +36,13 @@ Variables:List[str] = {
 
 StringPositions:Dict[str,List[int]] = {}
 
+HelpMessage = """\
+Iwa is the compiler for the Pineapple programming language, by Robert Lawrence DeForrest Reynolds.
+
+I thank you for using this, and I hope you enjoy the language, and continue to use it.
+"""
+
+
 def Cut_Tabspace(SourceFileData:List[str]) -> List[str]:
     for LineIndex, Line in enumerate(SourceFileData):
         for CharacterIndex, Character in enumerate(Line):
@@ -83,7 +90,7 @@ def Cut_Functions(SourceFileDataAsString:str) -> List[str]:
                 Function:str = SourceFileDataAsString[FunctionStartIndex:FunctionEndIndex+1]
                 if Verify_Function(Function) == True:
                     SourceFileDataAsString = SourceFileDataAsString.replace(Function, "")
-                    ParamStart = Find_ParamStart(Function)
+                    ParamStart = Find_Param_Start(Function)
                     FunctionName = Function[:ParamStart].split(" ")[1]
                     BodyStart = Find_BlockStart(Function)
                     FunctionBody = Function[BodyStart:]
@@ -91,7 +98,7 @@ def Cut_Functions(SourceFileDataAsString:str) -> List[str]:
                     return SourceFileDataAsString
 
 
-def Find_ParamStart(Content:str):
+def Find_Param_Start(Content:str):
     for Index, Character in enumerate(Content):
         if Character == "(":
             return Index
@@ -145,7 +152,6 @@ def Parse_Source_File(SourceFilePath:str) -> str | List[str]:
     SourceFileDataAsString = Cut_Functions(SourceFileDataAsString)
     print(f"Source File Data String: {SourceFileDataAsString}")
 
-
     SourceFileData = [Line for Line in "".join(SourceFileLines).replace("\n", "").split(";") if Line != ""]
 
     MutableCopy = SourceFileData
@@ -182,8 +188,8 @@ def Compile_Source_File() -> bool:
 
 def Parse_Arguments(Arguments:List[str]) -> None:
     global FilePath
-    print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Arguments]}")
     if len(Arguments) == 3:
+        print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Arguments]}")
         if Arguments[1] in ["c", "compile"]:
             if Arguments[2].endswith(".papple"):
                 FilePath = Arguments[2]
@@ -196,11 +202,14 @@ def Parse_Arguments(Arguments:List[str]) -> None:
                 print(f"Building {ProjectInstance.Name}")
                 Build()
     elif len(Arguments) == 2:
+        print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Arguments]}")
         if Check_For_Config():
             print("Using project configuration.")
         else:
             print("There is no project found.")
             exit()
+    elif len(Arguments) == 1:
+        print(HelpMessage)
 
 
 def Check_For_Config() -> bool:

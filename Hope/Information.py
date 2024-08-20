@@ -13,6 +13,9 @@ Note: You can attach a context to help like so: `Hope Help New`
 Create New Project
 ------------------
 Aliases: New, new, Create, create, N, n, C, c
-'Hope New <Project-Type> <project-name>'
+'hope new <Project-Type> <project-name>'
+
+Aliases: Build, build, B, b
+'hope build <project-directory>'
 """
 

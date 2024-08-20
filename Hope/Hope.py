@@ -5,10 +5,11 @@ from Information import Help_Information
 from Prefabs import DefaultProjectSettings, DefaultGitIgnore, Console_Application_Project_Type_Prefab, DevTest_Application_Project_Type_Prefab
 
 # Import EliJ Utility Files
-from os.path import dirname, realpath
+from os.path import dirname, realpath, exists
 from sys import path as SystemPath
 SystemPath.append(dirname(dirname(realpath(__file__))))
 from Helpers import Pretty_Wrap
+
 
 class Hope:
     def __init__(Self):
@@ -36,41 +37,53 @@ class Hope:
             except KeyError:
                 print("Whatever you gave is not a command.")
 
+
     def Help_Print(Self):
         print(Help_Information)
 
+
     def Create(Self):
-        ProjectPrefabMapping = {
-            "console": Console_Application_Project_Type_Prefab,
-            "test": DevTest_Application_Project_Type_Prefab
-        }
+        if Self.ArgumentAmount == 3:
+            ProjectPrefabMapping = {
+                "console": Console_Application_Project_Type_Prefab,
+                "test": DevTest_Application_Project_Type_Prefab
+            }
 
-        if Self.ArgumentAmount == 4:
-            ProjectType = Self.Arguments[2]
-            ProjectName = Self.Arguments[3]
+            if Self.ArgumentAmount == 4:
+                ProjectType = Self.Arguments[2]
+                ProjectName = Self.Arguments[3]
+            else:
+                ProjectType = "console"
+                ProjectName = Self.Arguments[2]
 
-        mkdir(ProjectName)
-        print(ProjectName)
-        with open(path.join(ProjectName, f'{ProjectName}.papple'), 'w+') as GENERATED_PAPPLE_FILE:
-            try:
-                GENERATED_PAPPLE_FILE.write(ProjectPrefabMapping[ProjectType])
-            except:
-                print("Error generating papple file template")
-            GENERATED_PAPPLE_FILE.close()
+            if exists(ProjectName):
+                print(f"A directory with the name {ProjectName} already exists in this working directory.")
+                return
+            
+            mkdir(ProjectName)
+            print(ProjectName)
+            with open(path.join(ProjectName, f'{ProjectName}.papple'), 'w+') as GENERATED_PAPPLE_FILE:
+                try:
+                    GENERATED_PAPPLE_FILE.write(ProjectPrefabMapping[ProjectType])
+                except:
+                    print("Error generating papple file template")
+                GENERATED_PAPPLE_FILE.close()
 
-        with open(path.join(ProjectName, '.gitignore'), 'w+') as IGNORE_FILE:
-            try:
-                IGNORE_FILE.write(DefaultGitIgnore)
-            except:
-                print("Error generating ignore file")
-        IGNORE_FILE.close()
+            with open(path.join(ProjectName, '.gitignore'), 'w+') as IGNORE_FILE:
+                try:
+                    IGNORE_FILE.write(DefaultGitIgnore)
+                except:
+                    print("Error generating ignore file")
+            IGNORE_FILE.close()
 
-        with open(path.join(ProjectName, '.Hope_Settings'), 'w+') as SETTINGSFILE:
-            try:
-                SETTINGSFILE.write(DefaultProjectSettings.format(ProjectType, ProjectName, ProjectName))
-            except:
-                print("Error generating Hope settings file")
-        SETTINGSFILE.close()
+            with open(path.join(ProjectName, '.Hope_Settings'), 'w+') as SETTINGSFILE:
+                try:
+                    SETTINGSFILE.write(DefaultProjectSettings.format(ProjectType, ProjectName, ProjectName))
+                except:
+                    print("Error generating Hope settings file")
+            SETTINGSFILE.close()
+        else:
+            print("Please give a project name when using command: `hope new <project-name>`.")
 
     def Build(Self):
         if Self.ArgumentAmount == 3:
