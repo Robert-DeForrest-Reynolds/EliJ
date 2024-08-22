@@ -114,13 +114,74 @@ I want to talk about the language I've been designing and exposé the syntax of 
 
 Let's start in the beginning. C is a beautiful language, I started with Java, and made my way through many languages, eventually reaching C, where I came to understand what other developers were talking about. It is, by far, the strongest language anyone has access to currently. C is the default palette of a computer scientist. It is the toolbelt compatible with any job, and it can access anything that it wants to access. The core weakness: it's taken over 50 years to get where we are with it now, and it is very difficult to teach, and practice C, as it is insanely complex. Where the language is simple, the compiler infrastructure for it is not. An argument immediately thrown is that a majority of people are just bad computer scientists, which I won't necessarily deny. I will acknowledge it, not necessarily believing it's true, but acknowledging that there's a problem. Python has a very strong community because of it's simplicity to learn, the  ability to practice, as well, the ability to teach it. Rapid prototyping, and the ability to approach a new project with momentum is absolutely valuable. Zig can compile anything is seems. C# proves the learnability of complex computer science abstractions, as long as you present it with human readability, and writability. JavaScript proves that people will walk through hell to avoid learning on their own, and thinking for themselves. C++ proves that some would sacrifice all of their sanity and then some for the sake of performance. Rust proves how much people love immutability by default, and good error messages. A lot of languages have brought a lot to the table, and some of them of been good for society, and some of them have been bad for society. What would the world be like if C# would the dominate web language?
 
-Pineapple parses line-by-line, and does not care about indentation. Whitespace between keywords is required, but is not required between symbols. You can think of every line as a statement.
+Pineapple parses line-by-line, and does not care about indentation. Whitespace between keywords is required, but is not required between symbols, for example: `Int X=5` is valid, but `IntX=5` is not as there is no way for the compiler to identify the type, and declarative name.
+
 ```
-# As `=` and `"` are 
-Str Name = "Sirley";
+# As `=`, `"`, and `;` are symbols, and `Str` and `Name` are keywords.
+Str Name="Sirley";
 ```
 
-This will allow ease of parsing.
+You can think of every line as a statement. A line can contain two statements, but the philosophy of the languages asks for modularity, and to conform to the single-responsibility principle, within reason. We have opening, and closing tokens for code blocks containing multiple statements, and most importantly, all variables are immutable by default, and when the values are changed, if they are not assigned, they are not held.
+
+Pineapple's memory management aims to be simple, easy to use, and east to extend. Iwa analyzes the source code you feed it, and attempts to create a memory safe program by testing against the bounds of each variable. Everything is dynamically allocated otherwise, and if you need to take control of memory, you can access the control flow exactly how you would an array.
+
+All `Int`'s are 64 bit signed integers by default unless otherwise compiling for a 32 bit system. Pineapple explicitly supports standard implementions over backwards compatibility, and future proofing. Therefore an expectation is allowed that you have access to the largest forms of data structures allowed by the system.
+When you download the compiler for 32 bit systems, they will be 32 bit integers.
+The `O` flag when compiling will tell Iwa to optimize, and finds the outer bounds of each integer case, and utilize a integer will less bits if allowed.
+```
+Int X = 5;
+Int Y = 6;
+
+Out(&0);
+```
+Outputs:
+```
+5
+```
+
+You can assign values
+```
+&0 = "I'm a string";
+```
+Outputs:
+```
+ERROR | &0 = "I'm a string";
+		 ^ is typed: Int, cannot implicitly cast to: Str
+
+Explicit Cast Example:
+Str Greeting:&0 = "I'm a String"	 
+```
+
+Pineapple's memory space accepts the ultimate foot-gun in favor of an explicit, and simplistic knowledge on how it works. Everything in the program is bounded, living, and accessible. Everything outside of the program is not accessible.
+
+The Iwa compiler tests all accessible bounds, and determines if the declarative bounds are measurable. If they are not, you will be provided an error at compile time dependant on the context, and you will have to flag the specific variable UNBOUNDED, or you will have to guard against it's bounds.
+```
+Int X = 5;
+If X < 0{
+	Out(X);
+} ? X++;
+```
+Outputs:
+```
+ERROR | Unbounded Loop
+```
+
+```
+Int X = 5;
+If X < 0{
+	Out(X);
+} ? X++ | 2000;
+```
+Outputs:
+```
+ERROR |
+If X < 0{
+} ? X++ | 2000;
+  ^ Touched bounds during compilation
+```
+
+Pineapple attempts to take on a form of test-driven philosophy during compilation. Iwa will not let you compile what it thinks to be an unsafe program unless you painstakingly accept the consequences. This means that you should never ship a production product that does not check against it's bounds before compile time. All bounds are 68 million by default.
+
 ### Large Form Example Script
 ```
 # I'm a comment #
