@@ -180,6 +180,22 @@ If X < 0{
   ^ Touched bounds during compilation
 ```
 
+You can explicitly cast `Int`'s if one would like.
+```
+Int x = 5;  // Default to system word size
+Int64 y = 1000000000000;  // Explicitly 64-bit
+Int8 z = 100;  // Explicitly 8-bit
+
+Fnc ProcessData: Int32 data {
+    // Function that explicitly works with 32-bit integers
+}
+
+// Compiler warning if this might overflow:
+Int8 small = 200;  
+
+// Type inference example:
+Auto largeNumber = 1000000000000;  // Compiler infers Int64
+```
 Pineapple attempts to take on a form of test-driven philosophy during compilation. Iwa will not let you compile what it thinks to be an unsafe program unless you painstakingly accept the consequences. This means that you should never ship a production product that does not check against it's bounds before compile time. All bounds are 68 million by default.
 
 ### Large Form Example Script
