@@ -82,25 +82,24 @@ Pineapple gets translated into an intermediate language using Python that is eas
 Pineapple Source Code -> Iwa Compiler -> C Code -> Clang -> Executable
 Pineapple Source Code -> Iwa Compiler -> C++ Code -> Clang++ -> Executable
 
-# Defining Syntax Character Names
-
 #### Symbols
 ```
-+ # Addition
-- # Subtraction
-+= # Increment and assign
--= # Decrement and assign
-* # Multiply
-/ # Division
-% # Get Remainder
-!= # Not Equals
-& # And
-\ # Or
-' # String Wrapper
-~ # Import
-, # List Separator
-() # Multi-line Data Wrappers
-{} # Multi-line Data Wrappers
++ # Addition #
+- # Subtraction #
++= # Increment and assign #
+-= # Decrement and assign #
+* # Multiply #
+/ # Division #
+% # Get Remainder #
+== # Equals #
+!= # Not Equals #
+& # And #
+\ # Or #
+' # String Wrapper #
+~ # Import #
+, # List Separator #
+() # Multi-line Data Wrappers #
+{} # Multi-line Data Wrappers #
 ```
 
 #### Reserved Keywords
@@ -110,7 +109,6 @@ Int
 Flt
 Obj
 Return
-Is
 ```
 #### Built-Ins
 ```
@@ -170,9 +168,10 @@ Pineapple's memory space accepts the ultimate foot-gun in favor of an explicit, 
 The Iwa compiler tests all accessible bounds, and determines if the declarative bounds are measurable. If they are not, you will be provided an error at compile time dependant on the context, and you will have to flag the specific variable UNBOUNDED, or you will have to guard against it's bounds.
 ```
 Int X = 5;
-If X < 0{
+While X < 0{
 	Out(X);
-} ? X++;
+	X++
+};
 ```
 Outputs:
 ```
@@ -427,34 +426,60 @@ Dct Students = [
 For Str Name, Int Age in Student{
 	Out("{Name} is {Age} years old");
 }
+```
+The compiler will try not to allow you to create "Improperly Bounded While Loops". At least it will rationally attempt to catch them.
+The below out will produce an error that will not allow you to compile because it can never be identified that Alive will ever be made true.
+Iwa will make great attempt to test down a loop-chain, ensuring that each variable is changed, or at least referenced within a bounded count.
+```
+Bln Alive = False;
+While Alive == True {
+	If Alive == true {
+		Alive = False
+	}
+}
+```
 
-# The compiler will try not to allow you to create "Improperly Bounded Looped Conditionals". At least it will rationally attempt to catch them. #
-Int Iterator at 0;
-If Iterator < -1{
-	Out(Iterator);
-} ? I++;
+Iwa would warn against the below code, because it does not mutate the variable that the conditional is checked against at all.
+```
+Int Health = 50
+Bln Alive = False;
+While Alive == True {
+	If Health <= 0 {
+		Alive = False
+	}
+}
+```
 
-# The compiler will also not allow you to mutate an 
-Int Iterator at 0;
-If Iterator < -1{
-	I--;
-	Out(Iterator);
-} ? I++;
+This code would be allowed to compile, as long as it passed the default 2 million bound check. Which it would not, as it would only iterate 50 times.
+```
+Int Health = 50
+Bln Alive = False;
+While Alive == True {
+	If Health <= 0 {
+		Alive = False
+	}
+	Health -= 1
+}
+```
 
-# Iwa will test the bounds of each side, and see if the bounds reaches a iteration count of 68,000,000 or greater, if so, it will deem it improperly bounded. I think that it's fair to say that if you're iterations are in the millions in the first place, some kind of normalization needs to be implemented. If you wish to control this bound, you can buy piping the value #
+You can bound loops to a specific iteration count yourself. The below code would not compile, and throw an error. This is my take on how to solve memory safety problems. We clearly define the limits we're willing to allow our program to break. If it breaks, we do not allow it in production. If we don't know the bounds, we test for them. If we do know the bounds, we assert we're within them.
+```
+Bln Alive = False;
+While Alive == True {
+	If Alive == true {
+		Alive = False
+	}
+} ? 2000;
+```
 
-Int Iterator at 0;
-If Iterator < -1{
-	Out(Iterator);
-} ? I++ | 2000;
-
-# You can also make the bound infinite by passing nothing. Here's the shotgun you might've been looking for. #
-Int Iterator at 0;
-If Iterator < -1{
-	Out(Iterator);
-} ? I++ |;
-
-
+You can also make the bound infinite by passing nothing. Here's the shotgun you might've been looking for. This code will compile, but will warn you, and you *cannot* turn off this warning.
+```
+Bln Alive = False;
+While Alive == True {
+	If Alive == true {
+		Alive = False
+	}
+} ?;
 ```
 
 
@@ -468,245 +493,6 @@ Out("Hello");
 ```C
 printf("Hello");
 ```
-# Comments
-```
-# <Text> #
-```
-
-```
-# Comments are anything between two pound/hash symbols #
-
-#
-This rule works
-for multi-line
-comments as well
-#
-```
-
-# Operators
-`+` - Add
-```
-Out(5 + 5);
-```
->10
-
-`-` - Minus
-```
-Out(10 - 5);
-```
->5
-
-`/` - Float Division
-```
-Out(9 / 2);
-```
->4.5
-
-`/`/ - Float Division
-```
-Out(10 // 2);
-```
->5
-
-`*` - Multiply
-```
-Out(10 * 2);
-```
->20
-
-`=` - Assignment
-```
-Int Health = 50;
-```
->5
-
-`Is` - Equality comparison
-```
-Str Answer = "Purple";
-
-Str UserInput = In("What's my favorite color?");
-If UserInput is Answer {
-	Out("You it got right!");
-} Else {
-	Out("You got it wrong!");
-}
-```
-
-`>` - Greater than comparison
-```
-Int Hunger = 50;
-
-If Hunger > 50 {
-	Out("I'm hungry");
-} Else {
-	Out("I'm not hungry");
-}
-```
->I'm not hungry
-
-`>=` - Greater than or equal to comparison
-```
-Int Hunger = 50;
-
-If Hunger >= 50 {
-	Out("I'm hungry");
-} Else {
-	Out("I'm not hungry");
-}
-```
-> I'm hungry
-
-`<` - Lesser than comparison
-```
-Int Hunger = 50;
-
-If Hunger < 50 {
-	Out("I'm hungry");
-} Else {
-	Out("I'm not hungry");
-}
-```
-> I'm not hungry
-
-`<=` Lesser than or equal to comparison
-```
-Int Hunger = 50;
-
-If Hunger <= 50{
-	Out("I'm hungry");
-} Else {
-	Out("I'm not hungry");
-}
-```
-> I'm hungry
-
-
-# Type Declaration
-
-**`Str` - String Type**
-```
-Str Greeting = "Hello";
-```
-
-**`Int` - Integer Type**
-```
-Int Age = 18;
-```
-
-**`Flt` - Float Type**
-```
-Flt Pi = 3.141;
-```
-
-
-# Decision Making
-
-`If` - Use specified code block if condition is met
-```
-If <Conditional> {
-	<Statement>;
-}
-
-
-
-If Food is Expired {
-	Out("Food is expired");
-}
-```
-
-`Else` - Use after `If` statement to use specified code block if condition in `if` is not met.
-```
-If <Conditional>{
-	<Statement>;
-} Else {
-	<Statement>;
-}
-
-
-
-
-If Food is Expired {
-	Out("Food is expired.");
-} Else {
-	Out("Store this food.");
-}
-
-If Food is Grapefruit {
-	Out("I don't like this food.");
-} Or Food is Strawberries {
-	Out("I like this food.");
-} Else {
-	Out("I don't know about this food.");
-}
-```
-
-```
-
-
-# Objects
-Objects have built-in functions that can be utilized to implement your own behavior on top of. Below are the built-ins described.
-
-`New` - Called when a object is instantiated
-`Destroy` - Called when a object is destroyed
-`Get_Obj` - Utility function returns a list of two elements: the object name, and memory address
-
-Obj <DelcarativeName>:
-	Fnc New: Parameters
-	{
-		<Statement>;
-	}
-;
-
-Obj Human:
-	Fnc New: Int Name, Int Age
-	{
-		Str _Name = InitName;
-		Int _Age = InitAge;
-	}
-;
-
-Human Jerry = Jerry("Jerry", 15);
-Out(Jerry.Get_Obj()); # Outputs: [Human, Human<0x6dfed4>] #
-Jerry.Destroy();
-Out(Jerry.Name)
-```
-
-
-# Functions
-
-```
-Fnc <DeclarativeName>: Parameters
-{
-	<Statement>;
-}
-```
-```
-Fnc Addition: X, Y
-{
-    Return X + Y;
-}
-
-Addition: 5, 10;
-```
-
-
-# Importing
-find is used to import code from another file.
-
-```
-~<File-Name>:<Declarative-Name>
-
-~Graphs:2DPlot
-```
-
-
-
-# Built-Ins
-
-`In()` - Take in input from the user
-
-`Out()` - Output something to the console
-
 
 
 # Developer Notation
