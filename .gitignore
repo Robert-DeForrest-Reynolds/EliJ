@@ -1,6 +1,7 @@
 # Ignore Utilities
 .vscode
 Cornelius/PythonVenv
+.obsidian/
 
 # Core Testing
 Test/

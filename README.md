@@ -59,19 +59,32 @@ A complete integreated development environment to support Pineapple development.
 ### Mel
 Audio development environment.
 
+---
 
-### Principles & Conventions
+I try to take a bit of a different perspective to this whole programming thing. I don't like doing things that same way the previous someone before did it.
 
-One of the core motives of Pineapple and Iwa is to provide a better interface to a compiled language. Here are the core beliefs, and features that motivated the creation of Pineapple:
-- Idiomatic syntax; programming languages help us talk to computers, but just as so, they allow computers to tell us what they are doing. If you're writing something useful, someone will read your code eventually probably. Make sure they can actually understand it when they do.
-- The compiler needs to guide you to properly leveraging it; the vernacular when outputting errors must be clear, concise, and contain all of the necessary notation to access the error's properties. Just as well, functions, and behavior created by the developer should be clearly, and concisely named, documented, and provide the necessary links to all of the related properties involved. A user of the language should never get lost within thousands of lines of someone else's code, if they understand the absolute fundamentals.
-- The fundamentals of something should be small and simple; the single-responsibility principle is the most universal method to organizing complex systems within code. This does not mean you cannot successfully create abstractions that use multiple responsibilities, however, take care to not create such a complex abstraction that a mind cannot easily grasp it.
-- Complexity is built from abundant simplicity; if we follow the previous principle of providing simple fundamentals. Building an abundant amount of simple fundamentals is what constitutes a complex system.
+Pineapple is the name of the language. Iwa is the name of the compiler I built for it.
+Iwa utilizes C, and Clang to generate C code.
+
+Pineapple is fundamentally made up of 4 things: Declarations, Structures, Conditionals, Functions
+
+Pineapple gets translated into an intermediate language using Python that is easier to work with, that is then used when generating C code. This intermediate code can then be easily made compatible with any compiler.
+
+### Guiding Principles & Opinions:
+- Modularity over inheritance. It isn't too hard to make modularity messy, but it's very easy to make inheritance hell. Complexity is achieved through individual abstractions in multitudes.
+- Programming languages allow us to talk to computers, but more importantly, it allows them to talk to us, and tell us what they are doing. When someone else comes along and reads your code, it best damn well tell them what the computer is doing. Don't hide things, make jokes at the expense of humor, not the program, and never, ever, for the love of all that is mighty, forget your documentation.
+- Technology is a conceptualization to help us. Don't deny it's implementation to make your life easier. Technology will inevitably push us farther and farther as the human capacity for experience craves more than what it had yesterday. We can still keep our humanity while implementing technology for it's great benefits, with positive intents. TLDR; VR good, TikTok bad.
+- A compiled, released program should never depend on another program to run. It should be absolute, and complete. This is not to say that two programs interacting with one another is bad, but more specifically, this tends leads to one-sided interactions between two programs which has proved to be very bad.
+- The idea "everything in programming is an object" is a good thing. Most of the time, the backend of a language being structured as so, and allows the programmer to develop a program that is naturally modular. An integer is a object, just as much as a cat is.
+
+
 #### Lifecycles
 Pineapple Source Code -> Iwa Compiler -> C Code -> Clang -> Executable
 Pineapple Source Code -> Iwa Compiler -> C++ Code -> Clang++ -> Executable
+
 # Defining Syntax Character Names
-#### Operators
+
+#### Symbols
 ```
 + # Addition
 - # Subtraction
@@ -81,7 +94,6 @@ Pineapple Source Code -> Iwa Compiler -> C++ Code -> Clang++ -> Executable
 / # Division
 % # Get Remainder
 != # Not Equals
-== # Equals
 & # And
 \ # Or
 ' # String Wrapper
@@ -96,8 +108,9 @@ Pineapple Source Code -> Iwa Compiler -> C++ Code -> Clang++ -> Executable
 Str
 Int
 Flt
-Fnc
 Obj
+Return
+Is
 ```
 #### Built-Ins
 ```
@@ -190,15 +203,14 @@ Fnc ProcessData: Int32 data {
     // Function that explicitly works with 32-bit integers
 }
 
-// Compiler warning if this might overflow:
-Int8 small = 200;  
-
-// Type inference example:
-Auto largeNumber = 1000000000000;  // Compiler infers Int64
+// Compiler error that this will probably overflow:
+Int8 small = 200;
 ```
-Pineapple attempts to take on a form of test-driven philosophy during compilation. Iwa will not let you compile what it thinks to be an unsafe program unless you painstakingly accept the consequences. This means that you should never ship a production product that does not check against it's bounds before compile time. All bounds are 68 million by default.
+Pineapple attempts to take on a form of test-driven philosophy during compilation. Iwa will not let you compile what it thinks to be an unsafe program unless you painstakingly accept the consequences. This means that you should never ship a production product that does not check against it's bounds before compile time. All bounds are checked at 2 million by default.
 
-### Large Form Example Script
+### Quick & Dirty Summary
+
+Comments:
 ```
 # I'm a comment #
 
@@ -207,7 +219,10 @@ Anything between
 two pound signs
 is a comment
 #
+```
 
+Importing:
+```
 # Importing another file; uses name of file, excluding .papple extension
 So the file name would be Lorem.papple
 Import is a direct copy and paste of code #
@@ -226,13 +241,22 @@ Import is a direct copy and paste of code #
 This allows for *imported variables to be global by default*, but potentially hidden from a specific context. #
 ~Lorem(SomeVariable);
 ~Lorem~(SomeVariable);
+```
 
+Output:
+```
 # Printing out information to the console, and function call example #
 Out("Hello");
+```
 
+Input:
+```
 # Wait for input from the user #
 Str UserInput = In();
+```
 
+Variables:
+```
 # Built-in Constants #
 Out(PI); # Outputs: 3.14159
 
@@ -246,21 +270,28 @@ Bln Unhappy = False;
 
 # Integers #
 Int Health = 20;
+
 # Float #
 Flt Wallet = 3.33;
+
 # List #
 Lst Students = ["Jeffery", "Sara", "Kevin"];
 Out(Students[0]) # Outputs: Jeffery #
 Students.Append("Julie");
+
 # Dictionary #
 Dct TrafficLights = [
 	"Green":"Go",
 	"Yellow":"Slow",
 	"Red":"Stop",
 ];
+
 # None, Mainly used for initializing variable without a value # 
 Int Wallet = None;
+```
 
+Math:
+```
 # Math
 Increment & Assignment Operators uses References
 Meaning that you variables will be directly changed#
@@ -276,25 +307,32 @@ Out(5//2); # Outputs: 2 #
 
 # Float Rounding #
 Out(Round(2.5)); # Outputs 3, typed Int #
-
+```
+Casting
+```
 # Casting #
 Flt Wallet = 5.26;
 Out(Cast(Wallet, Int)); # Outputs: 5 #
 # Iwa will automatically floor float conversions, if you want it rounded, you'll have to round it #
 Out(Cast(Rnd(Wallet), Flt))`
+```
 
-# Nicknaming/Rereferencing #
+Rereferencing:
+```
 Ref Rnd = Round;
 Out(Rnd(2.5));
 # Outputs: 3 #
 Out(Type(Rnd(2.5)));
 # Outputs: Int #
-
-# Copying/Duplicating #
+```
+Copying/Duplicating:
+```
 Int Total = 50;
 New Total;
 
-# Strings # 
+```
+Strings: 
+```
 Str FirstName = "Roger"
 Str LastName = "Rabbit";
 Str FullName = f"{FirstName} {LastName}"
@@ -312,8 +350,10 @@ string.;
 # Strings are arrays as always, and can be index, and sliced #
 Str Greeting = "Hello there!";
 Str Hello = Greeting[0:4];
+```
 
-# Functions
+Functions:
+```
 Parameters are passed by reference by default, or you can decide to make a copy #
 Fnc Sum: Number1, Number2 {
 	Return Number1 + Number2;
@@ -322,7 +362,11 @@ Fnc Sum: Number1, Number2 {
 # Variables not declared in place will be held as anonymous in memory #
 Sum(Int 5, Int 6);
 
-# Objects
+
+```
+
+Objects:
+```
 Obj Person:
 	Fnc Init: Str Name
 	{
@@ -349,8 +393,10 @@ Obj Person | Human:
 		Return f"Hello, my name is {_Name}, and I'm {_Age} years old.";
 	}
 ;
+```
 
-# Conditionals #
+Conditionals:
+```
 If Food is Grapefruit {
 	Out("I don't like this food.");
 } Or Food is Strawberries {
@@ -367,42 +413,43 @@ If "Aaron" not in Students {
 
 Lst Fruits = ["Oranges", "Apples", "Bananas"]
 
-# For loops can be used for looping through elements in data structures
-For Fruit in Fruits {
+# There are no for, or while loops, instead Pineapple has looped conditionals
+For Str Fruit in Fruits {
 	Out(Fruit);
 }
 
 Dct Students = [
-	"Kevin": 14,
+	"Kevin":14,
 	"Bill":15,
 	"Julia":14,
 ]
 
-For Name, Age in Students {
-	Out(f"{Name} is {Age} years old.");
+For Str Name, Int Age in Student{
+	Out("{Name} is {Age} years old");
 }
 
-# While loops don't exist in Pineapple, instead we have looped conditionals
-Int Iterator = 0;
-If Iterator < 10{
+# The compiler will try not to allow you to create "Improperly Bounded Looped Conditionals". At least it will rationally attempt to catch them. #
+Int Iterator at 0;
+If Iterator < -1{
 	Out(Iterator);
 } ? I++;
 
-# The compiler will not allow you to create "Improperly Bounded Looped Conditionals". At least it will rationally attempt to catch them. #
-Int Iterator = 0;
+# The compiler will also not allow you to mutate an 
+Int Iterator at 0;
 If Iterator < -1{
+	I--;
 	Out(Iterator);
 } ? I++;
 
 # Iwa will test the bounds of each side, and see if the bounds reaches a iteration count of 68,000,000 or greater, if so, it will deem it improperly bounded. I think that it's fair to say that if you're iterations are in the millions in the first place, some kind of normalization needs to be implemented. If you wish to control this bound, you can buy piping the value #
 
-Int Iterator = 0;
+Int Iterator at 0;
 If Iterator < -1{
 	Out(Iterator);
 } ? I++ | 2000;
 
 # You can also make the bound infinite by passing nothing. Here's the shotgun you might've been looking for. #
-Int Iterator = 0;
+Int Iterator at 0;
 If Iterator < -1{
 	Out(Iterator);
 } ? I++ |;
