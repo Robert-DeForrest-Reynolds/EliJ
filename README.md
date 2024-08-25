@@ -106,6 +106,7 @@ Pineapple Source Code -> Iwa Compiler -> C++ Code -> Clang++ -> Executable
 ```
 Str
 Int
+UInt
 Flt
 Obj
 Return
@@ -180,15 +181,19 @@ ERROR | Unbounded Loop
 
 ```
 Int X = 5;
-If X < 0{
+While X < 0{
 	Out(X);
-} ? X++ | 2000;
+	X++
+} ? 2000;
 ```
 Outputs:
 ```
 ERROR |
-If X < 0{
-} ? X++ | 2000;
+Int X = 5;
+While X < 0{
+	Out(X);
+	X++
+} ? 2000;
   ^ Touched bounds during compilation
 ```
 
@@ -434,31 +439,31 @@ Iwa will make great attempt to test down a loop-chain, ensuring that each variab
 Bln Alive = False;
 While Alive == True {
 	If Alive == true {
-		Alive = False
+		Alive = False;
 	}
 }
 ```
 
 Iwa would warn against the below code, because it does not mutate the variable that the conditional is checked against at all.
 ```
-Int Health = 50
+Int Health = 50;
 Bln Alive = False;
 While Alive == True {
 	If Health <= 0 {
-		Alive = False
+		Alive = False;
 	}
 }
 ```
 
 This code would be allowed to compile, as long as it passed the default 2 million bound check. Which it would not, as it would only iterate 50 times.
 ```
-Int Health = 50
+Int Health = 50;
 Bln Alive = False;
 While Alive == True {
 	If Health <= 0 {
-		Alive = False
+		Alive = False;
 	}
-	Health -= 1
+	Health -= 1;
 }
 ```
 
@@ -467,9 +472,21 @@ You can bound loops to a specific iteration count yourself. The below code would
 Bln Alive = False;
 While Alive == True {
 	If Alive == true {
-		Alive = False
+		Alive = False;
 	}
 } ? 2000;
+```
+
+Here's a good example potentially of the idea behind the implementation. You are bounding the loop by the specified variable you're checking against. Iwa will ensure that variable is mutated within a bounded amount of iterations, and if it succeeds, will deem your code compilable. If the variable is never mutated, or never even referenced, your code will not compile, and Iwa will produce an error.
+```
+Int Health = 50;
+Bln Alive = False;
+While Alive == True {
+	If Health <= 0 {
+		Alive = False;
+	}
+	Health -= 1;
+} ? Health;
 ```
 
 You can also make the bound infinite by passing nothing. Here's the shotgun you might've been looking for. This code will compile, but will warn you, and you *cannot* turn off this warning.
