@@ -280,7 +280,7 @@ Flt Wallet = 3.33;
 
 # List #
 Lst Students = ["Jeffery", "Sara", "Kevin"];
-Out(Students[0]) # Outputs: Jeffery #
+Out(Students[0]); # Outputs: Jeffery #
 Students.Append("Julie");
 
 # Dictionary #
@@ -329,12 +329,13 @@ Out(Rnd(2.5));
 Out(Type(Rnd(2.5)));
 # Outputs: Int #
 ```
+
 Copying/Duplicating:
 ```
 Int Total = 50;
 New Total;
-
 ```
+
 Strings: 
 ```
 Str FirstName = "Roger"
@@ -499,18 +500,15 @@ While Alive == True {
 } ?;
 ```
 
-
 Everything largely translates directly into some kind of C derivative, whether that's a keyword, operators, or function.
 
 ```
 Out("Hello");
 ```
 
-
 ```C
 printf("Hello");
 ```
-
 
 # Developer Notation
 
@@ -518,6 +516,4 @@ printf("Hello");
  - Graphical Implementations should be accessible within the Standard Library
  - There are many ways to say something, there is only one best way to do something, and it has to be obvious.
  - Complexity flourishes with creative simplicity.
- - Higher-Level Abstractions are never a bad thing.
-
-
+ - Higher-Level Abstractions are never a bad thing, as long as you they are named right, and plug in play compatibility. So, yeah, there's that.

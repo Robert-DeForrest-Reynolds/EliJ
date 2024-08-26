@@ -1,13 +1,19 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING # type: ignore
+
+if TYPE_CHECKING:
+    from Iwa import Compiler
+
 from typing import List #type: ignore
 
 C_PREFAB = "#include <stdio.h>\nint main() {\n}"
 
 
-def Write_Prefab(ProjectInstance):
+def Write_Prefab(Iwa:Compiler):
     print("Writing Prefab...")
-    if ProjectInstance.Name != None:
-        print(f"Using project name: {ProjectInstance.Name}\n")
-        with open(f"{ProjectInstance.Name}.c", 'w+') as CFile:
+    if Iwa.ProjectInstance.Name != None:
+        print(f"Using project name: {Iwa.ProjectInstance.Name}\n")
+        with open(f"{Iwa.DirectoryPath}/{Iwa.ProjectInstance.Name}.c", 'w+') as CFile:
             CFile.write(C_PREFAB)
     else:
         print("WARNING: No project name given. Defaulting to title: 'untitled.c'.\n")
@@ -15,11 +21,11 @@ def Write_Prefab(ProjectInstance):
             CFile.write(C_PREFAB)
 
 
-def Write_Instruction(ProjectInstance, Instruction) -> None:
-    if ProjectInstance.Name != None:
-        with open(f"{ProjectInstance.Name}.c", 'r') as CFile:
+def Write_Instruction(Iwa:Compiler, Instruction:str) -> None:
+    if Iwa.ProjectInstance.Name != None:
+        with open(f"{Iwa.DirectoryPath}/{Iwa.ProjectInstance.Name}.c", 'r') as CFile:
             CurrentLines:List[str] = CFile.readlines()
-        with open(f"{ProjectInstance.Name}.c", 'w') as CFile:
+        with open(f"{Iwa.DirectoryPath}/{Iwa.ProjectInstance.Name}.c", 'w') as CFile:
             EndLineIndex:int = len(CurrentLines)-1
             CurrentLines.insert(EndLineIndex, Instruction)
             CFile.write("".join(CurrentLines))

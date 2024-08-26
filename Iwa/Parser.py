@@ -1,12 +1,9 @@
+from Iwa import Compiler
+
 from typing import List # type: ignore
 from Error import ERROR
 from Writers import Write_Instruction, Write_Prefab
 
-global ProjectInstance
-global Variables
-global GlobalVariableMapping
-global Functions
-global FunctionsMapping
 
 def Cut_Tabspace(SourceFileData:List[str]) -> List[str]:
     for LineIndex, Line in enumerate(SourceFileData):
@@ -19,30 +16,30 @@ def Cut_Tabspace(SourceFileData:List[str]) -> List[str]:
     return SourceFileData
 
 
-def Check_For_Instructions(SourceFileData:List[str]) -> None:
+def Check_For_Instructions(Iwa:Compiler, SourceFileData:List[str]) -> None:
     for Line in SourceFileData:
-        for Keyword in Variables.keys():
+        for Keyword in Iwa.Variables.keys():
             if Line.startswith(Keyword):
                 VariableSplit = [Element.strip() for Element in Line.split("=")]
                 DataSplit = VariableSplit[0].split(" ")
                 DataType = DataSplit[0]
                 Name = DataSplit[1]
                 Value = VariableSplit[1]
-                GlobalVariableMapping.update({Name: DataType})
-                Variable = Variables[DataType](GlobalVariableMapping, Name, Value)
-                Write_Instruction(ProjectInstance, Variable)
+                Iwa.GlobalVariableMapping.update({Name: DataType})
+                Variable = Iwa.Variables[DataType](Iwa.GlobalVariableMapping, Name, Value)
+                Write_Instruction(Iwa, Variable)
 
-        for Keyword in Functions.keys():
+        for Keyword in Iwa.Functions.keys():
             if Line.startswith(Keyword):
                 FunctionSplit = Line.split("(")
                 OpenParanIndex = Line.find("(")
                 CloseParanIndex = len(Line) - Line[::-1].find(")")
                 PotentialInstruction = FunctionSplit[0]
-                Instruction = Functions[PotentialInstruction](GlobalVariableMapping, Line[OpenParanIndex+1:CloseParanIndex-1])
-                Write_Instruction(ProjectInstance, Instruction)
+                Instruction = Iwa.Functions[PotentialInstruction](Iwa.GlobalVariableMapping, Line[OpenParanIndex+1:CloseParanIndex-1])
+                Write_Instruction(Iwa, Instruction)
 
 
-def Cut_Functions(SourceFileDataAsString:str) -> List[str]:
+def Cut_Functions(Iwa:Compiler, SourceFileDataAsString:str) -> List[str]:
     FunctionStartIndex = None
     for Index, Character in enumerate(SourceFileDataAsString):
         if Index > 1:
@@ -59,7 +56,7 @@ def Cut_Functions(SourceFileDataAsString:str) -> List[str]:
                     FunctionName = Function[:ParamStart].split(" ")[1]
                     BodyStart = Find_BlockStart(Function)
                     FunctionBody = Function[BodyStart:]
-                    FunctionsMapping.update({FunctionName:FunctionBody})
+                    Iwa.FunctionsMapping.update({FunctionName:FunctionBody})
                     return SourceFileDataAsString
 
 
@@ -103,18 +100,18 @@ def Cut_Comments(MutableCopyDataAsString:str) -> List[str]:
 
 
 
-def Parse_Source_File(SourceFilePath:str) -> str | List[str]:
-    with open(SourceFilePath, 'r') as SourceFile:
+def Parse_Source_File(Iwa:Compiler) -> str | List[str]:
+    with open(Iwa.FilePath, 'r') as SourceFile:
         SourceFileLines:List[str] = SourceFile.readlines()
 
-    Write_Prefab(ProjectInstance)
+    Write_Prefab(Iwa)
 
     # Instructions = Function Calls, and Operators Usage
     # Steppage: Functions, Variables, Instructions
     # Functions get stripped from the SourceFileData first
 
     SourceFileDataAsString = "".join(SourceFileLines).replace("\n", "")
-    SourceFileDataAsString = Cut_Functions(SourceFileDataAsString)
+    SourceFileDataAsString = Cut_Functions(Iwa, SourceFileDataAsString)
     print(f"Source File Data String: {SourceFileDataAsString}")
 
     SourceFileData = [Line for Line in "".join(SourceFileLines).replace("\n", "").split(";") if Line != ""]
@@ -124,7 +121,7 @@ def Parse_Source_File(SourceFilePath:str) -> str | List[str]:
     MutableCopy = "".join(SourceFileLines).replace("\n", "")
     MutableCopy = Cut_Comments(MutableCopy)
 
-    Check_For_Instructions([Line for Line in MutableCopy.split(";") if Line != ""])
+    Check_For_Instructions(Iwa, [Line for Line in MutableCopy.split(";") if Line != ""])
 
     if type(MutableCopy) is ERROR: return MutableCopy.Report
     
