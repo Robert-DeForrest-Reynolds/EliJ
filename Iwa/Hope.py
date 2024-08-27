@@ -1,14 +1,13 @@
 from os import mkdir, system, path
 from sys import argv
 
-from Information import Help_Information
 from Prefabs import DefaultProjectSettings, DefaultGitIgnore, Console_Application_Project_Type_Prefab, DevTest_Application_Project_Type_Prefab
 
 # Import EliJ Utility Files
 from os.path import dirname, realpath, exists
 from sys import path as SystemPath
 SystemPath.append(dirname(dirname(realpath(__file__))))
-from Helpers import Pretty_Wrap
+from Utils import Pretty_Wrap
 
 
 class Hope:
@@ -30,6 +29,28 @@ class Hope:
             "h": Self.Help_Print,
         }
 
+        Self.HelpMessage = """\
+Welcome to the Hope Build System for Pineapple
+
+Most of Hope's commands fall within this model:
+Syntax Key: Hope <action> <context> <naming>
+
+Help Information
+----------------
+Aliases: Help, help, H, h
+`Hope Help`
+Note: You can attach a context to help like so: `Hope Help New`
+
+Create New Project
+------------------
+Aliases: New, new, Create, create, N, n, C, c
+'hope new <Project-Type> <project-name>'
+
+Aliases: Build, build, B, b
+'hope build <project-directory>'
+"""
+
+
         if Self.ArgumentAmount >= 2:
             try:
                 Command = Self.Arguments[1]
@@ -39,7 +60,7 @@ class Hope:
 
 
     def Help_Print(Self):
-        print(Help_Information)
+        print(Self.HelpMessage)
 
 
     def Create(Self):

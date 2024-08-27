@@ -1,1 +1,1 @@
-mpy iwa %*
+mpy -m Iwa %*
