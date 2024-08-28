@@ -10,7 +10,7 @@ DefaultGitIgnore = """".Hope_Settings"
 """
 
 Console_Application_Project_Type_Prefab = """# This is the prefab code for a Console project #
-Out("I'm Alive.")"""
+Out("I'm Alive.");"""
 
 DevTest_Application_Project_Type_Prefab = """# This is the prefab code for a DevTest project #
 from lorem import ipsum;
@@ -21,12 +21,12 @@ fnc Addition(int X, int y){````````````
 
 obj Person
     func New(Name, Age){
-        Self.Name = Name
-        Self.Age = Age
+        Self.Name = Name;
+        Self.Age = Age;
     }
 |
 
 Person Jack("Jack", 23);
 
-Out(Addition(5, 5))
+Out(Addition(5, 5));
 """
