@@ -13,13 +13,17 @@ class ERROR:
     def __init__(Self, Report:str) -> None: Self.Report:str = Report
 
 class Iwa:
-    def __init__(Self):
+    def __init__(Self, Arguments):
+        Self.DEV = False
         Self.ProjectInstance = Project()
         Self.DirectoryPath = None
         Self.FilePath = None
         Self.EXEPath = None
         Self.GlobalVariableMapping = {}
         Self.FunctionsMapping:Dict[str,str] = {}
+        
+        Self.Arguments = Arguments
+        Self.ArgumentCount = len(Arguments)
 
         Self.Functions:List[str] = {
             "Out": Self.Generate_Printf_Function,
@@ -30,12 +34,13 @@ class Iwa:
 
         Self.StringPositions:Dict[str,List[int]] = {}
 
-
         Self.HelpMessage = """\
 Iwa is the compiler for the Pineapple programming language, by Robert Lawrence DeForrest Reynolds.
 
 I thank you for using this, and I hope you enjoy the language, and continue to use it.
 """
+
+        Self.Parse_Arguments()
 
 
     def Cut_Tabspace(Self, SourceFileData:List[str]) -> List[str]:
@@ -60,7 +65,7 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
                     Value = VariableSplit[1]
                     Self.GlobalVariableMapping.update({Name: DataType})
                     Variable = Self.Variables[DataType](Self.GlobalVariableMapping, Name, Value)
-                    Write_Instruction(Iwa, Variable)
+                    Write_Instruction(Self, Variable)
 
             for Keyword in Self.Functions.keys():
                 if Line.startswith(Keyword):
@@ -69,7 +74,7 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
                     CloseParanIndex = len(Line) - Line[::-1].find(")")
                     PotentialInstruction = FunctionSplit[0]
                     Instruction = Self.Functions[PotentialInstruction](Self.GlobalVariableMapping, Line[OpenParanIndex+1:CloseParanIndex-1])
-                    Write_Instruction(Iwa, Instruction)
+                    Write_Instruction(Self, Instruction)
 
 
     def Cut_Functions(Self, SourceFileDataAsString:str) -> List[str]:
@@ -132,20 +137,21 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
         return MutableCopyDataAsString
 
 
-
     def Parse_Source_File(Self) -> str | List[str]:
         with open(Self.FilePath, 'r') as SourceFile:
             SourceFileLines:List[str] = SourceFile.readlines()
 
-        Write_Prefab(Iwa)
+        Write_Prefab(Self)
 
         # Instructions = Function Calls, and Operators Usage
         # Steppage: Functions, Variables, Instructions
         # Functions get stripped from the SourceFileData first
 
         SourceFileDataAsString = "".join(SourceFileLines).replace("\n", "")
-        SourceFileDataAsString = Self.Cut_Functions(Iwa, SourceFileDataAsString)
-        print(f"Source File Data String: {SourceFileDataAsString}")
+        SourceFileDataAsString = Self.Cut_Functions(SourceFileDataAsString)
+
+        if Self.DEV == True:
+            print(f"Source File Data String: {SourceFileDataAsString}")
 
         SourceFileData = [Line for Line in "".join(SourceFileLines).replace("\n", "").split(";") if Line != ""]
 
@@ -154,12 +160,13 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
         MutableCopy = "".join(SourceFileLines).replace("\n", "")
         MutableCopy = Self.Cut_Comments(MutableCopy)
 
-        Self.Check_For_Instructions(Iwa, [Line for Line in MutableCopy.split(";") if Line != ""])
+        Self.Check_For_Instructions([Line for Line in MutableCopy.split(";") if Line != ""])
 
         if type(MutableCopy) is ERROR: return MutableCopy.Report
         
         return MutableCopy
-    
+
+
     def Check_For_Config() -> bool:
         if exists(".pappleConfig"):
             return True
@@ -169,7 +176,6 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
 
     def Compile_Source_File(Self) -> bool:
         if Self.ProjectInstance.Name != None:
-            print("Woah, we got a project name")
             if exists(Self.EXEPath):
                 remove(f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe")
             run(f"clang {Self.DirectoryPath}/{Self.ProjectInstance.Name}.c -o {Self.EXEPath}")
@@ -188,69 +194,57 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
 
 
     def Build(Self):
-        print("Compiling from given path.")
         if Self.ProjectInstance.Name == None:
             print(f"Treating {Self.FilePath} as main file.")
-            print(f"Mutable Copy:\n{(Self.Parse_Source_File())}\n")
         else:
             print(f"Treating {Self.ProjectInstance.Name} as main file.")
-            print(f"Mutable Copy:\n{(Self.Parse_Source_File())}\n")
+        SourceFileContentsOutput = Self.Parse_Source_File()
+        if Self.DEV == True:
+            print(f"Source File Contents Output:\n{SourceFileContentsOutput}\n")
         print(f"Compiling...")
-        if Self.Compile_Source_File(Iwa) == True:
+        if Self.Compile_Source_File() == True:
             print(f"Running...")
             if Self.EXEPath != None:
                 run(Self.EXEPath)
             else:
                 run("test")
-
-
-    def Zero_Argument(Self, Arguments) -> None:
-        print(Self.HelpMessage)
-
-
-    def Single_Flag_Argument(Self, Arguments:List[str]) -> None:
-        print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Arguments]}")
-        if Self.Check_For_Config():
-            print("Using project configuration.")
-        else:
-            print("There is no project found.")
-            exit()
         
 
-    def Project_Action(Self, Arguments:List[str]) -> None:
-        IwaCall:str = Arguments[0]
-        Flag:str = Arguments[1]
-        ProjectPath:str = Arguments[2]
-        print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Arguments]}")
-        if Arguments[1] in ["c", "compile"]:
-            print(f"Building {Self.ProjectInstance.Name}")
-            # If we give the file
-            if Arguments[2].endswith(".papple"):
+    def Parse_Arguments(Self) -> None:
+        if Self.Arguments[Self.ArgumentCount-1] == "dvt":
+            Self.DEV = True
+            print("Using Iwa in Developer Mode")
+        print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Self.Arguments]}")
+        if Self.ArgumentCount == 1:
+            print(Self.HelpMessage)
+        elif Self.Arguments[1] in ["c", "compile"]:
+            if Self.ArgumentCount < 3:
+                print("You didn't provide a path.")
+                return
+            if Self.Arguments[2].endswith(".papple"):
+                PathSplit:List[str] = Self.Arguments[2].split("/")
+                Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1].replace(".papple", "")
                 print(f"Building {Self.ProjectInstance.Name}")
-                PathSplit:List[str] = Arguments[2].split("/")
-                Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1]
-                Self.DirectoryPath = PathSplit
-                Self.FilePath = Arguments[2]
+                Self.DirectoryPath = Self.Arguments[2].replace(f"{Self.ProjectInstance.Name}.papple", "")
+                Self.FilePath = Self.Arguments[2]
                 Self.EXEPath = f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe"
-                Self.Build(Iwa)
-            # If we give the directory, and/or Hope is calling Iwa
+                Self.Build()
             else:
-                print("Iwa is presuming that Hope is calling it.")
-                PathSplit:List[str] = Arguments[2].split("/")
+                PathSplit:List[str] = Self.Arguments[2].split("/")
                 Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1]
-                Self.DirectoryPath = Arguments[2]
-                Self.FilePath = Arguments[2]+f"/{Self.ProjectInstance.Name}.papple"
+                print(f"Building {Self.ProjectInstance.Name}")
+                Self.DirectoryPath = Self.Arguments[2]
+                Self.FilePath = Self.Arguments[2]+f"/{Self.ProjectInstance.Name}.papple"
                 Self.EXEPath = f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe"
-                print(Self.EXEPath)
-                Self.Build(Iwa)
+                Self.Build()
 
 
-    def Generate_Printf_Function(GlobalVariableMapping, Contents:str) -> str:
+    def Generate_Printf_Function(Self, GlobalVariableMapping, Contents:str) -> str:
         if '"' in Contents:
             return f'printf({Contents});'
         elif GlobalVariableMapping[Contents] == "Int":
             return f'printf("%d", {Contents});'
 
 
-    def Generate_Integer_Variable(GlobalVariableMapping, Name:str, Value:str) -> str:
+    def Generate_Integer_Variable(Self, GlobalVariableMapping, Name:str, Value:str) -> str:
         return f"int {Name} = {Value};"

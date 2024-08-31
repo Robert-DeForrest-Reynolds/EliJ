@@ -1,18 +1,11 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING # type: ignore
-
-if TYPE_CHECKING:
-    from Iwa import Compiler
-
 from typing import List #type: ignore
 
 C_PREFAB = "#include <stdio.h>\nint main() {\n}"
 
 
-def Write_Prefab(Iwa:Compiler):
+def Write_Prefab(Iwa):
     print("Writing Prefab...")
     if Iwa.ProjectInstance.Name != None:
-        print(f"Using project name: {Iwa.ProjectInstance.Name}\n")
         with open(f"{Iwa.DirectoryPath}/{Iwa.ProjectInstance.Name}.c", 'w+') as CFile:
             CFile.write(C_PREFAB)
     else:
@@ -21,7 +14,7 @@ def Write_Prefab(Iwa:Compiler):
             CFile.write(C_PREFAB)
 
 
-def Write_Instruction(Iwa:Compiler, Instruction:str) -> None:
+def Write_Instruction(Iwa, Instruction:str) -> None:
     if Iwa.ProjectInstance.Name != None:
         with open(f"{Iwa.DirectoryPath}/{Iwa.ProjectInstance.Name}.c", 'r') as CFile:
             CurrentLines:List[str] = CFile.readlines()
