@@ -1,0 +1,31 @@
+# This changelog is not your traditional changelog at all, below I will explain how to read it #
+# This Changelog can be parsed for visualization, and easy isolation #
+# If you don't mind turning on text wrapping, I suggest doing so. 135 characters is what the document is made to wrap at #
+
+# Features, and Their Completion Progress #
+# c = Complete | x = Incomplete #
+{
+    c:Output
+    x:Input
+    x:Variables
+    x:Functions
+    x:Objects
+    x:Importing
+    x:Testing
+    x:Loops
+    x:Conditionals
+    x:Asynchronous
+    x:Bounds Checking
+    x:Type Checking
+}
+
+# Question & Answers #
+# *Anyone* can ask question within this file. Whether or not they'll be answered is to be determined #
+# Questions determined to not be relative will be removed #
+# The system to submit question is a work in progress still #
+{
+    {
+        Question:""
+        Answer:""
+    }
+}

@@ -4,6 +4,7 @@ Cornelius/PythonVenv
 .obsidian/
 
 # Core Testing
+Iwa/Tests/**/*.c
 Test/
 test/
 Stats.py

@@ -1,0 +1,5 @@
+Iwa is the compiler for the Pineapple programming language, by Robert Lawrence DeForrest Reynolds.
+
+`iwa b <path>` to build a project
+
+I thank you for using this, and I hope you enjoy the language, and continue to use it.

@@ -1,5 +1,5 @@
 Welcome to the EliJ development environment, which contains Pineapple, the Iwa compiler, the msys2 toolchain, and more.
 
-`hope h` will give you information on how to use the Hope build tool
+`iwa h will give you information on how to use the Hope build tool
 
 Use `Building\msys2-64-Setup.bat` to install the mingw64 toolchain

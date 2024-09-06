@@ -22,6 +22,13 @@ class Iwa:
         Self.GlobalVariableMapping = {}
         Self.FunctionsMapping:Dict[str,str] = {}
         
+        Self.FlagCombinations = {
+            "b":Self.Build,
+            "build":Self.Build,
+            "h":Self.Help,
+            "help":Self.Help,
+        }
+
         Self.Arguments = Arguments
         Self.ArgumentCount = len(Arguments)
 
@@ -34,13 +41,14 @@ class Iwa:
 
         Self.StringPositions:Dict[str,List[int]] = {}
 
-        Self.HelpMessage = """\
-Iwa is the compiler for the Pineapple programming language, by Robert Lawrence DeForrest Reynolds.
-
-I thank you for using this, and I hope you enjoy the language, and continue to use it.
-"""
+        with open("Iwa/Help.txt") as HelpFile:
+            Self.HelpMessage = "".join(HelpFile.readlines())
 
         Self.Parse_Arguments()
+
+
+    def Help(Self):
+        print(Self.HelpMessage)
 
 
     def Cut_Tabspace(Self, SourceFileData:List[str]) -> List[str]:
@@ -194,6 +202,20 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
 
 
     def Build(Self):
+        if Self.Arguments[2].endswith(".papple"):
+            PathSplit:List[str] = Self.Arguments[2].split("/")
+            Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1].replace(".papple", "")
+            print(f"Building {Self.ProjectInstance.Name}")
+            Self.DirectoryPath = Self.Arguments[2].replace(f"{Self.ProjectInstance.Name}.papple", "")
+            Self.FilePath = Self.Arguments[2]
+            Self.EXEPath = f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe"
+        else:
+            PathSplit:List[str] = Self.Arguments[2].split("/")
+            Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1]
+            print(f"Building {Self.ProjectInstance.Name}")
+            Self.DirectoryPath = Self.Arguments[2]
+            Self.FilePath = Self.Arguments[2]+f"/{Self.ProjectInstance.Name}.papple"
+            Self.EXEPath = f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe"
         if Self.ProjectInstance.Name == None:
             print(f"Treating {Self.FilePath} as main file.")
         else:
@@ -217,34 +239,29 @@ I thank you for using this, and I hope you enjoy the language, and continue to u
         print(f"Parsing Arguments:\n{[f'{Argument}' for Argument in Self.Arguments]}")
         if Self.ArgumentCount == 1:
             print(Self.HelpMessage)
-        elif Self.Arguments[1] in ["c", "compile"]:
-            if Self.ArgumentCount < 3:
-                print("You didn't provide a path.")
-                return
-            if Self.Arguments[2].endswith(".papple"):
-                PathSplit:List[str] = Self.Arguments[2].split("/")
-                Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1].replace(".papple", "")
-                print(f"Building {Self.ProjectInstance.Name}")
-                Self.DirectoryPath = Self.Arguments[2].replace(f"{Self.ProjectInstance.Name}.papple", "")
-                Self.FilePath = Self.Arguments[2]
-                Self.EXEPath = f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe"
-                Self.Build()
-            else:
-                PathSplit:List[str] = Self.Arguments[2].split("/")
-                Self.ProjectInstance.Name = PathSplit[len(PathSplit)-1]
-                print(f"Building {Self.ProjectInstance.Name}")
-                Self.DirectoryPath = Self.Arguments[2]
-                Self.FilePath = Self.Arguments[2]+f"/{Self.ProjectInstance.Name}.papple"
-                Self.EXEPath = f"{Self.DirectoryPath}/{Self.ProjectInstance.Name}.exe"
-                Self.Build()
+        # Turn this in to a single-flagged argument index into dictionary
+        else:
+            Self.FlagCombinations[Self.Arguments[1]]()
 
 
-    def Generate_Printf_Function(Self, GlobalVariableMapping, Contents:str) -> str:
-        if '"' in Contents:
+    def Generate_Printf_Function(Self, GlobalVariableMapping, Contents:str, ContentsIsString=False) -> str:
+        if ContentsIsString == True:
             return f'printf({Contents});'
         elif GlobalVariableMapping[Contents] == "Int":
             return f'printf("%d", {Contents});'
 
 
+    def Generate_List_Variable(Self) -> str:
+        return f""
+
+
     def Generate_Integer_Variable(Self, GlobalVariableMapping, Name:str, Value:str) -> str:
         return f"int {Name} = {Value};"
+
+
+    def Generate_Float_Variable(Self, GlobalVariableMapping, Name:str, Value:str) -> str:
+        return f"double {Name} = {Value};"
+
+
+    def Generate_Function(Self, ReturnType:str, Name:str, Parameters:List[str], CodeBlock:str) -> str:
+        return f"{ReturnType} {Name}({Parameters})" + "{" + CodeBlock + "}"
