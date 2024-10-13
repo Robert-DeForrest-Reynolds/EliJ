@@ -11,5 +11,5 @@ Release_Iwa:
 release_iwa: Release_Iwa
 
 Run:
-	clang++ CIwa/Iwa.c -o CIwa && ./Iwa.exe
+	clang Iwa/Source/Iwa.c -o CIwa && ./CIwa.exe
 run: Run
