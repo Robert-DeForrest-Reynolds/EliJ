@@ -8,6 +8,8 @@ char* ArgumentBufferPointer;
 char* FileNamePointer;
 
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
+    ArgumentBufferPointer = malloc(256 * sizeof(char));
+    String_Pointer_Check(ArgumentBufferPointer, "ArgumentBuffer");
     for (int Iteration = 0; Iteration < ArgumentsCount; Iteration++) {
         size_t ArgumentLength = strlen(Arguments[Iteration]) + 3;
         if (ArgumentLength > 256) { return; } // Abort program if an argument is greater 256, this needs to handled more gracefully
@@ -27,10 +29,6 @@ void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
 }
 
 int main(int ArgumentsCount, char* Arguments[]) {
-    ArgumentBufferPointer = malloc(256 * sizeof(char));
-    FileNamePointer = malloc(256 * sizeof(char));
-    String_Pointer_Check(ArgumentBufferPointer, "ArgumentBuffer");
     Parse_User_Arguments(ArgumentsCount, Arguments);
-    free(FileNamePointer);
     return 0;
 }
