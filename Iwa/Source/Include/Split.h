@@ -1,6 +1,11 @@
 #ifndef SPLIT_H
 #define SPLIT_H
 
-char ** Split(char* String, char SplitCharacter);
+typedef struct SplitResult{
+    bool Successful;
+    char** Result;
+} SplitResult;
+
+SplitResult* Split(char* String, char SplitCharacter);
 
 #endif
