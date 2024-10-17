@@ -8,12 +8,12 @@
 SplitResult* Split(char* String, char SplitCharacter) {
     int SplitCharacterIndexCount = 0;
     int StringSize = strlen(String);
-
     for (int Iteration = 0; Iteration < StringSize; Iteration++) {
         if (String[Iteration] == SplitCharacter) {
             SplitCharacterIndexCount++;
         }
     }
+
     SplitResult* SplitBuffer = malloc(sizeof(SplitResult));
     SplitResult_Pointer_Check(SplitBuffer, "SplitBuffer");
     if (SplitCharacterIndexCount == 0){
@@ -26,6 +26,7 @@ SplitResult* Split(char* String, char SplitCharacter) {
     } else {
         SplitBuffer->Result = malloc((SplitCharacterIndexCount + 2) * sizeof(char*));
     }
+
     int SegmentStart = 0;
     int SegmentIndex = 0;
     for (int Iteration = 0; Iteration <= StringSize; Iteration++) {
@@ -42,6 +43,7 @@ SplitResult* Split(char* String, char SplitCharacter) {
             SegmentStart = Iteration + 1;
         }
     }
+    
     SplitBuffer->Result[SegmentIndex] = NULL;
     return SplitBuffer;
 }
