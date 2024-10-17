@@ -9,8 +9,8 @@
 char* ArgumentBufferPointer;
 char* FileNamePointer;
 
-void File_Name_Check(int Iteration, int ArgumentLength){
-    if (Iteration == 1 && Contains(ArgumentBufferPointer, ".")){
+void File_Name_Check(int ArgumentIndex, int ArgumentLength){
+    if (ArgumentIndex == 1 && Contains(ArgumentBufferPointer, ".")){
         FileNamePointer = malloc(ArgumentLength * sizeof(char));
         strcpy(FileNamePointer, ArgumentBufferPointer);
     }
