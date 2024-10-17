@@ -5,7 +5,7 @@
 #include "Split.h"
 #include "PointerChecks.h"
 
-SplitResult* Split(char* String, char SplitCharacter) {
+char** Split(char* String, char SplitCharacter) {
     int SplitCharacterIndexCount = 0;
     int StringSize = strlen(String);
     for (int Iteration = 0; Iteration < StringSize; Iteration++) {
@@ -14,17 +14,17 @@ SplitResult* Split(char* String, char SplitCharacter) {
         }
     }
 
-    SplitResult* SplitBuffer = malloc(sizeof(SplitResult));
-    SplitResult_Pointer_Check(SplitBuffer, "SplitBuffer");
+    char** SplitBuffer = malloc((SplitCharacterIndexCount + 2) * sizeof(char*));
+    String_List_Pointer_Check(SplitBuffer, "SplitBuffer");
     if (SplitCharacterIndexCount == 0){
-        SplitBuffer->Result = malloc(2 * sizeof(char*));
-        SplitBuffer->Result[0] = malloc((StringSize + 1) * sizeof(char));
-        String_Pointer_Check(SplitBuffer->Result[0], "SplitBuffer->Result");
-        strcpy(SplitBuffer->Result[0], String);
-        SplitBuffer->Result[1] = NULL;
+        SplitBuffer = malloc(2 * sizeof(char*));
+        SplitBuffer[0] = malloc((StringSize + 1) * sizeof(char));
+        String_Pointer_Check(SplitBuffer[0], "SplitBuffer");
+        strcpy(SplitBuffer[0], String);
+        SplitBuffer[1] = NULL;
         return SplitBuffer;
     } else {
-        SplitBuffer->Result = malloc((SplitCharacterIndexCount + 2) * sizeof(char*));
+        SplitBuffer = malloc((SplitCharacterIndexCount + 2) * sizeof(char*));
     }
 
     int SegmentStart = 0;
@@ -33,17 +33,17 @@ SplitResult* Split(char* String, char SplitCharacter) {
         if (String[Iteration] == SplitCharacter || String[Iteration] == '\0') {
             int SegmentLength = Iteration - SegmentStart;
 
-            SplitBuffer->Result[SegmentIndex] = malloc((SegmentLength + 1) * sizeof(char));
-            String_Pointer_Check(SplitBuffer->Result[Iteration], "SplitBuffer Segment");
+            SplitBuffer[SegmentIndex] = malloc((SegmentLength + 1) * sizeof(char));
+            String_Pointer_Check(SplitBuffer[Iteration], "SplitBuffer Segment");
 
-            strncpy(SplitBuffer->Result[SegmentIndex], &String[SegmentStart], SegmentLength);
-            SplitBuffer->Result[SegmentIndex][SegmentLength] = '\0';
+            strncpy(SplitBuffer[SegmentIndex], &String[SegmentStart], SegmentLength);
+            SplitBuffer[SegmentIndex][SegmentLength] = '\0';
 
             SegmentIndex++;
             SegmentStart = Iteration + 1;
         }
     }
     
-    SplitBuffer->Result[SegmentIndex] = NULL;
+    SplitBuffer[SegmentIndex] = NULL;
     return SplitBuffer;
 }
