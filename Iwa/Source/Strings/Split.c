@@ -23,8 +23,6 @@ char** Split(char* String, char SplitCharacter) {
         strcpy(SplitBuffer[0], String);
         SplitBuffer[1] = NULL;
         return SplitBuffer;
-    } else {
-        SplitBuffer = malloc((SplitCharacterIndexCount + 2) * sizeof(char*));
     }
 
     int SegmentStart = 0;

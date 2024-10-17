@@ -17,16 +17,15 @@ void File_Name_Check(int Iteration, int ArgumentLength){
 }
 
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
-    ArgumentBufferPointer = malloc(256 * sizeof(char));
-    String_Pointer_Check(ArgumentBufferPointer, "ArgumentBuffer");
     for (int Iteration = 1; Iteration < ArgumentsCount; Iteration++) {
         size_t ArgumentLength = strlen(Arguments[Iteration]) + 3;
-        if (ArgumentLength > 256) { return; } // Abort program if an argument is greater 256, this needs to handled more gracefully
+        ArgumentBufferPointer = malloc(ArgumentLength * sizeof(char));
+        String_Pointer_Check(ArgumentBufferPointer, "ArgumentBuffer");
         snprintf(ArgumentBufferPointer, ArgumentLength, "%s \n", Arguments[Iteration]);
         fwrite(ArgumentBufferPointer, sizeof(char), strlen(ArgumentBufferPointer), stdout);
         File_Name_Check(Iteration, ArgumentLength);
+        free(ArgumentBufferPointer);
     }
-    free(ArgumentBufferPointer);
 }
 
 int main(int ArgumentsCount, char* Arguments[]) {
@@ -35,5 +34,6 @@ int main(int ArgumentsCount, char* Arguments[]) {
         puts("\nObtained a file name:");
         puts(FileNamePointer);
     }
+    free(FileNamePointer);
     return 0;
 }
