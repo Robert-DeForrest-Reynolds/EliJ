@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include "Split.h"
+#include <stdlib.h>
 #include "PointerChecks.h"
 
 char** Split(char* String, char SplitCharacter) {

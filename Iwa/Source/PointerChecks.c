@@ -15,7 +15,7 @@ void String_List_Pointer_Check(char** Pointer, const char* PointerName){
     }
 }
 
-void SplitResult_Pointer_Check(char** Pointer, const char* PointerName){
+void File_Pointer_Check(FILE* Pointer, const char* PointerName){
     if (Pointer == NULL) {
         puts(PointerName);
         exit(EXIT_FAILURE);
