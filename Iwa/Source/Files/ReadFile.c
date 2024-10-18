@@ -3,6 +3,7 @@
 #include "PointerChecks.h"
 
 char* Read_File(char* FileName){
+    printf("Trying to read source file %s\n", FileName);
     FILE* FilePointer = fopen(FileName, "r");
     File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
 

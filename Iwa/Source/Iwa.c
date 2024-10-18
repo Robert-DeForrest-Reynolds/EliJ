@@ -6,10 +6,12 @@
 #include "ReadFile.h"
 #include "Contains.h"
 #include "PointerChecks.h"
+#include "Replace.h"
 
 void File_Name_Check(int ArgumentIndex, int ArgumentLength){
-    if (ArgumentIndex == 1 && Contains(ArgumentBufferPointer, ".")){
-        FileNamePointer = malloc((sizeof(WorkingDirectory) + ArgumentLength) * sizeof(char));
+    bool IsFileName = Contains(ArgumentBufferPointer, ".");
+    if (ArgumentIndex == 1 && IsFileName == true){
+        FileNamePointer = malloc((strlen(WorkingDirectory) + ArgumentLength) * sizeof(char));
         String_Pointer_Check(FileNamePointer, "File Name Pointer Allocation Fail");
         strcpy(FileNamePointer, ArgumentBufferPointer);
     }
@@ -33,19 +35,29 @@ int main(int ArgumentsCount, char* Arguments[]) {
     }
 
     Parse_User_Arguments(ArgumentsCount, Arguments);
-    
-    size_t FinalFileNameLength = strlen(WorkingDirectory) + strlen(FileNamePointer) + 2;
-    char* FinalFileName = malloc(FinalFileNameLength * sizeof(char));
-    String_Pointer_Check(FinalFileName, "Final File Name Pointer Allocation Fail");
-    strcpy(FinalFileName, WorkingDirectory);
-    strcat(FinalFileName, FileNamePointer);
 
-    char* SourceCode = Read_File(FinalFileName);
+    if (Contains(FileNamePointer, "\\")){
+        FileNamePointer = Replace(FileNamePointer, "\\", "/");
+        puts(FileNamePointer);
+        FinalWorkingDirectory = Replace(WorkingDirectory, "\\", "/");
+    }
+    else{
+        FinalWorkingDirectory = NULL;
+    }
+
+    if (FinalWorkingDirectory != NULL){
+        size_t FinalFileNameLength = strlen(FinalWorkingDirectory) + strlen(FileNamePointer) + 2;
+        char* FinalFileName = malloc(FinalFileNameLength + 1 * sizeof(char));
+        strcpy(FinalFileName, FinalWorkingDirectory);
+        strcat(FinalFileName, FileNamePointer);
+        SourceCode = Read_File(FinalFileName);
+    } else {
+        SourceCode = Read_File(FileNamePointer);
+    }
+
     if (SourceCode) {
         puts(SourceCode);
         free(SourceCode);
-    } else {
-        fprintf(stderr, "Failed to read the file: %s\n", FinalFileName);
     }
 
     free(FileNamePointer);
