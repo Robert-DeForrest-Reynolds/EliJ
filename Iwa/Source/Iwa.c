@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "Iwa.h"
 #include "ReadFile.h"
+#include "ReadFileLines.h"
 #include "Contains.h"
 #include "PointerChecks.h"
 #include "Replace.h"
@@ -15,6 +16,46 @@ void File_Name_Check(int ArgumentIndex, int ArgumentLength){
         String_Pointer_Check(FileNamePointer, "File Name Pointer Allocation Fail");
         strcpy(FileNamePointer, ArgumentBufferPointer);
     }
+}
+
+char** Parse_Source_Code(char* FileName){
+    printf("Trying to read source file %s\n", FileName);
+    FILE* FilePointer = fopen(FileName, "r");
+    File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
+
+    int LineBufferSize = 1024;
+
+    int LineCount = 0;
+    char* LineBuffer = malloc(LineBufferSize * sizeof(char));
+
+    fseek(FilePointer, 0, SEEK_END);
+    long FileSize = ftell(FilePointer);
+    rewind(FilePointer);
+
+    while (fgets(LineBuffer, LineBufferSize, FilePointer)){
+        LineCount += 1;
+    }
+
+    char** Contents = malloc((LineCount + 1) * sizeof(char*));
+    String_List_Pointer_Check(Contents, "Read File Contents Pointer Allocation Fail");
+    for (int LineIndex = 0; LineIndex < LineCount; LineIndex++){
+        Contents[LineIndex] = malloc((LineBufferSize + 1) * sizeof(char));
+        String_Pointer_Check(Contents[LineIndex], "Read File Lines Inner String Allocation Fail");
+    }
+
+    LineCount = 0;
+    rewind(FilePointer);
+    while (fgets(LineBuffer, LineBufferSize, FilePointer)){
+        strcpy(Contents[LineCount], LineBuffer);
+        printf("%s", Contents[LineCount]);
+        LineCount += 1;
+    }
+
+    free(LineBuffer);
+    fclose(FilePointer);
+
+    Contents[LineCount] = NULL;
+    return Contents;
 }
 
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
@@ -40,26 +81,16 @@ int main(int ArgumentsCount, char* Arguments[]) {
         FileNamePointer = Replace(FileNamePointer, "\\", "/");
         puts(FileNamePointer);
         FinalWorkingDirectory = Replace(WorkingDirectory, "\\", "/");
-    }
-    else{
-        FinalWorkingDirectory = NULL;
-    }
-
-    if (FinalWorkingDirectory != NULL){
         size_t FinalFileNameLength = strlen(FinalWorkingDirectory) + strlen(FileNamePointer) + 2;
         char* FinalFileName = malloc(FinalFileNameLength + 1 * sizeof(char));
         strcpy(FinalFileName, FinalWorkingDirectory);
         strcat(FinalFileName, FileNamePointer);
-        SourceCode = Read_File(FinalFileName);
+        SourceCode = Parse_Source_Code(FinalFileName);
     } else {
-        SourceCode = Read_File(FileNamePointer);
+        SourceCode = Parse_Source_Code(FileNamePointer);
     }
 
-    if (SourceCode) {
-        puts(SourceCode);
-        free(SourceCode);
-    }
-
+    free(SourceCode);
     free(FileNamePointer);
     return 0;
 }

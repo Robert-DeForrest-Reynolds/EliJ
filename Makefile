@@ -9,5 +9,11 @@ Build:
 build: Build
 
 Test:
-	clang $(SourceFiles) -I$(Include) -o CIwa && ./CIwa.exe Examples/HelloWorld.papple
+	clang $(SourceFiles) -I$(Include) -o CIwa
+	./CIwa.exe Examples/HelloWorld.papple
 test: Test
+
+timetest:
+	time clang $(SourceFiles) -I$(Include) -o CIwa
+	time ./CIwa.exe Examples/HelloWorld.papple
+	
