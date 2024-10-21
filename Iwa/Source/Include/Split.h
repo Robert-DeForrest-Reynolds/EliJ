@@ -1,6 +1,7 @@
 #ifndef SPLIT_H
 #define SPLIT_H
+#include "Structures.h"
 
-char** Split(char* String, char SplitCharacter);
+StringList* Split(char* String, char SplitCharacter);
 
 #endif

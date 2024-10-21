@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "PointerChecks.h"
+#include "Structures.h"
 
-char** Read_File_Lines(char* FileName, int LineBufferSize){
+StringList* Read_File_Lines(char* FileName, int LineBufferSize){
     if (LineBufferSize <= 0) { LineBufferSize = 1024; }
 
     printf("Trying to read source file %s\n", FileName);
@@ -21,24 +22,26 @@ char** Read_File_Lines(char* FileName, int LineBufferSize){
         LineCount += 1;
     }
 
-    char** Contents = malloc((LineCount + 1) * sizeof(char*));
-    String_List_Pointer_Check(Contents, "Read File Contents Pointer Allocation Fail");
+    StringList* Contents = (StringList*) malloc(sizeof(StringList));
+    Contents->List = malloc((LineCount + 1) * sizeof(char*));
+    StringList_Pointer_Check(Contents, "Read File Contents Pointer Allocation Fail");
     for (int LineIndex = 0; LineIndex < LineCount; LineIndex++){
-        Contents[LineIndex] = malloc((LineBufferSize + 1) * sizeof(char));
-        String_Pointer_Check(Contents[LineIndex], "Read File Lines Inner String Allocation Fail");
+        Contents->List[LineIndex] = malloc((LineBufferSize + 1) * sizeof(char));
+        String_Pointer_Check(Contents->List[LineIndex], "Read File Lines Inner String Allocation Fail");
     }
 
     LineCount = 0;
     rewind(FilePointer);
     while (fgets(LineBuffer, LineBufferSize, FilePointer)){
-        strcpy(Contents[LineCount], LineBuffer);
+        strcpy(Contents->List[LineCount], LineBuffer);
         LineCount += 1;
     }
 
     free(LineBuffer);
     fclose(FilePointer);
 
-    Contents[LineCount] = NULL;
+    Contents->List[LineCount] = NULL;
+    Contents->ElementCount = LineCount;
 
     return Contents;
 }

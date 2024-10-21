@@ -8,6 +8,7 @@
 #include "Contains.h"
 #include "PointerChecks.h"
 #include "Replace.h"
+#include "Structures.h"
 
 void File_Name_Check(int ArgumentIndex, int ArgumentLength){
     bool IsFileName = Contains(ArgumentBufferPointer, ".");
@@ -18,7 +19,7 @@ void File_Name_Check(int ArgumentIndex, int ArgumentLength){
     }
 }
 
-char** Parse_Source_Code(char* FileName){
+StringList* Parse_Source_Code(char* FileName){
     printf("Trying to read source file %s\n", FileName);
     FILE* FilePointer = fopen(FileName, "r");
     File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
@@ -36,25 +37,26 @@ char** Parse_Source_Code(char* FileName){
         LineCount += 1;
     }
 
-    char** Contents = malloc((LineCount + 1) * sizeof(char*));
-    String_List_Pointer_Check(Contents, "Read File Contents Pointer Allocation Fail");
+    StringList* Contents = (StringList* )malloc((LineCount + 1) * sizeof(char*));
+    Contents->List = malloc((LineCount + 1) * sizeof(char*));
+    StringList_Pointer_Check(Contents, "Read File Contents Pointer Allocation Fail");
     for (int LineIndex = 0; LineIndex < LineCount; LineIndex++){
-        Contents[LineIndex] = malloc((LineBufferSize + 1) * sizeof(char));
-        String_Pointer_Check(Contents[LineIndex], "Read File Lines Inner String Allocation Fail");
+        Contents->List[LineIndex] = malloc((LineBufferSize + 1) * sizeof(char));
+        String_Pointer_Check(Contents->List[LineIndex], "Read File Lines Inner String Allocation Fail");
     }
 
     LineCount = 0;
     rewind(FilePointer);
     while (fgets(LineBuffer, LineBufferSize, FilePointer)){
-        strcpy(Contents[LineCount], LineBuffer);
-        printf("%s", Contents[LineCount]);
+        strcpy(Contents->List[LineCount], LineBuffer);
         LineCount += 1;
     }
 
     free(LineBuffer);
     fclose(FilePointer);
 
-    Contents[LineCount] = NULL;
+    Contents->List[LineCount] = NULL;
+    Contents->ElementCount = LineCount;
     return Contents;
 }
 
@@ -88,6 +90,11 @@ int main(int ArgumentsCount, char* Arguments[]) {
         SourceCode = Parse_Source_Code(FinalFileName);
     } else {
         SourceCode = Parse_Source_Code(FileNamePointer);
+    }
+
+    Output(SourceCode, 0);
+    for (int Iteration = 0; Iteration < SourceCode->ElementCount; Iteration++){
+        printf("%s", SourceCode->List[Iteration]);
     }
 
     free(SourceCode);
