@@ -9,6 +9,7 @@
 #include "PointerChecks.h"
 #include "Replace.h"
 #include "Structures.h"
+#include "Dictionary.h"
 
 void File_Name_Check(int ArgumentIndex, int ArgumentLength){
     bool IsFileName = Contains(ArgumentBufferPointer, ".");
@@ -92,7 +93,6 @@ int main(int ArgumentsCount, char* Arguments[]) {
         SourceCode = Parse_Source_Code(FileNamePointer);
     }
 
-    Output(SourceCode, 0);
     for (int Iteration = 0; Iteration < SourceCode->ElementCount; Iteration++){
         printf("%s", SourceCode->List[Iteration]);
     }

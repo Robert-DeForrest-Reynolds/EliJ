@@ -1,15 +1,19 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-typedef struct Dictionary {
-    char* Key;
-    int Value;
-} Dictionary;
+typedef struct Pair {
+    void* Key;
+    char* KeyType;
+    void* Value;
+    char* ValueType;
+    struct Pair* Next;  // Pointer for handling collisions (linked list)
+} Pair;
 
-typedef struct HashTable {
-    Dictionary Dict;
+typedef struct Dictionary {
+    Pair** Table;
     int Size;
-} HashTable;
+    int* InnerDepth;  // Keeps track of collision depths for each index
+} Dictionary;
 
 typedef struct StringList{
     char** List;
