@@ -1,6 +1,7 @@
 SourceFiles = $(wildcard Iwa/Source/*.c)\
 			  $(wildcard  Iwa/Source/Strings/*.c)\
 			  $(wildcard  Iwa/Source/Files/*.c)\
+			  $(wildcard  Iwa/Source/Interpreter/*.c)\
 
 Include = Iwa/Source/Include
 
