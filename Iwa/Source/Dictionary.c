@@ -1,36 +1,3 @@
-/*
-
-A dictionary implementation for Pineapple
-
-A HashTable holds:
-    Pairs**;
-    PairValues**;
-    InnerDepth;
-    CollisionCount;
-
-
-A Pair holds:
-    void* Key;
-    char* KeyType;
-    void* Value;
-    char* valueType;
-
-Linked lists to handle collisions at a depth of 5, as through a bit of rough testing that's the reliable
-max to force the compiler to generate a jump table. We only check the collision count upon finding a
-collision in the first place. If a collision depth of 5 is reached, we resort to expanding turning if the
-linked list into an inner hash table. 
-
-Keep account of recursion depth at each collision, and report copies to the user
-If we have 2 or more collisions depths reached, we report to the user
-We only check afterward we've found a collision at all
-Ensure that hash recursion is checked against. If a collision is found, we need to start a counter of collisions, if the collision counter reaches 3
-the program informs the user that the our hashing does not work for their intended implementation.
-The user, and/or we as developers can deal with implementations to cover specified implementation detail for avoid these specified patterns that are dug up.
-
-// If we collide with an existing value when adding a new value, we'll add a secondary variable to the hash formula to resolve a new position
-// A has a collision count
-
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
