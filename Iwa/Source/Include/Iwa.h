@@ -9,7 +9,6 @@ char* FileNamePointer;
 char WorkingDirectory[1024 * 1024]; // 1MB
 int WorkingDirectoryLength;
 char* FinalWorkingDirectory;
-StringList* SourceCode;
 StringList* Instructions;
 
 #endif

@@ -17,7 +17,7 @@ Dictionary* Create_Dictionary(int Size) {
     return Dict;
 }
 
-Pair* Create_Pair(void* Key, char* KeyType, void* Value, char* ValueType) {
+Pair* Create_Pair(void* Key, Type KeyType, void* Value, Type ValueType) {
     Pair* NewPair = (Pair*)malloc(sizeof(Pair));
     NewPair->Key = Key;
     NewPair->KeyType = KeyType;
@@ -27,7 +27,7 @@ Pair* Create_Pair(void* Key, char* KeyType, void* Value, char* ValueType) {
     return NewPair;
 }
 
-void Insert(Dictionary* Dict, void* Key, char* KeyType, void* Value, char* ValueType) {
+void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueType) {
     unsigned int Index = Hash(Key, Dict->Size);
     Pair* NewPair = Create_Pair(Key, KeyType, Value, ValueType);
 
@@ -51,17 +51,21 @@ void Insert(Dictionary* Dict, void* Key, char* KeyType, void* Value, char* Value
     }
 }
 
-char* Find(Dictionary* Dict, void* Key) {
+Any* Find(Dictionary* Dict, void* Key) {
     unsigned int Index = Hash(Key, Dict->Size);
     Pair* Current = Dict->Table[Index];
+    Any* FoundValue = (Any*) malloc(sizeof(Any));
 
     while (Current != NULL) {
         if (Current->Key == Key) {
-            return Current->Value;
+            FoundValue->Value = Current->Value;
+            FoundValue->ValueType = Current->ValueType;
+            return FoundValue;
         }
         Current = Current->Next;
     }
-    return "Couldn't find anything";
+    FoundValue->Value = NULL;
+    return FoundValue;
 }
 
 void Free_Dictionary(Dictionary* Dict) {

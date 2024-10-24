@@ -19,7 +19,7 @@ void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
         String_Pointer_Check(ArgumentBufferPointer, "ArgumentBuffer");
         snprintf(ArgumentBufferPointer, ArgumentLength, "%s", Arguments[Iteration]);
         if (Iteration == 1){
-            File_Name_Check(FileNamePointer, ArgumentBufferPointer, ArgumentLength, WorkingDirectoryLength);
+            FileNamePointer = File_Name_Check(ArgumentBufferPointer, ArgumentLength, WorkingDirectoryLength);
         }
         free(ArgumentBufferPointer);
     }
@@ -33,25 +33,22 @@ int main(int ArgumentsCount, char* Arguments[]) {
     WorkingDirectoryLength = strlen(WorkingDirectory);
 
     Parse_User_Arguments(ArgumentsCount, Arguments);
-
+    Contains(FileNamePointer, "\\");
     if (Contains(FileNamePointer, "\\")){
         FileNamePointer = Replace(FileNamePointer, "\\", "/");
-        puts(FileNamePointer);
         FinalWorkingDirectory = Replace(WorkingDirectory, "\\", "/");
         size_t FinalFileNameLength = strlen(FinalWorkingDirectory) + strlen(FileNamePointer) + 2;
         char* FinalFileName = malloc(FinalFileNameLength + 1 * sizeof(char));
         strcpy(FinalFileName, FinalWorkingDirectory);
         strcat(FinalFileName, FileNamePointer);
-        SourceCode = Parse_Source_Code(FinalFileName);
+        Instructions = Parse_Source_Code(FinalFileName);
     } else {
-        SourceCode = Parse_Source_Code(FileNamePointer);
+        Instructions = Parse_Source_Code(FileNamePointer);
     }
 
-    for (int Iteration = 0; Iteration < SourceCode->ElementCount; Iteration++){
-        printf("%s", SourceCode->List[Iteration]);
-    }
+    Execute_Instructions(Instructions);
 
-    free(SourceCode);
+    free(Instructions);
     free(FileNamePointer);
     return 0;
 }

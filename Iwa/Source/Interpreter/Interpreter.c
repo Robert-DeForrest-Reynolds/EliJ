@@ -5,14 +5,22 @@
 #include "Structures.h"
 #include "Contains.h"
 #include "PointerChecks.h"
+#include "Dictionary.h"
+#include "Enums.h"
+#include "Output.h"
 
-void File_Name_Check(char* FileNamePointer, char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength){
+/*
+We parse the source code into a list of all of the lines, that will then be parsed, and executed line by line
+*/
+
+char* File_Name_Check(char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength){
     bool IsFileName = Contains(PotentialFileName, ".");
+    char* FileNamePointer = (char *) malloc((WorkingDirectoryLength + ArgumentLength) * sizeof(char));
     if (IsFileName == true){
-        FileNamePointer = malloc((WorkingDirectoryLength + ArgumentLength) * sizeof(char));
         String_Pointer_Check(FileNamePointer, "File Name Pointer Allocation Fail");
         strcpy(FileNamePointer, PotentialFileName);
     }
+    return FileNamePointer;
 }
 
 StringList* Parse_Source_Code(char* FileName){
@@ -54,4 +62,28 @@ StringList* Parse_Source_Code(char* FileName){
     Contents->List[LineCount] = NULL;
     Contents->ElementCount = LineCount;
     return Contents;
+}
+
+void Declare_String (){
+
+}
+
+void Execute_Instructions(StringList* Instructions){
+    Dictionary* BuiltIns = Create_Dictionary(10);
+    Function* StringDeclarations = malloc(sizeof(Function));
+    StringDeclarations->Function = Declare_String;
+    StringDeclarations->FunctionName = "Declare_String";
+    Insert(BuiltIns, "StringDeclaration", STRING, StringDeclarations, FUNCTION);
+    Insert(BuiltIns, "You're a walrus", STRING, "I'm not a walrus\n", STRING);
+
+    Any* FunctionValue = Find(BuiltIns, "StringDeclaration");
+    Output(FunctionValue);
+
+    Any* StringValue = Find(BuiltIns, "You're a walrus");
+    Output(StringValue);
+
+
+    // for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){
+    //     printf("%s", Instructions->List[LineIndex]);
+    // }
 }
