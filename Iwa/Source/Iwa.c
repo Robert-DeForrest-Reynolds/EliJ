@@ -56,8 +56,5 @@ int main(int ArgumentsCount, char* Arguments[]) {
     Example->Value = ExampleNumberValue;
     Example->ValueType = INT;
     Output(Example);
-
-    free(Instructions);
-    free(FileNamePointer);
     return 0;
 }
