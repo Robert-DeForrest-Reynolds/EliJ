@@ -19,13 +19,14 @@ void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
         String_Pointer_Check(ArgumentBufferPointer, "ArgumentBuffer");
         snprintf(ArgumentBufferPointer, ArgumentLength, "%s", Arguments[Iteration]);
         if (Iteration == 1){
-            FileNamePointer = File_Name_Check(ArgumentBufferPointer, ArgumentLength, WorkingDirectoryLength);
+            FileNamePointer = File_Name_Check(ArgumentBufferPointer, ArgumentLength,  WorkingDirectoryLength);
         }
         free(ArgumentBufferPointer);
     }
 }
 
 int main(int ArgumentsCount, char* Arguments[]) {
+    // puts("\n");
     if (getcwd(WorkingDirectory, sizeof(WorkingDirectory)) == NULL) {
         perror("Failed to obtain current working directory.");
         return EXIT_FAILURE;
@@ -45,7 +46,6 @@ int main(int ArgumentsCount, char* Arguments[]) {
     } else {
         Instructions = Parse_Source_Code(FileNamePointer);
     }
-
     Execute_Instructions(Instructions);
 
     free(Instructions);

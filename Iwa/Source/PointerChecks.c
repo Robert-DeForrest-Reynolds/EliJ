@@ -9,6 +9,13 @@ void String_Pointer_Check(char* Pointer, const char* PointerName){
     }
 }
 
+void CharList_Pointer_Check(char** Pointer, const char* PointerName){
+    if (Pointer == NULL) {
+        puts(PointerName);
+        exit(EXIT_FAILURE);
+    }
+}
+
 void StringList_Pointer_Check(StringList* Pointer, const char* PointerName){
     if (Pointer == NULL) {
         puts(PointerName);

@@ -4,23 +4,27 @@
 #include "Structures.h"
 
 StringList* Split(char* String, char SplitCharacter) {
+    if (String == NULL) { return NULL; }
     int SplitCharacterIndexCount = 0;
     int StringSize = strlen(String);
+    StringList* SplitBuffer = (StringList*) malloc(sizeof(StringList));
+    StringList_Pointer_Check(SplitBuffer, "SplitBuffer List Allocation Fail");
+    
+
     for (int Iteration = 0; Iteration < StringSize; Iteration++) {
         if (String[Iteration] == SplitCharacter) {
             SplitCharacterIndexCount++;
         }
     }
 
-    StringList* SplitBuffer = (StringList*) malloc(sizeof(StringList));
     SplitBuffer->List = malloc((SplitCharacterIndexCount + 2) * sizeof(char*));
-    StringList_Pointer_Check(SplitBuffer, "SplitBuffer");
+    CharList_Pointer_Check(SplitBuffer->List, "Split Buffer Inner List Allocation Fail");
     if (SplitCharacterIndexCount == 0){
-        SplitBuffer = malloc(2 * sizeof(char*));
         SplitBuffer->List[0] = malloc((StringSize + 1) * sizeof(char));
-        String_Pointer_Check(SplitBuffer->List[0], "SplitBuffer");
+        String_Pointer_Check(SplitBuffer->List[0], "SplitBuffer Element Allocation Fail");
         strcpy(SplitBuffer->List[0], String);
         SplitBuffer->List[1] = NULL;
+        SplitBuffer->ElementCount = 2;
         return SplitBuffer;
     }
 
@@ -31,7 +35,7 @@ StringList* Split(char* String, char SplitCharacter) {
             int SegmentLength = Iteration - SegmentStart;
 
             SplitBuffer->List[SegmentIndex] = malloc((SegmentLength + 1) * sizeof(char));
-            String_Pointer_Check(SplitBuffer->List[Iteration], "SplitBuffer Segment");
+            String_Pointer_Check(SplitBuffer->List[SegmentIndex], "SplitBuffer Segment Allocation Fail");
 
             strncpy(SplitBuffer->List[SegmentIndex], &String[SegmentStart], SegmentLength);
             SplitBuffer->List[SegmentIndex][SegmentLength] = '\0';
@@ -42,5 +46,6 @@ StringList* Split(char* String, char SplitCharacter) {
     }
     
     SplitBuffer->List[SegmentIndex] = NULL;
+    SplitBuffer->ElementCount = SplitCharacterIndexCount;
     return SplitBuffer;
 }

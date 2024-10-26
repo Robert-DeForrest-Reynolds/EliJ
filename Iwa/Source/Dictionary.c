@@ -62,7 +62,9 @@ Any* Find(Dictionary* Dict, void* Key) {
             FoundValue->ValueType = Current->ValueType;
             return FoundValue;
         }
-        Current = Current->Next;
+        FoundValue->Value = Current->Value;
+        FoundValue->ValueType = Current->ValueType;
+        return FoundValue;
     }
     FoundValue->Value = NULL;
     return FoundValue;

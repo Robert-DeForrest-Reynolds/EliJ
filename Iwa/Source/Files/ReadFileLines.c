@@ -11,37 +11,40 @@ StringList* Read_File_Lines(char* FileName, int LineBufferSize){
     FILE* FilePointer = fopen(FileName, "r");
     File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
 
-    int LineCount = 0;
-    char* LineBuffer = malloc(LineBufferSize * sizeof(char));
-
-    fseek(FilePointer, 0, SEEK_END);
-    long FileSize = ftell(FilePointer);
-    rewind(FilePointer);
-
-    while (fgets(LineBuffer, LineBufferSize, FilePointer)){
-        LineCount += 1;
-    }
-
     StringList* Contents = (StringList*) malloc(sizeof(StringList));
-    Contents->List = malloc((LineCount + 1) * sizeof(char*));
     StringList_Pointer_Check(Contents, "Read File Contents Pointer Allocation Fail");
-    for (int LineIndex = 0; LineIndex < LineCount; LineIndex++){
-        Contents->List[LineIndex] = malloc((LineBufferSize + 1) * sizeof(char));
-        String_Pointer_Check(Contents->List[LineIndex], "Read File Lines Inner String Allocation Fail");
+    Contents->List = malloc(sizeof(char*) * (LineBufferSize));
+    Contents->ElementCount = 0;
+
+    char* LineBuffer = malloc(LineBufferSize * sizeof(char));
+    if (LineBuffer == NULL) {
+        free(Contents);
+        fclose(FilePointer);
+        perror("Line buffer allocation failed");
+        return NULL;
     }
 
-    LineCount = 0;
-    rewind(FilePointer);
-    while (fgets(LineBuffer, LineBufferSize, FilePointer)){
-        strcpy(Contents->List[LineCount], LineBuffer);
-        LineCount += 1;
+    while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
+        Contents->List[Contents->ElementCount] = malloc((strlen(LineBuffer) + 1) * sizeof(char));
+        String_Pointer_Check(Contents->List[Contents->ElementCount], "Read File Lines Inner String Allocation Fail");
+        strcpy(Contents->List[Contents->ElementCount], LineBuffer);
+        Contents->ElementCount++;
+        
+        if (Contents->ElementCount % LineBufferSize == 0) {
+            Contents->List = realloc(Contents->List, sizeof(char*) * (Contents->ElementCount + LineBufferSize));
+            if (Contents->List == NULL) {
+                free(LineBuffer);
+                free(Contents);
+                perror("Reallocation of contents list failed");
+                return NULL;
+            }
+        }
     }
 
     free(LineBuffer);
     fclose(FilePointer);
 
-    Contents->List[LineCount] = NULL;
-    Contents->ElementCount = LineCount;
+    Contents->List[Contents->ElementCount] = NULL;
 
     return Contents;
 }

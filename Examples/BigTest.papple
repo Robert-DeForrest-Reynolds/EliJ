@@ -8,70 +8,64 @@ comment
 #
 
 # Variable declaration should feel pretty familiar #
-list Names;
+Lst Names
 
-int Health = 50;
+Int Health = 50
 
 # Imports should feel pretty familiar #
-from ImportExample import *;
+Import ExampleExternalScript
 
 # We have lists
 Names = ["Lani",
          "Lily",
-         "Eleanor"];
+         "Eleanor"]
 
 # And we have dictionaries
-dict People = ["Lani": 23,
-                "Lily": 6];
+Dct People = ["Lani": 23,
+               "Lily": 6]
 
 # Out is a built-in function to output to the CLI #
-Out(Health);
+Out(Health)
 
 # Functions should feel pretty familiar #
-func Addition(int X, int Y){
-    return X + Y;
-}
+Fnc Addition(int X, int Y) -> Int
+    return X + Y
 
-func Read_File (string FilePath) {
-    with Open (FilePath) as OpenedFile {
-        string Contents = OpenedFile.Read_Lines();
-    }
-    Out(Contents);
-}
+
+Fnc Read_File(string FilePath) -> Rtn
+    File SomeFile = Open(FilePath)
+    Str Contents = SomeFile.Read_Lines()
+    Out(Contents)
+
 
 # Conditionals
-func Is_Even(Number){
-    if Number % 2 == 0 {
-        return True;
-    } else {
-        return False;
-    }
-}
+Fnc Is_Even(Number) -> Bln
+    if Number % 2 == 0
+        return True
+    else
+        return False
 
 # Loops
-int Counter = 0
-while {
-    Counter += 1;
-    Out("I'm a loop");
-    if Counter == 3 {
-        break;
-    }
-}
+Int Counter = 0
+While
+    Counter += 1
+    Out("I'm a loop")
+    If Counter == 3
+        Break
 
 # Objects, I don't want them, but they'll be implemented in the interest of encapsulation, not inheritance, or polymorphism #
-obj Person{
-    func New(Name, Age){
-        String Self.Name: Name;
-        Integer Self.Age: Age;
-    }
-}
+Obj Person
+    func New(Name, Age) -> Rtn
+        String Self.Name =  Name
+        Integer Self.Age = Age
 
-Person Jack: "Jack", 21;
+Person Jack
+Person Jack.New("Jack", 21)
 
-Out(Jack.Name);
-Out(Jack.Age);
+Out(Jack.Name)
+Out(Jack.Age)
 
-Jack.Age = 22;
+Jack.Age = 22
 
-Out(Addition(5, 2));
-Out(Subtraction(5, 2));
+Out(Addition(5, 2))
+Out(Subtraction(5, 2))
