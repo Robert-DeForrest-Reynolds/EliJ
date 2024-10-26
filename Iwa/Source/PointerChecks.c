@@ -29,3 +29,10 @@ void File_Pointer_Check(FILE* Pointer, const char* PointerName){
         exit(EXIT_FAILURE);
     }
 }
+
+void Function_Pointer_Check(Function* Pointer, const char* PointerName){
+    if (Pointer == NULL) {
+        puts(PointerName);
+        exit(EXIT_FAILURE);
+    }
+}

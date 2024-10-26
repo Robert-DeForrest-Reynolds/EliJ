@@ -37,7 +37,7 @@ void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueTy
         Pair* Current = Dict->Table[Index];
         int Depth = 0;
 
-        if (Current->Next == NULL) {
+        while (Current->Next == NULL) {
             Depth++;
             Current = Current->Next;
         }
@@ -54,20 +54,20 @@ void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueTy
 Any* Find(Dictionary* Dict, void* Key) {
     unsigned int Index = Hash(Key, Dict->Size);
     Pair* Current = Dict->Table[Index];
-    Any* FoundValue = (Any*) malloc(sizeof(Any));
 
     while (Current != NULL) {
-        if (Current->Key == Key) {
-            FoundValue->Value = Current->Value;
-            FoundValue->ValueType = Current->ValueType;
-            return FoundValue;
+        if (Current->KeyType == STRING){
+            if (strcmp((char*) Current->Key, (char *) Key) == 0) {
+                Any* FoundValue = (Any*) malloc(sizeof(Any));
+                FoundValue->Value = Current->Value;
+                FoundValue->ValueType = Current->ValueType;
+                puts("Found a value");
+                return FoundValue;
+            }
         }
-        FoundValue->Value = Current->Value;
-        FoundValue->ValueType = Current->ValueType;
-        return FoundValue;
+        Current = Current->Next;
     }
-    FoundValue->Value = NULL;
-    return FoundValue;
+    return NULL;
 }
 
 void Free_Dictionary(Dictionary* Dict) {

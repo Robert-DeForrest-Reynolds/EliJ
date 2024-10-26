@@ -11,6 +11,7 @@
 #include "Replace.h"
 #include "Structures.h"
 #include "Dictionary.h"
+#include "Output.h"
 
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
     for (int Iteration = 1; Iteration < ArgumentsCount; Iteration++) {
@@ -46,7 +47,15 @@ int main(int ArgumentsCount, char* Arguments[]) {
     } else {
         Instructions = Parse_Source_Code(FileNamePointer);
     }
-    Execute_Instructions(Instructions);
+    Run_Interpreter(Instructions);
+
+    // Example integer output
+    Any* Example = (Any*) malloc(sizeof(Any));
+    int* ExampleNumberValue = malloc(sizeof(int));
+    *ExampleNumberValue = 5;
+    Example->Value = ExampleNumberValue;
+    Example->ValueType = INT;
+    Output(Example);
 
     free(Instructions);
     free(FileNamePointer);

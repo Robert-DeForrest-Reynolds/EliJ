@@ -6,15 +6,16 @@ SourceFiles = $(wildcard Iwa/Source/*.c)\
 Include = Iwa/Source/Include
 
 Build:
-	clang $(SourceFiles) -I$(Include) -o CIwa
+	clang $(SourceFiles) -I$(Include) -o Iwa
 build: Build
 
 Test:
-	clang $(SourceFiles) -I$(Include) -o CIwa
-	./CIwa.exe Examples/HelloWorld.papple
+	clang $(SourceFiles) -I$(Include) -o Iwa
+	@echo ""
+	./Iwa.exe Examples/HelloWorld.papple
 test: Test
 
 timetest:
-	time clang $(SourceFiles) -I$(Include) -o CIwa
-	time ./CIwa.exe Examples/HelloWorld.papple
+	time clang $(SourceFiles) -I$(Include) -o Iwa
+	time ./Iwa.exe Examples/HelloWorld.papple
 	

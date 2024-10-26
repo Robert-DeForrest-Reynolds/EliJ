@@ -10,6 +10,7 @@
 #include "Output.h"
 #include "Split.h"
 
+Dictionary* Globals;
 
 char* File_Name_Check(char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength){
     bool IsFileName = Contains(PotentialFileName, ".");
@@ -65,21 +66,54 @@ StringList* Parse_Source_Code(char* FileName){
 }
 
 Pair* Variable_Declaration(char* Line){
+    puts("Fuck yes");
     Pair* GlobalPair;
     return GlobalPair;
 }
 
-void Execute_Instructions(StringList* Instructions){
-    Dictionary* Globals = Create_Dictionary(10);
+
+void Execute_Instruction(char* Instruction){
+    int InstructionLength = strlen(Instruction);
+    char* KeyWordBuffer = malloc((InstructionLength + 1) * sizeof(char));
+    StringList InstructionSet;
+    for (int CharacterIndex = 0; CharacterIndex < InstructionLength; CharacterIndex++){
+        strncpy(KeyWordBuffer, Instruction, CharacterIndex+1);
+        KeyWordBuffer[CharacterIndex] = '\0';
+        Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
+        if (InstructionKeyword != NULL){
+            puts(KeyWordBuffer);
+            Output(InstructionKeyword);
+        }
+        free(InstructionKeyword);
+    }
+    free(KeyWordBuffer);
+}
+
+
+// Most of this will be cleaned up when the program closes, and doesn't need to be freed during runtime at all
+void Functions_Setup(){
     Function* VariableDeclaration = malloc(sizeof(Function));
     VariableDeclaration->Function = Variable_Declaration;
     VariableDeclaration->FunctionName = "Variable_Declaration";
-    Insert(Globals, "String ", STRING, VariableDeclaration, FUNCTION);
+
+    Function* OutputFunction = malloc(sizeof(Function));
+    OutputFunction->Function = Output;
+    OutputFunction->FunctionName = "Output";
+
+    Insert(Globals, "String", STRING, VariableDeclaration, FUNCTION);
+    Insert(Globals, "Out", STRING, OutputFunction, FUNCTION);
+}
+
+
+void Run_Interpreter(StringList* Instructions){
+    Globals = Create_Dictionary(10);
+    Functions_Setup();
 
     for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){
         if (Instructions->List[LineIndex] != NULL){
             puts("Executing instruction...");
             printf("Instruction: %s\n", Instructions->List[LineIndex]);
+            Execute_Instruction(Instructions->List[LineIndex]);
             puts("Finished instruction");
         }
         // Any* Instruction = Find(Globals, Instructions->List[LineIndex]);
@@ -92,5 +126,4 @@ void Execute_Instructions(StringList* Instructions){
         // }
     }
     free(Globals);
-    free(VariableDeclaration);
 }
