@@ -77,15 +77,27 @@ void Execute_Instruction(char* Instruction){
     int InstructionLength = strlen(Instruction);
     char* KeyWordBuffer = malloc((InstructionLength + 1) * sizeof(char));
     StringList InstructionSet;
+    bool InitialCharacterFound = false;
+    int IndexOfFirstCharacter;
     for (int CharacterIndex = 0; CharacterIndex < InstructionLength; CharacterIndex++){
-        strncpy(KeyWordBuffer, Instruction, CharacterIndex+1);
-        KeyWordBuffer[CharacterIndex] = '\0';
-        Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
-        if (InstructionKeyword != NULL){
-            puts(KeyWordBuffer);
-            Output(InstructionKeyword);
+        if (Instruction[CharacterIndex] != ' ') {
+            InitialCharacterFound = true;
+            IndexOfFirstCharacter = CharacterIndex;
+            break;
         }
-        free(InstructionKeyword);
+    }
+    for (int CharacterIndex = IndexOfFirstCharacter; CharacterIndex < InstructionLength; CharacterIndex++){
+
+        if (InitialCharacterFound == true && Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
+            strncpy(KeyWordBuffer, Instruction, CharacterIndex);
+            KeyWordBuffer[CharacterIndex] = '\0';
+            Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
+            if (InstructionKeyword != NULL){
+                puts(KeyWordBuffer);
+                Output(InstructionKeyword);
+            }
+            free(InstructionKeyword);
+        }
     }
     free(KeyWordBuffer);
 }
@@ -113,7 +125,7 @@ void Functions_Setup(){
 
     // Built-In Functions
     Insert(Globals, "Out", STRING, OutputFunction, FUNCTION);
-    Insert(Globals, "In", STRING, InputFunction, FUNCTION);
+    Insert(Globals, "Input", STRING, InputFunction, FUNCTION);
 }
 
 

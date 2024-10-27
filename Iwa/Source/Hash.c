@@ -1,7 +1,11 @@
+#include <stdio.h>
+
 unsigned int Hash(const char* Key, int TableSize) {
-    unsigned int HashValue = 0;
-    while (*Key) {
-        HashValue = (HashValue << 5) + *Key++;
+    if (Key == NULL) { return 0; }
+    unsigned int HashValue = 5381;
+    int CharacterASCII;
+    while ((CharacterASCII = *Key++)) {
+        HashValue = ((HashValue << 5) + HashValue) + CharacterASCII;
     }
     return HashValue % TableSize;
 }
