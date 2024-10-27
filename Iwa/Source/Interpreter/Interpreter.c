@@ -8,6 +8,7 @@
 #include "Dictionary.h"
 #include "Enums.h"
 #include "Output.h"
+#include "Input.h"
 #include "Split.h"
 
 Dictionary* Globals;
@@ -100,13 +101,24 @@ void Functions_Setup(){
     OutputFunction->Function = Output;
     OutputFunction->FunctionName = "Output";
 
+    Function* InputFunction = malloc(sizeof(Function));
+    InputFunction->Function = Input;
+    InputFunction->FunctionName = "Input";
+
+    // Variable Types
     Insert(Globals, "String", STRING, VariableDeclaration, FUNCTION);
+    Insert(Globals, "Int", STRING, VariableDeclaration, FUNCTION);
+    Insert(Globals, "Float", STRING, VariableDeclaration, FUNCTION);
+    Insert(Globals, "List", STRING, VariableDeclaration, FUNCTION);
+
+    // Built-In Functions
     Insert(Globals, "Out", STRING, OutputFunction, FUNCTION);
+    Insert(Globals, "In", STRING, InputFunction, FUNCTION);
 }
 
 
 void Run_Interpreter(StringList* Instructions){
-    Globals = Create_Dictionary(10);
+    Globals = Create_Dictionary(20);
     Functions_Setup();
 
     for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){

@@ -29,6 +29,7 @@ Pair* Create_Pair(void* Key, Type KeyType, void* Value, Type ValueType) {
 
 void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueType) {
     unsigned int Index = Hash(Key, Dict->Size);
+    printf("%s: %d\n", (char*) Key, Index);
     Pair* NewPair = Create_Pair(Key, KeyType, Value, ValueType);
 
     if (Dict->Table[Index] == NULL) {
@@ -37,7 +38,7 @@ void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueTy
         Pair* Current = Dict->Table[Index];
         int Depth = 0;
 
-        while (Current->Next == NULL) {
+        while (Current->Next != NULL) {
             Depth++;
             Current = Current->Next;
         }
