@@ -62,7 +62,6 @@ Any* Find(Dictionary* Dict, void* Key) {
                 Any* FoundValue = (Any*) malloc(sizeof(Any));
                 FoundValue->Value = Current->Value;
                 FoundValue->ValueType = Current->ValueType;
-                puts("Found a value");
                 return FoundValue;
             }
         }

@@ -11,7 +11,16 @@
 #include "Input.h"
 #include "Split.h"
 
+/*
+
+Any* values are used to deal with user declared values.
+The built-in functions are usable in the source code for the interpreter, as well as usable for the user.
+Be very attentative when using built-in functions within the source-code, that isn't usable by the user, as there is a good chance there's a better way.
+
+*/
+
 Dictionary* Globals;
+
 
 char* File_Name_Check(char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength){
     bool IsFileName = Contains(PotentialFileName, ".");
@@ -22,6 +31,7 @@ char* File_Name_Check(char* PotentialFileName, int ArgumentLength, int WorkingDi
     }
     return FileNamePointer;
 }
+
 
 StringList* Parse_Source_Code(char* FileName){
     printf("Trying to read source file %s\n", FileName);
@@ -66,45 +76,15 @@ StringList* Parse_Source_Code(char* FileName){
     return Contents;
 }
 
+
 Pair* Variable_Declaration(char* Line){
-    puts("Fuck yes");
     Pair* GlobalPair;
     return GlobalPair;
 }
 
 
-void Execute_Instruction(char* Instruction){
-    int InstructionLength = strlen(Instruction);
-    char* KeyWordBuffer = malloc((InstructionLength + 1) * sizeof(char));
-    StringList InstructionSet;
-    bool InitialCharacterFound = false;
-    int IndexOfFirstCharacter;
-    for (int CharacterIndex = 0; CharacterIndex < InstructionLength; CharacterIndex++){
-        if (Instruction[CharacterIndex] != ' ') {
-            InitialCharacterFound = true;
-            IndexOfFirstCharacter = CharacterIndex;
-            break;
-        }
-    }
-    for (int CharacterIndex = IndexOfFirstCharacter; CharacterIndex < InstructionLength; CharacterIndex++){
-
-        if (InitialCharacterFound == true && Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
-            strncpy(KeyWordBuffer, Instruction, CharacterIndex);
-            KeyWordBuffer[CharacterIndex] = '\0';
-            Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
-            if (InstructionKeyword != NULL){
-                puts(KeyWordBuffer);
-                Output(InstructionKeyword);
-            }
-            free(InstructionKeyword);
-        }
-    }
-    free(KeyWordBuffer);
-}
-
-
 // Most of this will be cleaned up when the program closes, and doesn't need to be freed during runtime at all
-void Functions_Setup(){
+void Functions_Setup(){ printf("\nExecuting Functions_Setup\n");
     Function* VariableDeclaration = malloc(sizeof(Function));
     VariableDeclaration->Function = Variable_Declaration;
     VariableDeclaration->FunctionName = "Variable_Declaration";
@@ -129,13 +109,45 @@ void Functions_Setup(){
 }
 
 
+void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruction\n");
+    int InstructionLength = strlen(Instruction);
+    char* KeyWordBuffer = malloc((InstructionLength + 1) * sizeof(char));
+    StringList InstructionSet;
+    bool InitialCharacterFound = false;
+    int IndexOfFirstCharacter;
+    for (int CharacterIndex = 0; CharacterIndex < InstructionLength; CharacterIndex++){
+        if (Instruction[CharacterIndex] != ' ') {
+            InitialCharacterFound = true;
+            IndexOfFirstCharacter = CharacterIndex;
+            break;
+        }
+    }
+    for (int CharacterIndex = IndexOfFirstCharacter; CharacterIndex < InstructionLength; CharacterIndex++){
+
+        if (InitialCharacterFound == true && Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
+            strncpy(KeyWordBuffer, Instruction, CharacterIndex);
+            KeyWordBuffer[CharacterIndex] = '\0';
+            Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
+            if (InstructionKeyword != NULL){
+                printf("Keyword found: %s\n", KeyWordBuffer);
+                printf("Keyword Type: %s\n", TypesAsStrings[InstructionKeyword->ValueType]);
+            }
+            free(InstructionKeyword);
+        }
+    }
+    free(KeyWordBuffer);
+}
+
+
 void Run_Interpreter(StringList* Instructions){
+    printf("\nExecuting Run_Interpreter\n");
+    
     Globals = Create_Dictionary(20);
     Functions_Setup();
 
     for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){
         if (Instructions->List[LineIndex] != NULL){
-            puts("Executing instruction...");
+            puts("\nExecuting instruction...\n");
             printf("Instruction: %s\n", Instructions->List[LineIndex]);
             Execute_Instruction(Instructions->List[LineIndex]);
             puts("Finished instruction");

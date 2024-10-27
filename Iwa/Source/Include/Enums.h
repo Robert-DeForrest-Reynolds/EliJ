@@ -11,4 +11,6 @@ typedef enum {
     FUNCTION,
 } Type;
 
+extern char* TypesAsStrings[];
+
 #endif
