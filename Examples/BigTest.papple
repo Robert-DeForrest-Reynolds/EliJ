@@ -40,9 +40,9 @@ Fnc Read_File(string FilePath) -> Rtn
 
 # Conditionals
 Fnc Is_Even(Number) -> Bln
-    if Number % 2 == 0
+    If Number % 2 == 0
         return True
-    else
+    Else
         return False
 
 # Loops
@@ -55,9 +55,9 @@ While
 
 # Objects, I don't want them, but they'll be implemented in the interest of encapsulation, not inheritance, or polymorphism #
 Obj Person
-    func New(Name, Age) -> Rtn
-        String Self.Name =  Name
-        Integer Self.Age = Age
+    func New(_Name, _Age) -> Rtn
+        String Name =  _Name
+        Integer Age = _Age
 
 Person Jack
 Person Jack.New("Jack", 21)

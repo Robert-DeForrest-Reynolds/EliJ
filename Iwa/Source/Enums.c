@@ -1,3 +1,6 @@
+#include "Structures.h"
+
+Dictionary* InternalTypeMap;
 char* TypesAsStrings[] = {
     "CHAR",
     "STRING",
@@ -5,5 +8,7 @@ char* TypesAsStrings[] = {
     "FLOAT",
     "DICTIONARY",
     "ANY",
-    "FUNCTION"
+    "FUNCTION",
+    "DECLARATION",
+    "TYPE",
 };

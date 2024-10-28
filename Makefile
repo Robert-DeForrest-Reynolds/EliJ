@@ -10,7 +10,7 @@ Build:
 build: Build
 
 Test:
-	clang $(SourceFiles) -I$(Include) -o Iwa
+	clang $(SourceFiles) -I$(Include) -o Iwa -Wno-deprecated-non-prototype
 	@echo ""
 	./Iwa.exe Examples/HelloWorld.papple
 test: Test

@@ -1,5 +1,3 @@
 String Greeting = "Hello, World!"
 
-Int = 5
-
 Out(Greeting)

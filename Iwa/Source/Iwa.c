@@ -10,6 +10,7 @@
 #include "PointerChecks.h"
 #include "Replace.h"
 #include "Structures.h"
+#include "Enums.h"
 #include "Dictionary.h"
 #include "Output.h"
 
@@ -27,7 +28,6 @@ void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
 }
 
 int main(int ArgumentsCount, char* Arguments[]) {
-    // puts("\n");
     if (getcwd(WorkingDirectory, sizeof(WorkingDirectory)) == NULL) {
         perror("Failed to obtain current working directory.");
         return EXIT_FAILURE;
@@ -47,14 +47,11 @@ int main(int ArgumentsCount, char* Arguments[]) {
     } else {
         Instructions = Parse_Source_Code(FileNamePointer);
     }
-    Run_Interpreter(Instructions);
 
-    // Example integer output
-    Any* Example = (Any*) malloc(sizeof(Any));
-    int* ExampleNumberValue = malloc(sizeof(int));
-    *ExampleNumberValue = 5;
-    Example->Value = ExampleNumberValue;
-    Example->ValueType = INT;
-    Output(Example);
+    InternalTypeMap = Create_Dictionary(sizeof(Type));
+    Insert(InternalTypeMap, "String", STRING, (int*) STRING, TYPE);
+    Insert(InternalTypeMap, "Int", STRING, (int*) INT, TYPE);
+    
+    Run_Interpreter(Instructions);
     return 0;
 }

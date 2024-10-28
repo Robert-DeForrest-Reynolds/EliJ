@@ -30,7 +30,21 @@ void File_Pointer_Check(FILE* Pointer, const char* PointerName){
     }
 }
 
-void Function_Pointer_Check(Function* Pointer, const char* PointerName){
+void VariableDeclaration_Pointer_Check(VariableDeclaration* Pointer, const char* PointerName){
+    if (Pointer == NULL) {
+        puts(PointerName);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void Output_Pointer_Check(OutputFunction* Pointer, const char* PointerName){
+    if (Pointer == NULL) {
+        puts(PointerName);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void Input_Pointer_Check(InputFunction* Pointer, const char* PointerName){
     if (Pointer == NULL) {
         puts(PointerName);
         exit(EXIT_FAILURE);

@@ -14,13 +14,13 @@ void Output(Any* Pointer){
             break;
         }
         case FUNCTION: {
-            Function* Func = (Function* ) Pointer->Value;
-            Function_Pointer_Check(Func, "Output Function Pointer Allocation Fail");
-            printf("%s\n", Func->FunctionName);
+            // Function* Func = (Function* ) Pointer->Value;
+            // Function_Pointer_Check(Func, "Output Function Pointer Allocation Fail");
+            // printf("%s\n", Func->FunctionName);
             break;
         }
         default:
-            puts("Unknown ValueType\n");
+            puts("Unknown ValueType when searching for output type\n");
             break;
     }
 }
