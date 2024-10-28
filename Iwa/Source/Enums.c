@@ -11,4 +11,6 @@ char* TypesAsStrings[] = {
     "FUNCTION",
     "DECLARATION",
     "TYPE",
+    "OUTPUT",
+    "INPUT",
 };

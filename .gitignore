@@ -35,3 +35,10 @@ clang++.bat
 Hope.bat
 Lily.bat
 Test.bat
+
+CppProperties.json
+.vs
+Debug/
+x64/
+**.sln
+**vcx**

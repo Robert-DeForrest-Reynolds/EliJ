@@ -29,12 +29,12 @@ typedef struct StringList{
 } StringList;
 
 typedef struct VariableDeclaration{
-    Pair* (*Function)(char* VariableName, char* VariableValue, Type VariableValueType);
+    void (*Function)(char* VariableName, char* VariableValue, Type VariableValueType);
     char* FunctionName;
 } VariableDeclaration;
 
 typedef struct OutputFunction{
-    void (*Function)();
+    void (*Function)(Any* Content);
     char* FunctionName;
 } OutputFunction;
 

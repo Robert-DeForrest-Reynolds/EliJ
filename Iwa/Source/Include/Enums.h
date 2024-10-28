@@ -5,7 +5,7 @@
 
 typedef struct Dictionary Dictionary;
 
-typedef enum {
+typedef enum Type{
     CHAR,
     STRING,
     INT,
@@ -15,6 +15,8 @@ typedef enum {
     FUNCTION,
     DECLARATION,
     TYPE,
+    OUTPUT,
+    INPUT,
 } Type;
 
 extern char* TypesAsStrings[];

@@ -77,10 +77,8 @@ StringList* Parse_Source_Code(char* FileName){
 }
 
 
-Pair* Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
+void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
     Insert(Globals, VariableName, STRING, VariableValue, VariableValueType);
-    Pair* GlobalPair;
-    return GlobalPair;
 }
 
 
@@ -108,8 +106,8 @@ void Functions_Setup(){ printf("\nExecuting Functions_Setup\n");
     Insert(Globals, "List", STRING, VarDecl, DECLARATION);
 
     // Built-In Functions
-    Insert(Globals, "Out", STRING, OutputFunc, FUNCTION);
-    Insert(Globals, "In", STRING, InputFunc, FUNCTION);
+    Insert(Globals, "Out", STRING, OutputFunc, OUTPUT);
+    Insert(Globals, "In", STRING, InputFunc, INPUT);
 }
 
 
@@ -158,6 +156,7 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues){
             switch (VariableType){
                 case STRING:{
                     Values[1] = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
+                    String_Pointer_Check(Values[1], "Failed to allocate for the variable value");
                     Values[1][UnparsedValuesLength-CharacterIndex] = '\0';
                     strncpy(Values[1], UnparsedValues+CharacterIndex, UnparsedValuesLength - CharacterIndex);
                     printf("Variable Value: %s\n", Values[1]);
@@ -166,6 +165,7 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues){
                 }
                 case INT:{
                     Values[1] = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
+                    String_Pointer_Check(Values[1], "Failed to allocate for the variable value");
                     Values[1][UnparsedValuesLength-CharacterIndex] = '\0';
                     strncpy(Values[1], UnparsedValues+CharacterIndex, UnparsedValuesLength - CharacterIndex);
                     int ValueAsInt = atoi(Values[1]);
@@ -203,8 +203,6 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
             KeyWordBuffer[CharacterIndex] = '\0';
             Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
             if (InstructionKeyword != NULL){
-                printf("Keyword found: %s\n", KeyWordBuffer);
-                printf("Keyword Type: %s\n", TypesAsStrings[InstructionKeyword->ValueType]);
                 switch (InstructionKeyword->ValueType){
                     case DECLARATION:{
                         VariableDeclaration* VarDecl = (VariableDeclaration*) InstructionKeyword->Value;
@@ -217,10 +215,59 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
                         if (ValueType->ValueType == TYPE){
                             char** Values = Find_Declaration_Values((Type)ValueType->Value, ValueBuffer);
                             VarDecl->Function(Values[0], Values[1], (Type)ValueType->Value);
-                            break;
                         }
+                        free(ValueBuffer);
+                        break;
+                    }
+                    case OUTPUT:{
+                        OutputFunction* Func = (OutputFunction*) InstructionKeyword->Value;
+                        Output_Pointer_Check(Func, "Output Function Instruction Allocation Fail");
+                        char* ValueBuffer = malloc((InstructionLength - CharacterIndex + 1) * sizeof(char));
+                        char* Parameter;
+                        ValueBuffer[InstructionLength - CharacterIndex] = '\0';
+                        strncpy(ValueBuffer, Instruction + CharacterIndex, InstructionLength - CharacterIndex);
+                        int ValueBufferLength = strlen(ValueBuffer);
+                        if (ValueBuffer[0] == '(' && ValueBuffer[ValueBufferLength - 1] == ')'){
+                            Parameter = malloc(((ValueBufferLength - 2) + 1) * sizeof(char));
+                            String_Pointer_Check(Parameter, "Parameter Allocation Fail");
+                            Parameter[ValueBufferLength-2] = '\0';
+                            strncpy(Parameter, ValueBuffer+1, ValueBufferLength-2);
+                        } else { printf("You are missing a paranthesis at your function call"); exit(EXIT_FAILURE);}
+
+                        if (Parameter[0] == '"' && Parameter[strlen(ValueBuffer) - 1] == '"'){
+                            Any* Content = (Any*) malloc(sizeof(Any));
+                            int ParameterLength = strlen(Parameter);
+                            char* StrippedString = malloc(((ParameterLength - 2) + 1) * sizeof(char));
+                            String_Pointer_Check(StrippedString, "Stripped String Allocation Fail");
+                            StrippedString[ParameterLength-2] = '\0';
+                            strncpy(StrippedString, Parameter+1, ParameterLength-2);
+                            Content->Value = Parameter;
+                            Content->ValueType = STRING;
+                            Func->Function(Content);
+                            free(StrippedString);
+                        } else {
+                            puts(Parameter);
+                            Any* ParameterValue = Find(Globals, Parameter);
+                            if (ParameterValue == NULL){
+                                printf("%s does not exist", Parameter);
+                                exit(EXIT_FAILURE);
+                            } else {
+                                int ParameterValueLength = strlen((char*) ParameterValue->Value);
+                                char* StrippedString = malloc(((ParameterValueLength - 2) + 1) * sizeof(char));
+                                String_Pointer_Check(StrippedString, "Stripped String Allocation Fail");
+                                StrippedString[ParameterValueLength] = '\0';
+                                strncpy(StrippedString, (char*) ParameterValue->Value+1, ParameterValueLength-2);
+                                ParameterValue->Value = StrippedString;
+                                Func->Function(ParameterValue);
+                                free(StrippedString);
+                            }
+                        }
+                        free(ValueBuffer);
+                        free(Parameter);
+                        break;
                     }
                     default:
+                        printf("%d", InstructionKeyword->ValueType);
                         puts("Unknown ValueType when searching for instruction type\n");
                         break;
                 }
@@ -234,8 +281,7 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
 
 void Run_Interpreter(StringList* Instructions){
     printf("\nExecuting Run_Interpreter\n");
-    
-    Globals = Create_Dictionary(20);
+    Globals = Create_Dictionary(50);
     Functions_Setup();
 
     for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){
@@ -246,9 +292,4 @@ void Run_Interpreter(StringList* Instructions){
             puts("Finished instruction");
         }
     }
-
-    Any* UserVariable = Find(Globals, "Greeting");
-    printf("User Variable: %s\n", (char* ) UserVariable->Value);
-
-    free(Globals);
 }

@@ -50,3 +50,12 @@ void Input_Pointer_Check(InputFunction* Pointer, const char* PointerName){
         exit(EXIT_FAILURE);
     }
 }
+
+void Pair_Pointer_Check(Pair* Pointer, const char* PointerName){
+    if ((Pair*) Pointer == NULL |
+        Pointer->Key == NULL |
+        Pointer->Value == NULL) {
+        puts(PointerName);
+        exit(EXIT_FAILURE);
+    }
+}

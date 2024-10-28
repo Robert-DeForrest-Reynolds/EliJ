@@ -10,5 +10,6 @@ void File_Pointer_Check(FILE* Pointer, const char* PointerName);
 void VariableDeclaration_Pointer_Check(VariableDeclaration* Pointer, const char* PointerName);
 void Output_Pointer_Check(OutputFunction* Pointer, const char* PointerName);
 void Input_Pointer_Check(InputFunction* Pointer, const char* PointerName);
+void Pair_Pointer_Check(Pair* Pointer, const char* PointerName);
 
 #endif

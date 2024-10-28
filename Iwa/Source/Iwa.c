@@ -35,23 +35,31 @@ int main(int ArgumentsCount, char* Arguments[]) {
     WorkingDirectoryLength = strlen(WorkingDirectory);
 
     Parse_User_Arguments(ArgumentsCount, Arguments);
-    Contains(FileNamePointer, "\\");
-    if (Contains(FileNamePointer, "\\")){
-        FileNamePointer = Replace(FileNamePointer, "\\", "/");
-        FinalWorkingDirectory = Replace(WorkingDirectory, "\\", "/");
-        size_t FinalFileNameLength = strlen(FinalWorkingDirectory) + strlen(FileNamePointer) + 2;
-        char* FinalFileName = malloc(FinalFileNameLength + 1 * sizeof(char));
-        strcpy(FinalFileName, FinalWorkingDirectory);
-        strcat(FinalFileName, FileNamePointer);
-        Instructions = Parse_Source_Code(FinalFileName);
-    } else {
-        Instructions = Parse_Source_Code(FileNamePointer);
+    if (FileNamePointer != NULL) {
+        if (Contains(FileNamePointer, "\\")) {
+            FileNamePointer = Replace(FileNamePointer, "\\", "/");
+            FinalWorkingDirectory = Replace(WorkingDirectory, "\\", "/");
+            size_t FinalFileNameLength = strlen(FinalWorkingDirectory) + strlen(FileNamePointer) + 2;
+            char* FinalFileName = malloc(FinalFileNameLength + 1 * sizeof(char));
+            String_Pointer_Check(FinalFileName, "Final File Name Allocation Fail");
+            strcpy(FinalFileName, FinalWorkingDirectory);
+            strcat(FinalFileName, FileNamePointer);
+            Instructions = Parse_Source_Code(FinalFileName);
+        }
+        else {
+            Instructions = Parse_Source_Code(FileNamePointer);
+        }
+
     }
 
-    InternalTypeMap = Create_Dictionary(sizeof(Type));
+    InternalTypeMap = Create_Dictionary(50);
     Insert(InternalTypeMap, "String", STRING, (int*) STRING, TYPE);
     Insert(InternalTypeMap, "Int", STRING, (int*) INT, TYPE);
+    Insert(InternalTypeMap, "Out", STRING, (int*) OUTPUT, TYPE);
     
-    Run_Interpreter(Instructions);
+    if (Instructions != NULL) {
+        puts("fuck");
+        Run_Interpreter(Instructions);
+    }
     return 0;
 }
