@@ -1,32 +1,29 @@
-obj Node
-    Func New() {
-        Integer|String Self.Value;
-        Node Self.Next;
-    }
-|
+Obj Node
+    Func New() -> Rtn
+        Integer|Float|String Self.Value
+        Node Self.Next
 
-obj LinkedList
-    Func New() {
-        Node Self.Head;
-    }
-|
+Obj LinkedList
+    Func New() -> Rtn
+        Node Self.Head
 
-LinkedList Example;
-Node Head;
-Example.Head = Head;
+LinkedList Example
+Node Head
+Example.Head = Head
 
-ExampleList = [4, 2, 0];
+List[Int] ExampleList = [4, 2, 0]
 
-Cursor = Head;
-for Integer Number in ExampleList
-    Cursor.Value = Number;
-    Cursor.Next = Node();
-    Cursor = Cursor.Next;
-~
+Node Cursor = Head
+For Int Number in ExampleList
+    Cursor.Value = Number
+    Cursor.Next = Node()
+    Cursor = Cursor.Next
+Free(Cursor)
 
-Cursor = Head;
-while
-    Out(Cursor.Value);
-    if Cursor.Next == None {break};
-    Cursor = Cursor.Next;
-~
+Node Cursor = Head
+While
+    Out(Cursor.Value)
+    If Cursor.Next == None
+        Break
+    Cursor = Cursor.Next
+Free(Cursor)

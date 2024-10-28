@@ -1,6 +1,4 @@
-imports {
-    Person
-}
+Import Person
 
-Person Jack = "Jack", 27;
-Person Sally = "Sally", 27;
+Person Jack
+Jack.New("Jack", 18)

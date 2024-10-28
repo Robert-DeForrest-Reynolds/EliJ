@@ -1,19 +1,15 @@
-func Addition(int X, int Y) {
-    return X + Y;
-}
+Fnc Addition(Int X, Int Y) -> Int
+    Rtn X + Y
 
-func Subtraction(int X, int Y) {
-    return X - Y;
-}
+Fnc Subtraction(Int X, Int Y) -> Int
+    Rtn X - Y
 
-func Read_File(string FileName) {
-    string Contents: Open(File).Read_Lines();
-    Out(Contents);
-}
+Fnc Read_File(String FileName) -> Rtn
+    String Contents = Open(File).Read_Lines()
+    Out(Contents)
 
-func Is_Even(int Number) {
-    if Number % 2 == 0:
-        return True;
-    else:
-        return False;
-}
+Fnc Is_Even(Int Number) -> Bln
+    If Number % 2 == 0
+        Rtn True
+    Else
+        Rtn False

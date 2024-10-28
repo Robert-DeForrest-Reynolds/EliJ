@@ -1,51 +1,51 @@
-# This is a comment #
+/ This is a comment /
 
-# 
+/ 
 This
 is
 a multi-line
 comment
-#
+/
 
-# Variable declaration should feel pretty familiar #
-Lst Names
+/ Variable declaration should feel pretty familiar /
+List[String] Names
 
 Int Health = 50
 
-# Imports should feel pretty familiar #
+/ Imports should feel pretty familiar /
 Import ExampleExternalScript
 
-# We have lists
+/ We have lists
 Names = ["Lani",
          "Lily",
          "Eleanor"]
 
-# And we have dictionaries
-Dct People = ["Lani": 23,
-               "Lily": 6]
+/ And we have dictionaries
+Dict People = ["Lani": 23,
+              "Lily": 6]
 
-# Out is a built-in function to output to the CLI #
+/ Out is a built-in function to output to the CLI /
 Out(Health)
 
-# Functions should feel pretty familiar #
+/ Functions should feel pretty familiar /
 Fnc Addition(int X, int Y) -> Int
     return X + Y
 
 
-Fnc Read_File(string FilePath) -> Rtn
+Fnc Read_File(String FilePath) -> Rtn
     File SomeFile = Open(FilePath)
-    Str Contents = SomeFile.Read_Lines()
+    String Contents = SomeFile.Read_Lines()
     Out(Contents)
 
 
-# Conditionals
+/ Conditionals
 Fnc Is_Even(Number) -> Bln
     If Number % 2 == 0
         return True
     Else
         return False
 
-# Loops
+/ Loops
 Int Counter = 0
 While
     Counter += 1
@@ -53,7 +53,7 @@ While
     If Counter == 3
         Break
 
-# Objects, I don't want them, but they'll be implemented in the interest of encapsulation, not inheritance, or polymorphism #
+/ Objects, I don't want them, but they'll be implemented in the interest of encapsulation, not inheritance, or polymorphism /
 Obj Person
     func New(_Name, _Age) -> Rtn
         String Name =  _Name

@@ -1,6 +1,4 @@
-obj Person{
-    func New(Name, Age){
-        Self.Name = Name
-        Self.Age = Age
-    }
-}
+obj Person
+    Fnc New(_Name, _Age) -> Rtn
+        String Name = _Name
+        Int Age = _Age

@@ -1,11 +1,12 @@
 obj Person
-    func New(Name, Age){
-        String Self.Name: Name;
-        Integer Self.Age: Age;
+    func New(_Name, _Age){
+        String Name = _Name
+        Int Age = _Age
     }
 |
 
-Person Jack: "Jack";
+Person Jack
+Jack.New("Jack", 22)
 
-Out(Jack.Name);
-Out(Jack.Age);
+Out(Jack.Name)
+Out(Jack.Age)
