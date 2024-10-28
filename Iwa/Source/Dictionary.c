@@ -75,7 +75,7 @@ void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueTy
     }
 }
 
-Any* Find(Dictionary* Dict, void* Key) {
+Any* Lookup(Dictionary* Dict, void* Key) {
     unsigned int Index = Hash(Key, Dict->Size);
     Pair* Current = Dict->Table[Index];
 

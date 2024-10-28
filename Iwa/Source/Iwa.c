@@ -13,6 +13,8 @@
 #include "Enums.h"
 #include "Dictionary.h"
 #include "Output.h"
+#include "Find.h"
+#include "FindBetween.h"
 
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
     for (int Iteration = 1; Iteration < ArgumentsCount; Iteration++) {
@@ -57,8 +59,14 @@ int main(int ArgumentsCount, char* Arguments[]) {
     Insert(InternalTypeMap, "Int", STRING, (int*) INT, TYPE);
     Insert(InternalTypeMap, "Out", STRING, (int*) OUTPUT, TYPE);
     
+    char* String = malloc(strlen("\"Fuck\"") + 1 *sizeof(char));
+    strcpy(String, "\"Fuck\"");
+    String[7] = '\0';
+    
+    char* Sliced = Find_Between(String, "\"");
+    printf("%s", Sliced);
+
     if (Instructions != NULL) {
-        puts("fuck");
         Run_Interpreter(Instructions);
     }
     return 0;

@@ -10,6 +10,7 @@
 #include "Output.h"
 #include "Input.h"
 #include "Split.h"
+#include "FindBetween.h"
 
 /*
 
@@ -201,7 +202,7 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
         if (InitialCharacterFound == true && Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
             strncpy(KeyWordBuffer, Instruction+SearchIndex, CharacterIndex-SearchIndex);
             KeyWordBuffer[CharacterIndex] = '\0';
-            Any* InstructionKeyword = Find(Globals, (char *) KeyWordBuffer);
+            Any* InstructionKeyword = Lookup(Globals, (char *) KeyWordBuffer);
             if (InstructionKeyword != NULL){
                 switch (InstructionKeyword->ValueType){
                     case DECLARATION:{
@@ -210,11 +211,12 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
                         char* ValueBuffer = malloc((InstructionLength - CharacterIndex + 1) * sizeof(char));
                         ValueBuffer[InstructionLength - CharacterIndex] = '\0';
                         strncpy(ValueBuffer, Instruction + CharacterIndex, InstructionLength - CharacterIndex);
-                        Any* ValueType = Find(InternalTypeMap, KeyWordBuffer);
+                        Any* ValueType = Lookup(InternalTypeMap, KeyWordBuffer);
                         if (ValueType == NULL){ puts("You magical fuck, how did you break this? That internal type doesn't exist."); exit(EXIT_FAILURE); }
                         if (ValueType->ValueType == TYPE){
-                            char** Values = Find_Declaration_Values((Type)ValueType->Value, ValueBuffer);
-                            VarDecl->Function(Values[0], Values[1], (Type)ValueType->Value);
+                            Type DeclType = (Type) ValueType->Value;
+                            char** Values = Find_Declaration_Values(DeclType, ValueBuffer);
+                            VarDecl->Function(Values[0], Values[1], DeclType);
                         }
                         free(ValueBuffer);
                         break;
@@ -250,7 +252,7 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
                             free(StrippedString);
                         } else {
                             puts(Parameter);
-                            Any* ParameterValue = Find(Globals, Parameter);
+                            Any* ParameterValue = Lookup(Globals, Parameter);
                             if (ParameterValue == NULL){
                                 printf("%s does not exist", Parameter);
                                 exit(EXIT_FAILURE);
