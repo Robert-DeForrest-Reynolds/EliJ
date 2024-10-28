@@ -232,7 +232,10 @@ void Execute_Instruction(char* Instruction){ printf("\nExecuting Execute_Instruc
                             String_Pointer_Check(Parameter, "Parameter Allocation Fail");
                             Parameter[ValueBufferLength-2] = '\0';
                             strncpy(Parameter, ValueBuffer+1, ValueBufferLength-2);
-                        } else { printf("You are missing a paranthesis at your function call"); exit(EXIT_FAILURE);}
+                        } else {
+                            printf("You are missing a paranthesis at your function call");
+                            exit(EXIT_FAILURE);
+                        }
 
                         if (Parameter[0] == '"' && Parameter[strlen(ValueBuffer) - 1] == '"'){
                             Any* Content = (Any*) malloc(sizeof(Any));
