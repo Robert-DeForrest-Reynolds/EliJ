@@ -1,0 +1,4 @@
+W = Create_Window(600, 600)
+
+While W.Input(KEY_ESCAPE) == False
+    Draw_Pixel(W, 300, 300, RGB(165, 165, 200))

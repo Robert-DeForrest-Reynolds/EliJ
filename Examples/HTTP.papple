@@ -1,0 +1,17 @@
+// This is a VERY basic example of HTTP potential in Pineapple
+
+String API_URL = "https://api.example.com/data"
+
+Dict Headers = [
+    "User-Agent": "Example/1.0",
+    "Accept": "application/json"
+]
+
+Response R = HTTP.Get(API_URL, Headers)
+
+If R.StatusCode == 200
+    Out("Successful Get: {R}")
+    Out("Response Body: {R.Body}")
+    Out("Headers: {R.Headers}")
+Else
+    Out("Error: {R.StatusCode}")
