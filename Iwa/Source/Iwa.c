@@ -115,10 +115,11 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues){
         if (SpaceCount == 2){
             switch (VariableType){
                 case STRING:{
-                    Values[1] = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
+                    int ValueLength = strlen(UnparsedValues+CharacterIndex);
+                    Values[1] = malloc((ValueLength + 1) * sizeof(char));
                     String_Pointer_Check(Values[1], "Failed to allocate for the variable value");
-                    Values[1][CharacterIndex-SearchIndex] = '\0';
-                    strncpy(Values[1], UnparsedValues+CharacterIndex, UnparsedValuesLength - SearchIndex);
+                    Values[1][ValueLength] = '\0';
+                    strncpy(Values[1], UnparsedValues+CharacterIndex, ValueLength);
                     SearchIndex = CharacterIndex;
                     break;
                 }
@@ -238,8 +239,6 @@ void Execute_Instruction(char* Instruction){
             break;
         }
     }
-    // String Greeting = "Hello World"
-    // Out(Greeting)
     for (int CharacterIndex = SearchIndex; CharacterIndex < InstructionLength-SearchIndex; CharacterIndex++){
         if (InitialCharacterFound == true && Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
             KeywordBuffer = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
