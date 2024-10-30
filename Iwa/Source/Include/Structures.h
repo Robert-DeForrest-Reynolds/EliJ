@@ -20,7 +20,7 @@ typedef struct Dictionary {
     Pair** Table;
     int Filled;
     int Size;
-    int* InnerDepth;  // Keeps track of collision depths for each index
+    int InnerDepth;  // Keeps track of collision depths for each index
 } Dictionary;
 
 typedef struct StringList{

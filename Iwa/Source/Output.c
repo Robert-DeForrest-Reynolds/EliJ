@@ -1,5 +1,6 @@
 #include <stdio.h.>
 #include <string.h>
+#include <stdlib.h>
 #include "Structures.h"
 #include "PointerChecks.h"
 
@@ -9,8 +10,7 @@ void Output(Any* Pointer){
             printf("%s\n", (char*) Pointer->Value);
             break;
         case INT:{
-            int Value = *(int*) Pointer->Value;
-            printf("%d\n", Value);
+            printf("%d\n", atoi(Pointer->Value));
             break;
         }
         case FUNCTION: {

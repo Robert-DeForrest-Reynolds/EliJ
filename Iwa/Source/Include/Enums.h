@@ -5,7 +5,7 @@
 
 typedef struct Dictionary Dictionary;
 
-typedef enum Type{
+typedef enum{
     CHAR,
     STRING,
     INT,

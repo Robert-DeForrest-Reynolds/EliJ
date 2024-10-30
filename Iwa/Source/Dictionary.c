@@ -18,12 +18,7 @@ Dictionary* Create_Dictionary(int Size) {
         return NULL;
     }
     
-    Dict->InnerDepth = (int*) calloc(Size, sizeof(int));
-    if (Dict->InnerDepth == NULL) {
-        free(Dict->Table);
-        free(Dict);
-        return NULL;
-    }
+    Dict->InnerDepth = 0;
     
     Dict->Size = Size;
     Dict->Filled = 0;  // Initialize this field
@@ -50,11 +45,8 @@ Pair* Create_Pair(void* Key, Type KeyType, void* Value, Type ValueType) {
 }
 
 void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueType) {
-    printf("Inserting Key: %s\n", (char*) Key);
     unsigned int Index = Hash(Key, Dict->Size);
-    printf("Hash Value: %u\n", Index);
     Pair* NewPair = Create_Pair(Key, KeyType, Value, ValueType);
-    printf("Created Pair\n");
     if (Dict->Table[Index] == NULL) {
         Dict->Table[Index] = NewPair;
     } else {
@@ -67,30 +59,31 @@ void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueTy
         }
         Current->Next = NewPair;
 
-        Dict->InnerDepth[Index] = Depth + 1;
+        Dict->InnerDepth = Depth + 1;
 
-        if (Dict->InnerDepth[Index] >= 5) {
-            printf("Warning: High collision depth (%d) detected at index %u.\n", Dict->InnerDepth[Index], Index);
+        if (Dict->InnerDepth >= 5) {
+            printf("Warning: High collision depth (%d) detected at index %u.\n", Dict->InnerDepth, Index);
         }
     }
 }
 
 Any* Lookup(Dictionary* Dict, void* Key) {
-    unsigned int Index = Hash(Key, Dict->Size);
-    Pair* Current = Dict->Table[Index];
-
-    while (Current != NULL) {
-        if (Current->KeyType == STRING){
-            if (strcmp((char*) Current->Key, (char *) Key) == 0) {
-                Any* FoundValue = (Any*) malloc(sizeof(Any));
-                if (FoundValue != NULL) {
-                    FoundValue->Value = Current->Value;
-                    FoundValue->ValueType = Current->ValueType;
-                    return FoundValue;
+    unsigned int Index = Hash((char*) Key, Dict->Size);
+    if (Dict->Table[Index] != NULL){
+        Pair* Current = Dict->Table[Index];
+        while (Current != NULL) {
+            if (Current->KeyType == STRING){
+                if (strcmp((char*) Current->Key, (char *) Key) == 0) {
+                    Any* FoundValue = (Any*) malloc(sizeof(Any));
+                    if (FoundValue != NULL) {
+                        FoundValue->Value = Current->Value;
+                        FoundValue->ValueType = Current->ValueType;
+                        return FoundValue;
+                    }
                 }
             }
+            Current = Current->Next;
         }
-        Current = Current->Next;
     }
     return NULL;
 }
@@ -99,22 +92,22 @@ void Free_Dictionary(Dictionary* Dict) {
     if (Dict == NULL) return;
     
     for (int Iteration = 0; Iteration < Dict->Size; Iteration++) {
-        Pair* Current = Dict->Table[Iteration];
-        while (Current != NULL) {
-            Pair* Next = Current->Next;
-            // Free string keys if they were dynamically allocated
-            if (Current->KeyType == STRING) {
-                free(Current->Key);
+        if (Dict->Table[Iteration] != NULL){
+            Pair* Current = Dict->Table[Iteration];
+            while (Current != NULL) {
+                if (Current->Key != NULL){
+                    free(Current->Key);
+                }
+                // Do not free DECLARATIONS, as they are the pointers to use the built-in functions
+                if (Current->ValueType != DECLARATION && Current->Value != NULL){
+                    free(Current->Value);
+                }
+                Pair* Next = Current->Next;
+                free(Current);
+                Current = Next;  
             }
-            // Free string values if they were dynamically allocated
-            if (Current->ValueType == STRING) {
-                free(Current->Value);
-            }
-            free(Current);
-            Current = Next;
         }
     }
     free(Dict->Table);
-    free(Dict->InnerDepth);
     free(Dict);
 }

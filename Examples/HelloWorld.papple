@@ -1,3 +1,6 @@
-String Greeting = "Hello World"
+String Greeting = "Hello, World!"
+
+Int X = 5
 
 Out(Greeting)
+Out(X)
