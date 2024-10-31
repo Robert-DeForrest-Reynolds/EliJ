@@ -131,7 +131,10 @@ void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 ValueBuffer[InstructionLength - CharacterIndex] = '\0';
                 strncpy(ValueBuffer, Instruction + CharacterIndex, InstructionLength - CharacterIndex);
                 Any* ValueType = Lookup(InternalTypeMap, KeywordBuffer);
-                if (ValueType == NULL){ puts("You magical fuck, how did you break this? That internal type doesn't exist."); exit(EXIT_FAILURE); }
+                if (ValueType == NULL){
+                    puts("You magical fuck, how did you break this? That internal type doesn't exist.");
+                    exit(EXIT_FAILURE);
+                }
                 if (ValueType->ValueType == TYPE){
                     Type DeclType = *(Type*) ValueType->Value;
                     char** Values = Find_Declaration_Values(DeclType, ValueBuffer, Instruction, LineNumber);
