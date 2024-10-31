@@ -80,35 +80,33 @@ int Next_NonWhitespace(char* Line){
 }
 
 
-// Declarations are correctly formatted as so:
-// <space> == " "      (I hope that is obvious)
-// <space>VariableName<space>=<space>Value
-// Iterate past any space, and get the first character, and buffer out that word as the variable name
-// Iterate past two spaces, and get the first character, and buffer out the value
-// Delcare the variable dependant on the value's type
-// Values[0] == Variable Names
-// Values[1] == Variable Value
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber){
     char** Values = malloc(2 * sizeof(char*));
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
+    bool NoSeparation = false;
 
     int SearchIndex = Next_NonWhitespace(UnparsedValues);
 
-    // Get variable name
-    int FirstCharacterIndex = SearchIndex;
-    int NameLength = Find(UnparsedValues+SearchIndex, " ");
-    Values[0] = malloc((NameLength + 1) * sizeof(char));
-    String_Pointer_Check(Values[0], "Variable Name Allocation Fail");
-    Values[0][NameLength] = '\0';
-    strncpy(Values[0], UnparsedValues+FirstCharacterIndex, NameLength);
-    
-    SearchIndex = Next_NonWhitespace(UnparsedValues+SearchIndex) + SearchIndex;
-    if (UnparsedValues[SearchIndex] != '='){
-        printf("Missing a + sign at line: %d", LineNumber);
-        SearchIndex += 1;
+    for (int CharacterIndex = SearchIndex; CharacterIndex < strlen(UnparsedValues+SearchIndex); CharacterIndex++){
+        if (UnparsedValues[CharacterIndex] == ' ' | UnparsedValues[CharacterIndex] == '='){
+            int NameLength = (CharacterIndex - SearchIndex);
+            Values[0] = malloc((NameLength + 1) * sizeof(char));
+            String_Pointer_Check(Values[0], "Variable Name Allocation Fail");
+            Values[0][NameLength] = '\0';
+            strncpy(Values[0], UnparsedValues+SearchIndex, NameLength);
+            if (UnparsedValues[CharacterIndex] == '='){
+                SearchIndex = Next_NonWhitespace(UnparsedValues+CharacterIndex) + CharacterIndex;
+            } else {
+                SearchIndex = Next_NonWhitespace(UnparsedValues+CharacterIndex) + CharacterIndex;
+                if (UnparsedValues[SearchIndex] != '='){
+                    printf("Missing a = sign at line: %d, index: %d\n", LineNumber, SearchIndex);
+                    exit(EXIT_FAILURE);
+                }
+                SearchIndex = Next_NonWhitespace(UnparsedValues+CharacterIndex) + SearchIndex;
+            }
+            break;
+        }
     }
-
-    SearchIndex = Next_NonWhitespace(UnparsedValues+SearchIndex) + SearchIndex;
 
     // Get variable value
     int ValueLength = strlen(UnparsedValues+SearchIndex);
