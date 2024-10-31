@@ -78,7 +78,7 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
 // Delcare the variable dependant on the value's type
 // Values[0] == Variable Names
 // Values[1] == Variable Value
-char** Find_Declaration_Values(Type VariableType, char* UnparsedValues){
+char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber){
     char** Values = malloc(2 * sizeof(char*));
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
     int UnparsedValuesLength = strlen(UnparsedValues);
@@ -96,6 +96,7 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues){
     for (int CharacterIndex = SearchIndex; CharacterIndex < UnparsedValuesLength; CharacterIndex++){
         if (UnparsedValues[CharacterIndex] == ' ') {
             Values[0] = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
+            String_Pointer_Check(Values[0], "Variable Name Allocation Fail");
             Values[0][CharacterIndex-SearchIndex] = '\0';
             strncpy(Values[0], UnparsedValues+SearchIndex, CharacterIndex-SearchIndex);
             SearchIndex = CharacterIndex;
@@ -105,45 +106,33 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues){
     // Get variable value loop
     int SpaceCount = 0;
     for (int CharacterIndex = SearchIndex; CharacterIndex < UnparsedValuesLength; CharacterIndex++){
-        if (UnparsedValues[CharacterIndex] == ' '){
+        if (SpaceCount == 2){
+            int ValueLength = strlen(UnparsedValues+CharacterIndex);
+            Values[1] = malloc((ValueLength + 1) * sizeof(char));
+            String_Pointer_Check(Values[1], "Variable Value Allocation Fail");
+            Values[1][ValueLength] = '\0';
+            strncpy(Values[1], UnparsedValues+CharacterIndex, ValueLength);
+            SearchIndex = CharacterIndex;
+            break;
+        }
+        if (SpaceCount != 1 && UnparsedValues[CharacterIndex] == ' '){
             SpaceCount++;
             continue;
         }
         if (SpaceCount == 1 && UnparsedValues[CharacterIndex] != '='){
-            puts("Missing a =");
-        }
-        if (SpaceCount == 2){
-            switch (VariableType){
-                case STRING:{
-                    int ValueLength = strlen(UnparsedValues+CharacterIndex);
-                    Values[1] = malloc((ValueLength + 1) * sizeof(char));
-                    String_Pointer_Check(Values[1], "Failed to allocate for the variable value");
-                    Values[1][ValueLength] = '\0';
-                    strncpy(Values[1], UnparsedValues+CharacterIndex, ValueLength);
-                    SearchIndex = CharacterIndex;
-                    break;
-                }
-                case INT:{
-                    Values[1] = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
-                    String_Pointer_Check(Values[1], "Failed to allocate for the variable value");
-                    Values[1][CharacterIndex-SearchIndex] = '\0';
-                    strncpy(Values[1], UnparsedValues+CharacterIndex, UnparsedValuesLength - CharacterIndex);
-                    int ValueAsInt = atoi(Values[1]);
-                    SearchIndex = CharacterIndex;
-                    break;
-                }
-                default:
-                    puts("Unknown ValueType when searching for declaration value type\n");
-                    break;
-            }
-            break;
+            int LengthOfTypeDecl = strlen(Instruction-UnparsedValuesLength);
+            printf("%s\n", Instruction);
+            printf("Missing a '=' at line:%d\n", LineNumber+1);
+            exit(EXIT_FAILURE);
+        } else {
+            SpaceCount++;
         }
     }
     return Values;
 }
 
 
-void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionKeyword, int InstructionLength, int CharacterIndex){
+void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionKeyword, int InstructionLength, int CharacterIndex, int LineNumber){
     if (InstructionKeyword != NULL){
         switch (InstructionKeyword->ValueType){
             case DECLARATION:{
@@ -157,7 +146,7 @@ void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 if (ValueType == NULL){ puts("You magical fuck, how did you break this? That internal type doesn't exist."); exit(EXIT_FAILURE); }
                 if (ValueType->ValueType == TYPE){
                     Type DeclType = *(Type*) ValueType->Value;
-                    char** Values = Find_Declaration_Values(DeclType, ValueBuffer);
+                    char** Values = Find_Declaration_Values(DeclType, ValueBuffer, Instruction, LineNumber);
                     VarDecl->Function(Values[0], Values[1], DeclType);
                 }
                 free(ValueBuffer);
@@ -226,7 +215,7 @@ void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
 }
 
 
-void Execute_Instruction(char* Instruction){
+void Execute_Instruction(char* Instruction, int LineNumber){
     int InstructionLength = strlen(Instruction);
     char* KeywordBuffer;
     StringList InstructionSet;
@@ -247,7 +236,7 @@ void Execute_Instruction(char* Instruction){
             strncpy(KeywordBuffer, Instruction+SearchIndex, CharacterIndex-SearchIndex);
             Any* InstructionKeyword = Lookup(Globals, KeywordBuffer);
             if (InstructionKeyword != NULL) {
-                Execute_Statement(Instruction, KeywordBuffer, InstructionKeyword, InstructionLength, CharacterIndex);
+                Execute_Statement(Instruction, KeywordBuffer, InstructionKeyword, InstructionLength, CharacterIndex, LineNumber);
                 free(InstructionKeyword);
             }
             free(KeywordBuffer);
@@ -309,7 +298,7 @@ void Run_Interpreter(){
     }
     for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){
         if (Instructions->List[LineIndex] != NULL){
-            Execute_Instruction(Instructions->List[LineIndex]);
+            Execute_Instruction(Instructions->List[LineIndex], LineIndex);
         }
     }
 }

@@ -1,6 +1,8 @@
 String Greeting = "Welcome to the thunderdome bitches!"
 
 Int X = 5
+Int Y = 500
 
 Out(Greeting)
 Out(X)
+Out(Y)
