@@ -24,45 +24,7 @@ char* FinalWorkingDirectory;
 StringList* Instructions;
 
 
-void Parse_Source_Code(){
-    FILE* FilePointer = fopen(FileName, "r");
-    File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
 
-    int LineBufferSize = 1024;
-    int LineCount = 0;
-    char* LineBuffer = malloc(LineBufferSize * sizeof(char));
-
-    while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
-        LineCount += 1;
-    }
-
-    Instructions = (StringList*)malloc(sizeof(StringList));
-    Instructions->List = malloc((LineCount + 1) * sizeof(char*));
-    StringList_Pointer_Check(Instructions, "Read File Contents Pointer Allocation Fail");
-
-    rewind(FilePointer);
-    LineCount = 0;
-
-    while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
-        if (strcmp(LineBuffer, "\n") == 0) { continue; }
-        size_t LineLength = strlen(LineBuffer);
-        if (LineLength > 0 && LineBuffer[LineLength - 1] == '\n') {
-            LineBuffer[LineLength - 1] = '\0';
-        }
-
-        Instructions->List[LineCount] = malloc((LineLength + 1) * sizeof(char));
-        String_Pointer_Check(Instructions->List[LineCount], "Read File Lines Inner String Allocation Fail");
-        strcpy(Instructions->List[LineCount], LineBuffer);
-
-        LineCount += 1;
-    }
-
-    free(LineBuffer);
-    fclose(FilePointer);
-
-    Instructions->List[LineCount] = NULL;
-    Instructions->ElementCount = LineCount;
-}
 
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
@@ -283,15 +245,44 @@ void Setup_Globals(){
 
 
 void Run_Interpreter(){
-    if (Instructions == NULL){
-        printf("Instructions are null");
-        exit(EXIT_FAILURE);
+    FILE* FilePointer = fopen(FileName, "r");
+    File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
+
+    int LineBufferSize = 1024;
+    int LineCount = 0;
+    char* LineBuffer = malloc(LineBufferSize * sizeof(char));
+
+    while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
+        LineCount += 1;
     }
-    for (int LineIndex = 0; LineIndex < Instructions->ElementCount; LineIndex++){
-        if (Instructions->List[LineIndex] != NULL){
-            Execute_Instruction(Instructions->List[LineIndex], LineIndex);
+
+    Instructions = (StringList*)malloc(sizeof(StringList));
+    Instructions->List = malloc((LineCount + 1) * sizeof(char*));
+    StringList_Pointer_Check(Instructions, "Read File Contents Pointer Allocation Fail");
+
+    rewind(FilePointer);
+    LineCount = 0;
+
+    while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
+        if (strcmp(LineBuffer, "\n") == 0) { continue; }
+        size_t LineLength = strlen(LineBuffer);
+        if (LineLength > 0 && LineBuffer[LineLength - 1] == '\n') {
+            LineBuffer[LineLength - 1] = '\0';
         }
+
+        // Instructions->List[LineCount] = malloc((LineLength + 1) * sizeof(char));
+        Execute_Instruction(LineBuffer, LineCount);
+        // String_Pointer_Check(Instructions->List[LineCount], "Read File Lines Inner String Allocation Fail");
+        // strcpy(Instructions->List[LineCount], LineBuffer);
+
+        LineCount += 1;
     }
+
+    free(LineBuffer);
+    fclose(FilePointer);
+
+    Instructions->List[LineCount] = NULL;
+    Instructions->ElementCount = LineCount;
 }
 
 void Check_Windows_Style_Path(){
@@ -359,7 +350,6 @@ void Run_Iwa(int ArgumentsCount, char* Arguments[]){
     Check_Windows_Style_Path();
     Setup_Globals();
     Setup_Internal_Types();
-    Parse_Source_Code();
     Run_Interpreter();
 
     Free_Dictionary(Globals);
