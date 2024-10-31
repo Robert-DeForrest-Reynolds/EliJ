@@ -24,9 +24,6 @@ char* FinalWorkingDirectory;
 StringList* Instructions;
 
 
-
-
-
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
     Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
 }
@@ -285,6 +282,7 @@ void Run_Interpreter(){
     Instructions->ElementCount = LineCount;
 }
 
+
 void Check_Windows_Style_Path(){
     if (FileName != NULL) {
         if (Contains(FileName, "\\")) {
@@ -350,6 +348,7 @@ void Run_Iwa(int ArgumentsCount, char* Arguments[]){
     Check_Windows_Style_Path();
     Setup_Globals();
     Setup_Internal_Types();
+
     Run_Interpreter();
 
     Free_Dictionary(Globals);
