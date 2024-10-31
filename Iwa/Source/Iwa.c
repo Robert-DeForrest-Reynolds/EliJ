@@ -70,6 +70,16 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
 }
 
 
+int Next_NonWhitespace(char* Line){
+    for (int Index = 0; Index < strlen(Line); Index++){
+        if (Line[Index] == ' '){
+            return Index+1;
+        }
+    }
+    return -1;
+}
+
+
 // Declarations are correctly formatted as so:
 // <space> == " "      (I hope that is obvious)
 // <space>VariableName<space>=<space>Value
@@ -81,53 +91,33 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber){
     char** Values = malloc(2 * sizeof(char*));
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
-    int UnparsedValuesLength = strlen(UnparsedValues);
-    bool InitialCharacterFound = false;
-    int SearchIndex;
-    // Skip whitespace loop
-    for (int CharacterIndex = 0; CharacterIndex < UnparsedValuesLength; CharacterIndex++){
-        if (UnparsedValues[CharacterIndex] != ' ') {
-            InitialCharacterFound = true;
-            SearchIndex = CharacterIndex;
-            break;
-        }
+
+    int SearchIndex = Next_NonWhitespace(UnparsedValues);
+
+    // Get variable name
+    int FirstCharacterIndex = SearchIndex;
+    int NameLength = Find(UnparsedValues+SearchIndex, " ");
+    Values[0] = malloc((NameLength + 1) * sizeof(char));
+    String_Pointer_Check(Values[0], "Variable Name Allocation Fail");
+    Values[0][NameLength] = '\0';
+    strncpy(Values[0], UnparsedValues+FirstCharacterIndex, NameLength);
+    
+    SearchIndex = Next_NonWhitespace(UnparsedValues+SearchIndex) + SearchIndex;
+    if (UnparsedValues[SearchIndex] != '='){
+        printf("Missing a + sign at line: %d", LineNumber);
+        SearchIndex += 1;
     }
-    // Get variable name loop
-    for (int CharacterIndex = SearchIndex; CharacterIndex < UnparsedValuesLength; CharacterIndex++){
-        if (UnparsedValues[CharacterIndex] == ' ') {
-            Values[0] = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
-            String_Pointer_Check(Values[0], "Variable Name Allocation Fail");
-            Values[0][CharacterIndex-SearchIndex] = '\0';
-            strncpy(Values[0], UnparsedValues+SearchIndex, CharacterIndex-SearchIndex);
-            SearchIndex = CharacterIndex;
-            break;
-        }
-    }
-    // Get variable value loop
-    int SpaceCount = 0;
-    for (int CharacterIndex = SearchIndex; CharacterIndex < UnparsedValuesLength; CharacterIndex++){
-        if (SpaceCount == 2){
-            int ValueLength = strlen(UnparsedValues+CharacterIndex);
-            Values[1] = malloc((ValueLength + 1) * sizeof(char));
-            String_Pointer_Check(Values[1], "Variable Value Allocation Fail");
-            Values[1][ValueLength] = '\0';
-            strncpy(Values[1], UnparsedValues+CharacterIndex, ValueLength);
-            SearchIndex = CharacterIndex;
-            break;
-        }
-        if (SpaceCount != 1 && UnparsedValues[CharacterIndex] == ' '){
-            SpaceCount++;
-            continue;
-        }
-        if (SpaceCount == 1 && UnparsedValues[CharacterIndex] != '='){
-            int LengthOfTypeDecl = strlen(Instruction-UnparsedValuesLength);
-            printf("%s\n", Instruction);
-            printf("Missing a '=' at line:%d\n", LineNumber+1);
-            exit(EXIT_FAILURE);
-        } else {
-            SpaceCount++;
-        }
-    }
+
+    SearchIndex = Next_NonWhitespace(UnparsedValues+SearchIndex) + SearchIndex;
+
+    // Get variable value
+    int ValueLength = strlen(UnparsedValues+SearchIndex);
+    Values[1] = malloc((ValueLength + 1) * sizeof(char));
+    String_Pointer_Check(Values[1], "Variable Value Allocation Fail");
+    Values[1][ValueLength] = '\0';
+    strncpy(Values[1], UnparsedValues+SearchIndex, ValueLength);
+    SearchIndex = SearchIndex;
+    
     return Values;
 }
 
@@ -184,7 +174,7 @@ void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 } else {
                     Any* ParameterValue = Lookup(Globals, Parameter);
                     if (ParameterValue == NULL){
-                        printf("%s does not exist", Parameter);
+                        printf("%s does not exist\n", Parameter);
                         exit(EXIT_FAILURE);
                     } else {
                         if (ParameterValue->ValueType == STRING){
