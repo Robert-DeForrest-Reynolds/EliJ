@@ -31,8 +31,8 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
 
 int Next_NonWhitespace(char* Line){
     for (int Index = 0; Index < strlen(Line); Index++){
-        if (Line[Index] == ' '){
-            return Index+1;
+        if (Line[Index] != ' '){
+            return Index;
         }
     }
     return -1;
@@ -61,7 +61,8 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
                     printf("Missing a = sign at line: %d, index: %d\n", LineNumber, SearchIndex);
                     exit(EXIT_FAILURE);
                 }
-                SearchIndex = Next_NonWhitespace(UnparsedValues+CharacterIndex) + SearchIndex;
+                SearchIndex += 1;
+                SearchIndex = Next_NonWhitespace(UnparsedValues+SearchIndex) + SearchIndex;
             }
             break;
         }
@@ -73,7 +74,6 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
     String_Pointer_Check(Values[1], "Variable Value Allocation Fail");
     Values[1][ValueLength] = '\0';
     strncpy(Values[1], UnparsedValues+SearchIndex, ValueLength);
-    SearchIndex = SearchIndex;
     
     return Values;
 }
@@ -136,12 +136,14 @@ void Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                     if (ParameterValue == NULL){
                         printf("%s does not exist\n", Parameter);
                         exit(EXIT_FAILURE);
-                    } else {
+                    }
+                    else {
                         if (ParameterValue->ValueType == STRING){
                             int ParameterValueLength = strlen((char*) ParameterValue->Value);
-                            char* StrippedString = malloc(((ParameterValueLength - 2) + 1) * sizeof(char));
+                            int StrippedStringLength = ParameterValueLength - 2;
+                            char* StrippedString = malloc((StrippedStringLength + 1) * sizeof(char));
                             String_Pointer_Check(StrippedString, "Stripped String Allocation Fail");
-                            StrippedString[ParameterValueLength] = '\0';
+                            StrippedString[StrippedStringLength] = '\0';
                             strncpy(StrippedString, (char*) ParameterValue->Value+1, ParameterValueLength-2);
                             ParameterValue->Value = StrippedString;
                             Func->Function(ParameterValue);
@@ -248,38 +250,22 @@ void Run_Interpreter(){
     int LineBufferSize = 1024;
     int LineCount = 0;
     char* LineBuffer = malloc(LineBufferSize * sizeof(char));
-
-    while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
-        LineCount += 1;
-    }
-
-    Instructions = (StringList*)malloc(sizeof(StringList));
-    Instructions->List = malloc((LineCount + 1) * sizeof(char*));
-    StringList_Pointer_Check(Instructions, "Read File Contents Pointer Allocation Fail");
-
-    rewind(FilePointer);
-    LineCount = 0;
-
+    String_Pointer_Check(LineBuffer, "Line Buffer Allocation Fail");
+    
     while (fgets(LineBuffer, LineBufferSize, FilePointer)) {
         if (strcmp(LineBuffer, "\n") == 0) { continue; }
-        size_t LineLength = strlen(LineBuffer);
-        if (LineLength > 0 && LineBuffer[LineLength - 1] == '\n') {
-            LineBuffer[LineLength - 1] = '\0';
+        int LineLength = strlen(LineBuffer);
+        if (LineLength > 0 && LineBuffer[LineLength-1] == '\n' | LineBuffer[LineLength-1] == EOF) {
+            LineBuffer[LineLength-1] = '\0';
+            LineLength--;
+            Execute_Instruction(LineBuffer, LineCount);
         }
-
-        // Instructions->List[LineCount] = malloc((LineLength + 1) * sizeof(char));
-        Execute_Instruction(LineBuffer, LineCount);
-        // String_Pointer_Check(Instructions->List[LineCount], "Read File Lines Inner String Allocation Fail");
-        // strcpy(Instructions->List[LineCount], LineBuffer);
-
         LineCount += 1;
     }
 
     free(LineBuffer);
     fclose(FilePointer);
 
-    Instructions->List[LineCount] = NULL;
-    Instructions->ElementCount = LineCount;
 }
 
 
