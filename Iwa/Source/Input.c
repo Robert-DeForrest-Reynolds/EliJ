@@ -5,6 +5,8 @@
 #include "Structures.h"
 #include "PointerChecks.h"
 
+// This eventually needs to be dynamic and read userinput char by char until eof
+
 char* Input(char* Prefix){
     char UserInput[1024];
     printf("%s", Prefix);

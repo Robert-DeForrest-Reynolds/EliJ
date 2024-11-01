@@ -15,6 +15,8 @@
 #include "Find.h"
 #include "FindBetween.h"
 
+#define DEBUG true
+
 Dictionary* Globals;
 char* ArgumentBuffer;
 char* FileName;
@@ -36,6 +38,9 @@ void Verify_Valid_Papple_File(char* PotentialFileName, int ArgumentLength, int W
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]);
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
+    #if DEBUG
+    printf("Inserting Variable Declaration: %s = %s\n\n", VariableName, VariableValue);
+    #endif
     Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
 }
 
@@ -114,6 +119,9 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
 
 
 Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber){
+    #if DEBUG
+    printf("Executing Statement: %s\n\n", Instruction);
+    #endif
     if (InstructionKeyword != NULL){
         switch (InstructionKeyword->ValueType){
             case DECLARATION:{
@@ -223,7 +231,9 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
 
 
 Any* Evaluate_Instruction(char* Instruction, int LineNumber){
-    // printf("Evaluating Instruction: %s\n", Instruction);
+    #if DEBUG
+    printf("Executing Instruction: %s\n\n", Instruction);
+    #endif
     int InstructionLength = strlen(Instruction);
     Any* Return;
     char* KeywordBuffer;
@@ -269,6 +279,17 @@ void Setup_Internal_Types(){
     Insert(InternalTypeMap, strdup("String"), STRING, StringType, TYPE);
     Insert(InternalTypeMap, strdup("Int"), STRING, IntType, TYPE);
     Insert(InternalTypeMap, strdup("Out"), STRING, OutputType, TYPE);
+    
+    #if DEBUG
+    puts("\nVerifying Internal Types");
+    for (int Index = 0; Index < InternalTypeMap->Size; Index++){
+        if (InternalTypeMap->Table[Index] != NULL){
+            Pair* KeyValue = InternalTypeMap->Table[Index];
+            Type ValueType = *(Type*) KeyValue->Value;
+            printf("Type Syntax: %s\nRepresentation: %s\n", (char*) KeyValue->Key, TypesAsStrings[ValueType]);
+        }
+    }
+    #endif
 }
 
 
@@ -298,6 +319,35 @@ void Setup_Globals(){
     // Built-In Functions
     Insert(Globals, strdup("Out"), STRING, OutputFunc, OUTPUT);
     Insert(Globals, strdup("In"), STRING, InputFunc, INPUT);
+    
+    #if DEBUG
+    puts("\nVerifying Built-Ins within Globals");
+    for (int Index = 0; Index < Globals->Size; Index++){
+        if (Globals->Table[Index] != NULL){
+            Pair* KeyValue = Globals->Table[Index];
+            switch (KeyValue->ValueType){
+                case DECLARATION:{
+                    VariableDeclaration* VarDeclCheck = (VariableDeclaration*) KeyValue->Value;
+                    VariableDeclaration_Pointer_Check(VarDecl, "Variable Declaration Pointer Allocation Fail");
+                    printf("Key: %s\nValue: %s\n", (char*) KeyValue->Key, VarDeclCheck->FunctionName);
+                    break;
+                }
+                case OUTPUT:{
+                    OutputFunction* OutputFuncCheck = (OutputFunction*) KeyValue->Value;
+                    Output_Pointer_Check(OutputFuncCheck, "Output Function Instruction Allocation Fail");
+                    printf("Key: %s\nValue: %s\n", (char*) KeyValue->Key, OutputFuncCheck->FunctionName);
+                    break;
+                }
+                case INPUT:{
+                    InputFunction* InputFuncCheck = (InputFunction*) KeyValue->Value;
+                    Input_Pointer_Check(InputFuncCheck, "Input Function Instruction Allocation Fail");
+                    printf("Key: %s\nValue: %s\n", (char*) KeyValue->Key, InputFuncCheck->FunctionName);
+                    break;
+                }
+            }
+        }
+    }
+    #endif
 }
 
 
@@ -391,17 +441,20 @@ void Setup_Working_Directory(){
 
 
 void Run_Iwa(int ArgumentsCount, char* Arguments[]){
-    Setup_Working_Directory();
-    Parse_User_Arguments(ArgumentsCount, Arguments);
-    Check_Windows_Style_Path();
     Setup_Globals();
     Setup_Internal_Types();
 
-    Run_Interpreter();
+    if (ArgumentsCount > 1){
+        Setup_Working_Directory();
+        Parse_User_Arguments(ArgumentsCount, Arguments);
+        Check_Windows_Style_Path();
+
+        Run_Interpreter();
+        free(FileName);
+    }
 
     Free_Dictionary(Globals);
     Free_Dictionary(InternalTypeMap);
-    free(FileName);
 }
 
 
