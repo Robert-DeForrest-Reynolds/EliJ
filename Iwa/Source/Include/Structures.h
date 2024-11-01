@@ -39,7 +39,7 @@ typedef struct OutputFunction{
 } OutputFunction;
 
 typedef struct InputFunction{
-    StringList* (*Function)();
+    char* (*Function)(char* Prefix);
     char* FunctionName;
 } InputFunction;
 

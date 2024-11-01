@@ -1,0 +1,7 @@
+Int X = 5
+String Greeting = "Welcome"
+
+Out(X)
+Out(Greeting)
+
+String UserInput = In(">")

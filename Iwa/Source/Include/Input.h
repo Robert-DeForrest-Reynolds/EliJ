@@ -3,6 +3,6 @@
 
 #include "Structures.h"
 
-StringList* Input();
+char* Input(char* Prefix);
 
 #endif
