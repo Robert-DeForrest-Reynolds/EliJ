@@ -7,8 +7,9 @@
 
 // This eventually needs to be dynamic and read userinput char by char until eof
 
-char* Input(char* Prefix){
+char* Input(char* Prompt){
     char UserInput[1024];
+    printf("%s", Prompt);
     if (fgets(UserInput, sizeof(UserInput), stdin) == NULL) {
         printf("User Input Exceeded Limit");
     }

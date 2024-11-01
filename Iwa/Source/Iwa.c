@@ -364,8 +364,8 @@ void Run_Interpreter(){
         if (LineLength > 0 && LineBuffer[LineLength-1] == '\n') {
             LineBuffer[LineLength-1] = '\0';
             LineLength--;
-            Evaluate_Instruction(LineBuffer, LineCount);
         }
+        Evaluate_Instruction(LineBuffer, LineCount);
         LineCount += 1;
     }
 

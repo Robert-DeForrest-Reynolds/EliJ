@@ -16,6 +16,14 @@ Operations like conditionals make decision on how to access, and what do with th
 If it's not a declaration, it's an operation. If it's not an operation, we've reached the end of the program.
 Files are read top-down.
 The only control flow hidden that begs an understanding of the backend is scope, but it is simple. Anything declared outside of the local scope of a variable, function, or an object is global. You cannot expose data within a local scope to the global scope, but the global scope is always exposed to any local scope, and local scope cannot overwrite, or shadow in name.
+
+### Currently Implemented
+ - String Variable Declarations
+ - Integer Variable Declarations
+ - `Out(String Contents)`
+ - `In()`
+ - `In(String Prompt)` - Overloaded with string to display to console before user input
+
 ### **Standard Library Implementations**
 - Strings
 - Math Functions & Constants
