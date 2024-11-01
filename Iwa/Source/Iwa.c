@@ -368,10 +368,6 @@ void Run_Interpreter(){
         }
         LineCount += 1;
     }
-    // Last instruction if there's no extra line at the end of the file
-    if (strlen(LineBuffer) > 0) {
-        Evaluate_Instruction(LineBuffer, LineCount);
-    }
 
     free(LineBuffer);
     fclose(FilePointer);

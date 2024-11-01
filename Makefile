@@ -24,7 +24,7 @@ Test:
 test: Test
 
 timetest:
-	clang -g $(SourceFiles) -I$(Include) -o Iwa -Wno-deprecated-non-prototype -DDEBUG=1
+	clang -g $(SourceFiles) -I$(Include) -o Iwa -Wno-deprecated-non-prototype
 	@echo ""
 	time ./Iwa.exe Examples/HelloWorld.papple
 	

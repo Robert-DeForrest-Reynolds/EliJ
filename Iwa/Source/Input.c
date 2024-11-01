@@ -9,7 +9,6 @@
 
 char* Input(char* Prefix){
     char UserInput[1024];
-    printf("%s", Prefix);
     if (fgets(UserInput, sizeof(UserInput), stdin) == NULL) {
         printf("User Input Exceeded Limit");
     }
