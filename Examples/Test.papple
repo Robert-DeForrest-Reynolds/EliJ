@@ -5,3 +5,4 @@ Out(X)
 Out(Greeting)
 
 String UserInput = In(">")
+Out(UserInput)

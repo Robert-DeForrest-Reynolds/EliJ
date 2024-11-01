@@ -95,8 +95,16 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
         if (PotentialFunction != NULL && PotentialFunction->ValueType == INPUT){
             Any* InstructionReturn = Evaluate_Instruction(Values[1], LineNumber);
             if (InstructionReturn != NULL){
-                
                 free(Values[1]);
+                switch (InstructionReturn->ValueType){
+                    case STRING:{
+                        Values[1] = (char*) InstructionReturn->Value;
+                        break;
+                    }
+                    default:
+                        puts("Unknown ValueType when searching for instruction return type\n");
+                        break;
+                }
             }
         }
     }
@@ -196,7 +204,6 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 int ParametersLength = strlen(Parameters);
                 if (Parameters[0] == '\"' && Parameters[ParametersLength-1] == '\"'){
                     char* String = Find_Between(Parameters, "\"", "\"");
-                    printf("String %s|\n", String);
                     char* UserInput = Func->Function(String);
                     ReturnValue->Value = UserInput;
                     ReturnValue->ValueType = STRING;
@@ -216,7 +223,7 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
 
 
 Any* Evaluate_Instruction(char* Instruction, int LineNumber){
-    printf("Evaluating Instruction: %s\n", Instruction);
+    // printf("Evaluating Instruction: %s\n", Instruction);
     int InstructionLength = strlen(Instruction);
     Any* Return;
     char* KeywordBuffer;

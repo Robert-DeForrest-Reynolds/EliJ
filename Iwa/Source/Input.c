@@ -6,17 +6,18 @@
 #include "PointerChecks.h"
 
 char* Input(char* Prefix){
-    printf("Calling input function\n");
     char UserInput[1024];
     printf("%s", Prefix);
     if (fgets(UserInput, sizeof(UserInput), stdin) == NULL) {
         printf("User Input Exceeded Limit");
     }
     int UserInputLength = strlen(UserInput);
-    char* ReturnString = malloc((UserInputLength + 1) * sizeof(char));
+    int ReturnStringLength = UserInputLength + 1; // 1 extra for " at beginning
+    char* ReturnString = malloc((ReturnStringLength) + 1 * sizeof(char)); // 1 extra space for null terminator
     String_Pointer_Check(ReturnString, "Input Return String Allocation Fail");
-    ReturnString[UserInputLength] = '\0';
-    strcpy(ReturnString, UserInput);
-    printf("%s\n", ReturnString);
+    strcpy(ReturnString+1, UserInput);
+    ReturnString[0] = '"';
+    ReturnString[ReturnStringLength - 1] = '"';
+    ReturnString[ReturnStringLength] = '\0';
     return ReturnString;
 }
