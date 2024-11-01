@@ -15,8 +15,6 @@
 #include "Find.h"
 #include "FindBetween.h"
 
-#define DEBUG true
-
 Dictionary* Globals;
 char* ArgumentBuffer;
 char* FileName;
