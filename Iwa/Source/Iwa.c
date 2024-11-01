@@ -214,6 +214,10 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                     ReturnValue->Value = UserInput;
                     ReturnValue->ValueType = STRING;
                     free(String);
+                } else {
+                    char* UserInput = Func->Function("");
+                    ReturnValue->Value = UserInput;
+                    ReturnValue->ValueType = STRING;
                 }
                 free(ValueBuffer);
                 free(Parameters);

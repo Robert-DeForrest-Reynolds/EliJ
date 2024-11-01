@@ -8,11 +8,15 @@
 // This eventually needs to be dynamic and read userinput char by char until eof
 
 char* Input(char* Prompt){
+    if (strlen(Prompt) > 0){
+        printf("%s", Prompt);
+    }
+
     char UserInput[1024];
-    printf("%s", Prompt);
     if (fgets(UserInput, sizeof(UserInput), stdin) == NULL) {
         printf("User Input Exceeded Limit");
     }
+    
     int UserInputLength = strlen(UserInput);
     int ReturnStringLength = UserInputLength + 1; // 1 extra for " at beginning
     char* ReturnString = malloc((ReturnStringLength) + 1 * sizeof(char)); // 1 extra space for null terminator
