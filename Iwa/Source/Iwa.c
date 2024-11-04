@@ -224,16 +224,9 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
     char* KeywordBuffer;
     StringList InstructionSet;
     bool InitialCharacterFound = false;
-    int SearchIndex;
-    for (int CharacterIndex = 0; CharacterIndex < InstructionLength; CharacterIndex++){
-        if (Instruction[CharacterIndex] != ' ') {
-            InitialCharacterFound = true;
-            SearchIndex = CharacterIndex;
-            break;
-        }
-    }
+    int SearchIndex = Left_Trim(Instruction);
     for (int CharacterIndex = SearchIndex; CharacterIndex < InstructionLength-SearchIndex; CharacterIndex++){
-        if (InitialCharacterFound == true && Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
+        if (Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
             KeywordBuffer = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
             String_Pointer_Check(KeywordBuffer, "Keyword Buffer Allocation Fail");
             KeywordBuffer[CharacterIndex-SearchIndex] = '\0';
