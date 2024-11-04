@@ -14,6 +14,7 @@
 #include "Input.h"
 #include "Find.h"
 #include "FindBetween.h"
+#include "LeftTrim.h"
 
 Dictionary* Globals;
 char* ArgumentBuffer;
@@ -24,7 +25,6 @@ char* FinalWorkingDirectory;
 StringList* Instructions;
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType);
-int Skip_Whitespace(char* Line);
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber);
 Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionKeyword, int InstructionLength, int CharacterIndex, int LineNumber);
 Any* Evaluate_Instruction(char* Instruction, int LineNumber);
@@ -42,22 +42,13 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
     Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
 }
 
-int Skip_Whitespace(char* Line){
-    for (int Index = 0; Index < strlen(Line); Index++){
-        if (Line[Index] != ' '){
-            return Index;
-        }
-    }
-    return -1;
-}
-
 
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber){
     char** Values = malloc(2 * sizeof(char*));
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
     bool NoSeparation = false;
 
-    int SearchIndex = Skip_Whitespace(UnparsedValues);
+    int SearchIndex = Left_Trim(UnparsedValues);
 
     for (int CharacterIndex = SearchIndex; CharacterIndex < strlen(UnparsedValues+SearchIndex); CharacterIndex++){
         if (UnparsedValues[CharacterIndex] == ' ' | UnparsedValues[CharacterIndex] == '='){
@@ -67,15 +58,15 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
             Values[0][NameLength] = '\0';
             strncpy(Values[0], UnparsedValues+SearchIndex, NameLength);
             if (UnparsedValues[CharacterIndex] == '='){
-                SearchIndex = Skip_Whitespace(UnparsedValues+CharacterIndex) + CharacterIndex;
+                SearchIndex = Left_Trim(UnparsedValues+CharacterIndex) + CharacterIndex;
             } else {
-                SearchIndex = Skip_Whitespace(UnparsedValues+CharacterIndex) + CharacterIndex;
+                SearchIndex = Left_Trim(UnparsedValues+CharacterIndex) + CharacterIndex;
                 if (UnparsedValues[SearchIndex] != '='){
                     printf("Missing a = sign at line: %d, index: %d\n", LineNumber, SearchIndex);
                     exit(EXIT_FAILURE);
                 }
                 SearchIndex += 1;
-                SearchIndex = Skip_Whitespace(UnparsedValues+SearchIndex) + SearchIndex;
+                SearchIndex = Left_Trim(UnparsedValues+SearchIndex) + SearchIndex;
             }
             break;
         }
@@ -116,6 +107,16 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
 }
 
 
+Any* Globals_Lookup(char* Parameter){
+    Any* ParameterValue = Lookup(Globals, Parameter);
+    if (ParameterValue == NULL){
+        printf("%s does not exist\n", Parameter);
+        exit(EXIT_FAILURE);
+    }
+    return ParameterValue;
+}
+
+
 Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber){
     #if DEBUG
     printf("Executing Statement: %s\n\n", Instruction);
@@ -150,49 +151,31 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 ValueBuffer[InstructionLength - ValuesStartIndex] = '\0';
                 strncpy(ValueBuffer, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
                 int ValueBufferLength = strlen(ValueBuffer);
-                if (ValueBuffer[0] == '(' && ValueBuffer[ValueBufferLength - 1] == ')'){
-                    Parameter = malloc(((ValueBufferLength - 2) + 1) * sizeof(char));
-                    String_Pointer_Check(Parameter, "Parameter Allocation Fail");
-                    Parameter[ValueBufferLength-2] = '\0';
-                    strncpy(Parameter, ValueBuffer+1, ValueBufferLength-2);
-                } else {
-                    printf("You are missing a paranthesis at your function call");
-                    exit(EXIT_FAILURE);
-                }
-
-                if (Parameter[0] == '"' && Parameter[strlen(ValueBuffer) - 1] == '"'){
+                Parameter = Find_Between(ValueBuffer, "(", ")");
+                
+                char* PotentialInnerString = Find_Between(Parameter, "\"", "\"");
+                if (PotentialInnerString != NULL){
                     Any* Content = (Any*) malloc(sizeof(Any));
-                    int ParameterLength = strlen(Parameter);
-                    char* StrippedString = malloc(((ParameterLength - 2) + 1) * sizeof(char));
-                    String_Pointer_Check(StrippedString, "Stripped String Allocation Fail");
-                    StrippedString[ParameterLength-2] = '\0';
-                    strncpy(StrippedString, Parameter+1, ParameterLength-2);
-                    Content->Value = Parameter;
+                    Content->Value = PotentialInnerString;
                     Content->ValueType = STRING;
                     Func->Function(Content);
-                    free(StrippedString);
-                } else {
-                    Any* ParameterValue = Lookup(Globals, Parameter);
-                    if (ParameterValue == NULL){
-                        printf("%s does not exist\n", Parameter);
-                        exit(EXIT_FAILURE);
-                    }
-                    else {
-                        if (ParameterValue->ValueType == STRING){
-                            int ParameterValueLength = strlen((char*) ParameterValue->Value);
-                            int StrippedStringLength = ParameterValueLength - 2;
-                            char* StrippedString = malloc((StrippedStringLength + 1) * sizeof(char));
-                            String_Pointer_Check(StrippedString, "Stripped String Allocation Fail");
-                            StrippedString[StrippedStringLength] = '\0';
-                            strncpy(StrippedString, (char*) ParameterValue->Value+1, ParameterValueLength-2);
-                            ParameterValue->Value = StrippedString;
-                            Func->Function(ParameterValue);
-                            free(StrippedString);
+                }
+                else {
+                    Any* ParameterValue = Globals_Lookup(Parameter);
+                    if (ParameterValue->ValueType == STRING){
+                        int ParameterValueLength = strlen((char*) ParameterValue->Value);
+                        int StrippedStringLength = ParameterValueLength - 2;
+                        char* StrippedString = malloc((StrippedStringLength + 1) * sizeof(char));
+                        String_Pointer_Check(StrippedString, "Stripped String Allocation Fail");
+                        StrippedString[StrippedStringLength] = '\0';
+                        strncpy(StrippedString, (char*) ParameterValue->Value+1, ParameterValueLength-2);
+                        ParameterValue->Value = StrippedString;
+                        Func->Function(ParameterValue);
+                        free(StrippedString);
 
-                        }
-                        else if (ParameterValue->ValueType == INT) {
-                            Func->Function(ParameterValue);
-                        }
+                    }
+                    else if (ParameterValue->ValueType == INT) {
+                        Func->Function(ParameterValue);
                     }
                 }
                 free(ValueBuffer);
@@ -206,7 +189,7 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 char* ValueBuffer = malloc((InstructionLength - ValuesStartIndex + 1) * sizeof(char));
                 ValueBuffer[InstructionLength - ValuesStartIndex] = '\0';
                 strncpy(ValueBuffer, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
-                char* Parameters = Find_Between(ValueBuffer, "(", ")");
+                char* Parameters = Find_Between(ValueBuffer, "(", ")"); // We need to handle if we find nothing
                 int ParametersLength = strlen(Parameters);
                 if (Parameters[0] == '\"' && Parameters[ParametersLength-1] == '\"'){
                     char* String = Find_Between(Parameters, "\"", "\"");
@@ -255,11 +238,9 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
             String_Pointer_Check(KeywordBuffer, "Keyword Buffer Allocation Fail");
             KeywordBuffer[CharacterIndex-SearchIndex] = '\0';
             strncpy(KeywordBuffer, Instruction+SearchIndex, CharacterIndex-SearchIndex);
-            Any* InstructionKeyword = Lookup(Globals, KeywordBuffer);
-            if (InstructionKeyword != NULL) {
-                Return = Execute_Statement(Instruction, KeywordBuffer, InstructionKeyword, InstructionLength, CharacterIndex, LineNumber);
-                free(InstructionKeyword);
-            }
+            Any* InstructionKeyword = Globals_Lookup(KeywordBuffer);
+            Return = Execute_Statement(Instruction, KeywordBuffer, InstructionKeyword, InstructionLength, CharacterIndex, LineNumber);
+            free(InstructionKeyword);
             free(KeywordBuffer);
             return Return;
         }
