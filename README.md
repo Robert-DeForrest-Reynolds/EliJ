@@ -23,6 +23,7 @@ The only control flow hidden that begs an understanding of the backend is scope,
  - `Out(String Contents)`
  - `In()`
  - `In(String Prompt)` - Overloaded with string to display to console before user input
+ - `Find_Between(String Content, String LeftQuery, String RightQuery)` - Find substring between two strings
 
 ### **Standard Library Implementations**
 - Strings
