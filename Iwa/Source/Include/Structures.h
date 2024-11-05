@@ -6,6 +6,7 @@
 typedef struct Any {
     void* Value;
     Type ValueType;
+    FunctionType FuncType;
 } Any;
 
 typedef struct Pair {
@@ -42,5 +43,11 @@ typedef struct InputFunction{
     char* (*Function)(char* Prefix);
     char* FunctionName;
 } InputFunction;
+
+typedef struct FindBetweenFunction{
+    char* (*Function)(char* String, char* LeftTrim, char* RightTrim);
+    char* FunctionName;
+    FunctionType FuncType;
+} FindBetweenFunction;
 
 #endif

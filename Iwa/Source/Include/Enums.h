@@ -6,6 +6,10 @@
 typedef struct Dictionary Dictionary;
 
 typedef enum{
+    FIND_BETWEEN,
+} FunctionType;
+
+typedef enum{
     CHAR,
     STRING,
     INT,
@@ -17,6 +21,7 @@ typedef enum{
     TYPE,
     OUTPUT,
     INPUT,
+    STRING_RTN,
 } Type;
 
 extern char* TypesAsStrings[];

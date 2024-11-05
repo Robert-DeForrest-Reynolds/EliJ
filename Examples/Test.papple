@@ -1,8 +1,7 @@
-Int X = 5
-String Greeting = "Welcome"
+String Greeting = "(Welcome)"
 
-Out(X)
+String FindBetweenTest = Find_Between(Greeting, "(", ")")
+
+Out(FindBetweenTest)
+
 Out(Greeting)
-
-String UserInput = In(">")
-Out(UserInput)

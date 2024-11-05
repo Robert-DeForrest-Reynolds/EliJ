@@ -15,6 +15,9 @@
 #include "Find.h"
 #include "FindBetween.h"
 #include "LeftTrim.h"
+#include "Reverse.h"
+#include "Split.h"
+#include "Trim.h"
 
 Dictionary* Globals;
 char* ArgumentBuffer;
@@ -39,7 +42,17 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
     #if DEBUG
     printf("Inserting Variable Declaration: %s = %s\n\n", VariableName, VariableValue);
     #endif
-    Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+    int VariableValueLength = strlen(VariableValue);
+    if (VariableValue[0] != '\"' && VariableValue[strlen(VariableValue)-1] != '\"'){
+        char* WrappedString = malloc((VariableValueLength + 3) * sizeof(char));
+        WrappedString[VariableValueLength + 2] = '\0';
+        strcpy(WrappedString+1, VariableValue);
+        WrappedString[0] = '"';
+        WrappedString[VariableValueLength + 1] = '"';
+        Insert(Globals, strdup(VariableName), STRING, strdup(WrappedString), VariableValueType);
+    } else {
+        Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+    }
 }
 
 
@@ -78,26 +91,42 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
     String_Pointer_Check(Values[1], "Variable Value Allocation Fail");
     Values[1][ValueLength] = '\0';
     strncpy(Values[1], UnparsedValues+SearchIndex, ValueLength);
-
     // If variable value is a function call
-    int PotentialFunctionEnd = Find(Values[1], "(");
-    if (PotentialFunctionEnd != -1){
-        char* PotentialKeyword = malloc(((PotentialFunctionEnd) + 1) * sizeof(char));
-        PotentialKeyword[PotentialFunctionEnd] = '\0';
-        strncpy(PotentialKeyword, Values[1], PotentialFunctionEnd);
+    int PotentialFunctionParan = Find(Values[1], "(");
+    if (PotentialFunctionParan != -1){
+        char* PotentialKeyword = malloc(((PotentialFunctionParan) + 1) * sizeof(char));
+        PotentialKeyword[PotentialFunctionParan] = '\0';
+        strncpy(PotentialKeyword, Values[1], PotentialFunctionParan);
         Any* PotentialFunction = Lookup(Globals, PotentialKeyword);
-        if (PotentialFunction != NULL && PotentialFunction->ValueType == INPUT){
-            Any* InstructionReturn = Evaluate_Instruction(Values[1], LineNumber);
-            if (InstructionReturn != NULL){
-                free(Values[1]);
-                switch (InstructionReturn->ValueType){
-                    case STRING:{
-                        Values[1] = (char*) InstructionReturn->Value;
-                        break;
+        if (PotentialFunction != NULL){
+            switch(PotentialFunction->ValueType){
+                case OUTPUT:{
+                    printf("Out() does not return any value, do not user it's return.");
+                    exit(EXIT_FAILURE);
+                }
+                case INPUT:{
+                    Any* InstructionReturn = Evaluate_Instruction(Values[1], LineNumber);
+                    if (InstructionReturn != NULL){
+                        free(Values[1]);
+                        switch (InstructionReturn->ValueType){
+                            case STRING:{
+                                Values[1] = (char*) InstructionReturn->Value;
+                                break;
+                            }
+                            default:
+                                puts("Unknown ValueType when searching for instruction return type\n");
+                                break;
+                        }
                     }
-                    default:
-                        puts("Unknown ValueType when searching for instruction return type\n");
-                        break;
+                }
+                case STRING_RTN:{
+                    char* Parameters = Find_Between(Values[1] + PotentialFunctionParan, "(", ")");
+                    Any* InstructionReturn = Evaluate_Instruction(Values[1], LineNumber);
+                    if (InstructionReturn != NULL){
+                        free(Values[1]);
+                        Values[1] = (char*) InstructionReturn->Value;
+                    }
+                    break;
                 }
             }
         }
@@ -114,6 +143,36 @@ Any* Globals_Lookup(char* Parameter){
         exit(EXIT_FAILURE);
     }
     return ParameterValue;
+}
+
+
+Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber){
+    switch (InstructionKeyword->FuncType){
+        case FIND_BETWEEN:{
+            char* Parameters = Find_Between(Instruction, "(", ")");
+            StringList* ParameterList = Split(Parameters, ',');
+            char** ParametersValues = malloc(3 * sizeof(char*));
+            for (int ElementIndex = 0; ElementIndex < ParameterList->ElementCount; ElementIndex++){
+                char* TrimmedParameter = Trim(ParameterList->List[ElementIndex]);
+                Any* PotentialVariable = Lookup(Globals, TrimmedParameter);
+                if (PotentialVariable != NULL){
+                    char* StrippedVariable = Find_Between((char*) PotentialVariable->Value, "\"", "\"");
+                    ParametersValues[ElementIndex] = StrippedVariable;
+                }
+                else {
+                    char* PotentialString = Find_Between((char*) ParameterList->List[ElementIndex], "\"", "\"");
+                    if (PotentialString != NULL){
+                        ParametersValues[ElementIndex] = PotentialString;
+                    }
+                }
+            }
+            Any* ReturnValue = (Any*) malloc(sizeof(Any));
+            ReturnValue->Value = Find_Between(ParametersValues[0], ParametersValues[1], ParametersValues[2]);
+            ReturnValue->ValueType = STRING;
+            return ReturnValue;
+        }
+    }
+    return NULL;
 }
 
 
@@ -206,6 +265,12 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 free(Parameters);
                 return ReturnValue;
             }
+            case STRING_RTN: {
+                Any* ReturnValue = Handle_String_Return(Instruction, InstructionKeyword, InstructionLength, ValuesStartIndex, LineNumber);
+                return ReturnValue;
+                break;
+                
+            }
             default:
                 puts("Unknown ValueType when searching for instruction type\n");
                 break;
@@ -254,7 +319,6 @@ void Setup_Internal_Types(){
     
     Insert(InternalTypeMap, strdup("String"), STRING, StringType, TYPE);
     Insert(InternalTypeMap, strdup("Int"), STRING, IntType, TYPE);
-    Insert(InternalTypeMap, strdup("Out"), STRING, OutputType, TYPE);
     
     #if DEBUG
     puts("\nVerifying Internal Types");
@@ -286,6 +350,12 @@ void Setup_Globals(){
     InputFunc->Function = Input;
     InputFunc->FunctionName = "Input";
 
+    FindBetweenFunction* FindBetweenFunc = malloc(sizeof(FindBetweenFunction));
+    FindBetween_Pointer_Check(FindBetweenFunc, "Find_Between Pointer Allocation Fail");
+    FindBetweenFunc->Function = Find_Between;
+    FindBetweenFunc->FunctionName = "Find_Between";
+    FindBetweenFunc->FuncType = FIND_BETWEEN;
+
     // Variable Types
     Insert(Globals, strdup("String"), STRING, VarDecl, DECLARATION);
     Insert(Globals, strdup("Int"), STRING, VarDecl, DECLARATION);
@@ -295,6 +365,7 @@ void Setup_Globals(){
     // Built-In Functions
     Insert(Globals, strdup("Out"), STRING, OutputFunc, OUTPUT);
     Insert(Globals, strdup("In"), STRING, InputFunc, INPUT);
+    Insert(Globals, strdup("Find_Between"), STRING, FindBetweenFunc, STRING_RTN);
     
     #if DEBUG
     puts("\nVerifying Built-Ins within Globals");

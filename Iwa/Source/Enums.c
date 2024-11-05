@@ -13,4 +13,5 @@ char* TypesAsStrings[] = {
     "TYPE",
     "OUTPUT",
     "INPUT",
+    "STRING_RTN",
 };

@@ -42,10 +42,10 @@ StringList* Split(char* String, char SplitCharacter) {
 
             SegmentIndex++;
             SegmentStart = Iteration + 1;
+            SplitBuffer->ElementCount += 1;
         }
     }
     
     SplitBuffer->List[SegmentIndex] = NULL;
-    SplitBuffer->ElementCount = SplitCharacterIndexCount;
     return SplitBuffer;
 }
