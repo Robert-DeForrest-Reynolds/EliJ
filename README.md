@@ -13,9 +13,9 @@ I think there is a middle ground between concrete compilation to machine code, a
 The Pineapple is fundamentally made up of 2 things: Declarations, and operations.
 Declarations structure and add data to the accessible scopes.
 Operations like conditionals make decision on how to access, and what do with that data, as well as, functions which exist to reuse code, and organize complex functionality.
-If it's not a declaration, it's an operation. If it's not an operation, we've reached the end of the program.
+If it's not a declaration, it's an operation. If it's not an operation, we've reached the end of the program *or an error*.
 Files are read top-down.
-The only control flow hidden that begs an understanding of the backend is scope, but it is simple. Anything declared outside of the local scope of a variable, function, or an object is global. You cannot expose data within a local scope to the global scope, but the global scope is always exposed to any local scope, and local scope cannot overwrite, or shadow in name.
+The only control flow hidden that begs an understanding of the backend is scope, but it is **simple**. Anything declared outside of the local scope of a variable, function, or an object is global. You cannot expose data within a local scope to the global scope, but the global scope is always exposed to any local scope, and *local scope cannot overwrite, or shadow in name* (how do we create scopes? indentation? so does that mean loops MUST have variable declaration in local scope, name cannot conflict with anything else).
 
 ### Currently Implemented
  - String Variable Declarations
@@ -23,7 +23,7 @@ The only control flow hidden that begs an understanding of the backend is scope,
  - `Out(String Contents)`
  - `In()`
  - `In(String Prompt)` - Overloaded with string to display to console before user input
- - `Find_Between(String Content, String LeftQuery, String RightQuery)` - Find substring between two strings
+ - `Find_Between(String Content, String LeftQuery, String RightQuery)` - Find substring between two strings *(shouldn't the language constructs be completed first and then these methods written in Pineapple? or is this a helper for the parser? I read currently implemeted as language features completed)
 
 ### **Standard Library Implementations**
 - Strings
@@ -103,7 +103,7 @@ I see no reason why there *needs* to be:
  - semi-colons when there are already newline characters, and we can search forward in specified contexts
  - code block wrapping when code blocks are almost always organized with newlines, and tabs for readability anyways
 
-All functions can return 3 types, the type statically state, an Error, and a NULL value, or "None" in Pineapple
+All functions can return 3 types, the type statically state, an Error, and a NULL value, or "None" (how do we set this value?) in Pineapple
 
 Parameter evaluation is just easier, and better done with a wrapping of characters, in Pineapple, and most languages that is parentheses wrap "()".
 
@@ -120,6 +120,9 @@ Multi-line
 comment in
 Pineapple
 \ 
+
+\\\ Invalid Inline Comment
+
 
 \ Variable Declarations \
 Int Number = 5
@@ -145,14 +148,14 @@ While Number < 15
 List Fruits = [
     "Apple",
     "Orange",
-    "Strawberry",
+    "Strawberry", (trailing comma mandatory?)
 ]
 
 For Fruit in Fruits
     Out(Fruit)
 
 \ Function Declaration: Read_File \
-Fnc Read_File(String FilePath) -> Rtn
+Fnc Read_File(String FilePath) -> Rtn (is Rtn None? or void)
     File SomeFile = Open(FilePath)
     Str Contents = SomeFile.Read_Lines()
     Out(Contents)
@@ -172,7 +175,7 @@ Obj Person:
         Int Age = _Age
 
 \ Object Instantiation \
-Person Sally;
+Person Sally; *implictly value of None*
 
 \ Object Property Call \
 Sally.Name = "Sally"
