@@ -1,4 +1,5 @@
 Pineapple is the name of the language. Iwa is the name of the interpreter I built for it.
+Most of this currently is thought vomit. If you wish to provide any input, create a pull request, or reach out to me on Discord, user: `robertdeforrest`
 
 Let's keep this simple, what're the hopes and goals?
  - Fast to write, fast to develop
@@ -94,16 +95,21 @@ When searching through a statement, we'll find the first Space character, and wi
 All keywords, are hashed into a hash table (the Global dictionary)
 That keyword will be used to key into the Global dictionary. If a value is found, the internal instruction will be used.
 Variables names, function names, and object names are hashed into the Global dictionary
-
 If the hash does not exist in the map, the interpreter will crash, and report it.
 
-Dynamic typing is not supported, and will never be supported.
+Program crashes can be determined by the user through reassigning their constant value.
+Constant values will only be change using the `Mutate()` function.
+
+Dynamic typing is not supported, and will never be supported, nor any of it's lower-types like duck typing, sub-typing, or nominal typing comparison.
+All typing is declared, casted, and compared explicitly. You can specify a kind of "translation unit" that allows for casting to other specifed types.
+
+There will be built-in functions to assist with type casting primitive types to one another when compatible.
 
 I see no reason why there *needs* to be:
  - semi-colons when there are already newline characters, and we can search forward in specified contexts
  - code block wrapping when code blocks are almost always organized with newlines, and tabs for readability anyways
 
-All functions can return 3 types, the type statically state, an Error, and a NULL value, or "None" in Pineapple
+All functions can return 3 types, the type statically stated, an Error that you can use to better present errors within your program, and a void pointer, or "None" in Pineapple.
 
 Parameter evaluation is just easier, and better done with a wrapping of characters, in Pineapple, and most languages that is parentheses wrap "()".
 
@@ -111,7 +117,7 @@ Memory is automatically allocated, but is only deallocated automatically within 
 
 Within the global scope, the user is responsible for deallocation using the built-in Free() function.
 
-Everything is something. Pineapple strays from delving too far into the canonical OOP approach. An Object in Pineapple is treated as a structure of data.
+Anything that is not nothing, is something, and there's no initialization without identity. In other words, a variable requires a declarative name, and a type at minimum, or you have nothing. Every named, and typed variable in Pineapple is therefore fundamentally described as an object.
 
 ```
 \ Comments in Pineapple \

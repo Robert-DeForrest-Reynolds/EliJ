@@ -1,7 +1,9 @@
-String Greeting = "(Welcome)"
+String lorem = "Fuck"
 
-String FindBetweenTest = Find_Between(Greeting, "(", ")")
+Int X = 5
+Int Y = 7
+Int Z = 56 + 56
 
-Out(FindBetweenTest)
-
-Out(Greeting)
+Out(X)
+Out(Y)
+Out(Z)

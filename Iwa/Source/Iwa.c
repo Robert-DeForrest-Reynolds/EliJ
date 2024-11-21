@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "ctype.h"
 #include "ReadFile.h"
 #include "ReadFileLines.h"
 #include "Contains.h"
@@ -43,20 +44,120 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
     printf("Inserting Variable Declaration: %s = %s\n\n", VariableName, VariableValue);
     #endif
     int VariableValueLength = strlen(VariableValue);
-    if (VariableValue[0] != '\"' && VariableValue[strlen(VariableValue)-1] != '\"'){
-        char* WrappedString = malloc((VariableValueLength + 3) * sizeof(char));
-        WrappedString[VariableValueLength + 2] = '\0';
-        strcpy(WrappedString+1, VariableValue);
-        WrappedString[0] = '"';
-        WrappedString[VariableValueLength + 1] = '"';
-        Insert(Globals, strdup(VariableName), STRING, strdup(WrappedString), VariableValueType);
-    } else {
-        Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+    switch(VariableValueType){
+        case STRING:{
+            // We need to check if the string is properly wrapped in quotes, if not, wrap it
+            if (VariableValue[0] != '\"' && VariableValue[strlen(VariableValue)-1] != '\"'){
+                char* WrappedString = malloc((VariableValueLength + 3) * sizeof(char));
+                WrappedString[VariableValueLength + 2] = '\0';
+                strcpy(WrappedString+1, VariableValue);
+                WrappedString[0] = '"';
+                WrappedString[VariableValueLength + 1] = '"';
+                Insert(Globals, strdup(VariableName), STRING, strdup(WrappedString), VariableValueType);
+                break;
+            }
+            Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+            break;
+        }
+        case INT:{
+            Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+            break;
+        }
+        default:{
+            printf("Couldn't determine variable type during variable declaration");
+        }
     }
+}
+
+char* Check_If_Function(char* VariableValue, int LineNumber){
+    // If variable value is a function call
+    int PotentialFunctionParan = Find(VariableValue, "(");
+    if (PotentialFunctionParan == -1) { return NULL; }
+    char* PotentialKeyword = malloc(((PotentialFunctionParan) + 1) * sizeof(char));
+    PotentialKeyword[PotentialFunctionParan] = '\0';
+    strncpy(PotentialKeyword, VariableValue, PotentialFunctionParan);
+    Any* PotentialFunction = Lookup(Globals, PotentialKeyword);
+    if (PotentialFunction != NULL){
+        switch(PotentialFunction->ValueType){
+            case OUTPUT:{
+                printf("Out() does not return any value, do not user it's return.");
+                exit(EXIT_FAILURE);
+            }
+            case INPUT:{
+                Any* InstructionReturn = Evaluate_Instruction(VariableValue, LineNumber);
+                if (InstructionReturn != NULL){
+                    switch (InstructionReturn->ValueType){
+                        case STRING:{
+                            return (char*) InstructionReturn->Value;
+                            break;
+                        }
+                        default:
+                            puts("Unknown ValueType when searching for instruction return type\n");
+                            break;
+                    }
+                }
+            }
+            case STRING_RTN:{
+                char* Parameters = Find_Between(VariableValue + PotentialFunctionParan, "(", ")");
+                Any* InstructionReturn = Evaluate_Instruction(VariableValue, LineNumber);
+                if (InstructionReturn != NULL){
+                    free(VariableValue);
+                    free(PotentialFunction);
+                    free(InstructionReturn);
+                    return (char*) InstructionReturn->Value;
+                }
+                break;
+            }
+        }
+    }
+    free(PotentialFunction);
+    return NULL;
+}
+
+// God damn PEMDAS
+char* Check_If_Expression(char* VariableValue, int LineNumber){
+    #if DEBUG
+    printf("Potential Expression: %s\n", VariableValue);
+    #endif
+    int ExpressionStackMax = 1024;
+    int*                 * Values = malloc(ExpressionStackMax * sizeof(int*));
+    int DigitCounter = 0;
+    int VariableValueLength = strlen(VariableValue);
+    for (int Index = 0; Index < VariableValueLength; Index++){
+        if (isdigit(VariableValue[Index])){
+            printf("Found digit\n");
+            DigitCounter++;
+        }
+        if (Index == (VariableValueLength - 1)){
+            char* Number = malloc((DigitCounter + 1) * sizeof(char));
+            Number[DigitCounter] = '\0';
+            if (DigitCounter == 1){
+                strcpy(Number, (VariableValue+Index));
+                printf("%d, Last Number: %s\n", DigitCounter, Number);
+                DigitCounter = 0;
+            }
+            else {
+                strncpy(Number, (VariableValue+Index)-DigitCounter, DigitCounter);
+                printf("%d, %c, Last Number: %s\n", DigitCounter, VariableValue[Index], Number);
+                DigitCounter = 0;
+            }
+        }
+        else if (DigitCounter != 0 && VariableValue[Index] == ' ' || VariableValue[Index] == '+'){
+            char* Number = malloc((DigitCounter + 1) * sizeof(char));
+            Number[DigitCounter] = '\0';
+            strncpy(Number, (VariableValue+Index)-DigitCounter, DigitCounter);
+            DigitCounter = 0;
+            printf("Number: %s\n", Number);
+        }
+    }
+    return NULL;
 }
 
 
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber){
+    #if DEBUG
+        printf("Finding Declaration Values\n");
+    #endif
     char** Values = malloc(2 * sizeof(char*));
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
     bool NoSeparation = false;
@@ -91,47 +192,38 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
     String_Pointer_Check(Values[1], "Variable Value Allocation Fail");
     Values[1][ValueLength] = '\0';
     strncpy(Values[1], UnparsedValues+SearchIndex, ValueLength);
-    // If variable value is a function call
-    int PotentialFunctionParan = Find(Values[1], "(");
-    if (PotentialFunctionParan != -1){
-        char* PotentialKeyword = malloc(((PotentialFunctionParan) + 1) * sizeof(char));
-        PotentialKeyword[PotentialFunctionParan] = '\0';
-        strncpy(PotentialKeyword, Values[1], PotentialFunctionParan);
-        Any* PotentialFunction = Lookup(Globals, PotentialKeyword);
-        if (PotentialFunction != NULL){
-            switch(PotentialFunction->ValueType){
-                case OUTPUT:{
-                    printf("Out() does not return any value, do not user it's return.");
-                    exit(EXIT_FAILURE);
-                }
-                case INPUT:{
-                    Any* InstructionReturn = Evaluate_Instruction(Values[1], LineNumber);
-                    if (InstructionReturn != NULL){
-                        free(Values[1]);
-                        switch (InstructionReturn->ValueType){
-                            case STRING:{
-                                Values[1] = (char*) InstructionReturn->Value;
-                                break;
-                            }
-                            default:
-                                puts("Unknown ValueType when searching for instruction return type\n");
-                                break;
-                        }
-                    }
-                }
-                case STRING_RTN:{
-                    char* Parameters = Find_Between(Values[1] + PotentialFunctionParan, "(", ")");
-                    Any* InstructionReturn = Evaluate_Instruction(Values[1], LineNumber);
-                    if (InstructionReturn != NULL){
-                        free(Values[1]);
-                        Values[1] = (char*) InstructionReturn->Value;
-                    }
-                    break;
-                }
-            }
-        }
-    }
     
+    #if DEBUG
+    printf("Variable Declaration Value: %s\n", Values[1]);
+    #endif
+    
+    // Yo, this is just a string man, just return, nothing else
+    if (Values[1][0] == '"' && Values[1][ValueLength-1] == '"'){
+        return Values;
+    }
+
+    char* PotentialFunctionValue = Check_If_Function(Values[1], LineNumber);
+    if (PotentialFunctionValue != NULL){
+        int FunctionValueLength = strlen(PotentialFunctionValue);
+        free(Values[1]);
+        Values[1] = malloc((FunctionValueLength + 1) * sizeof(char));
+        Values[1][FunctionValueLength] = '\0';
+        strcpy(Values[1], PotentialFunctionValue);
+        free(PotentialFunctionValue);
+        return Values;
+    }
+
+    char* PotentialExpressionValue = Check_If_Expression(Values[1], LineNumber);
+    if (PotentialExpressionValue != NULL){
+        int ExpressionValueLength = strlen(PotentialExpressionValue);
+        free(Values[1]);
+        Values[1] = malloc((ExpressionValueLength + 1) * sizeof(char));
+        Values[1][ExpressionValueLength] = '\0';
+        strcpy(Values[1], PotentialExpressionValue);
+        free(PotentialExpressionValue);
+        return Values;
+    }
+
     return Values;
 }
 
@@ -176,41 +268,40 @@ Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int Instru
 }
 
 
-Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber){
+Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber){
     #if DEBUG
     printf("Executing Statement: %s\n\n", Instruction);
     #endif
     if (InstructionKeyword != NULL){
+        char* InstructionsValues = malloc((InstructionLength - ValuesStartIndex + 1) * sizeof(char));
         switch (InstructionKeyword->ValueType){
             case DECLARATION:{
                 VariableDeclaration* VarDecl = (VariableDeclaration*) InstructionKeyword->Value;
                 VariableDeclaration_Pointer_Check(VarDecl, "Variable Declaration Pointer Allocation Fail");
-                char* ValueBuffer = malloc((InstructionLength - ValuesStartIndex + 1) * sizeof(char));
-                String_Pointer_Check(ValueBuffer, "Value Buffer Allocation Fail");
-                ValueBuffer[InstructionLength - ValuesStartIndex] = '\0';
-                strncpy(ValueBuffer, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
-                Any* ValueType = Lookup(InternalTypeMap, KeywordBuffer);
+                String_Pointer_Check(InstructionsValues, "Value Buffer Allocation Fail");
+                InstructionsValues[InstructionLength - ValuesStartIndex] = '\0';
+                strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
+                Any* ValueType = Lookup(InternalTypeMap, VariableDeclarationType);
                 if (ValueType == NULL){
                     puts("You magical fuck, how did you break this? That internal type doesn't exist.");
                     exit(EXIT_FAILURE);
                 }
                 if (ValueType->ValueType == TYPE){
                     Type DeclType = *(Type*) ValueType->Value;
-                    char** Values = Find_Declaration_Values(DeclType, ValueBuffer, Instruction, LineNumber);
+                    char** Values = Find_Declaration_Values(DeclType, InstructionsValues, Instruction, LineNumber);
                     VarDecl->Function(Values[0], Values[1], DeclType);
                 }
-                free(ValueBuffer);
+                free(InstructionsValues);
                 break;
             }
             case OUTPUT:{
                 OutputFunction* Func = (OutputFunction*) InstructionKeyword->Value;
                 Output_Pointer_Check(Func, "Output Function Instruction Allocation Fail");
-                char* ValueBuffer = malloc((InstructionLength - ValuesStartIndex + 1) * sizeof(char));
                 char* Parameter;
-                ValueBuffer[InstructionLength - ValuesStartIndex] = '\0';
-                strncpy(ValueBuffer, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
-                int ValueBufferLength = strlen(ValueBuffer);
-                Parameter = Find_Between(ValueBuffer, "(", ")");
+                InstructionsValues[InstructionLength - ValuesStartIndex] = '\0';
+                strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
+                int InstructionsValuesLength = strlen(InstructionsValues);
+                Parameter = Find_Between(InstructionsValues, "(", ")");
                 
                 char* PotentialInnerString = Find_Between(Parameter, "\"", "\"");
                 if (PotentialInnerString != NULL){
@@ -237,7 +328,7 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                         Func->Function(ParameterValue);
                     }
                 }
-                free(ValueBuffer);
+                free(InstructionsValues);
                 free(Parameter);
                 break;
             }
@@ -245,10 +336,9 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                 InputFunction* Func = (InputFunction*) InstructionKeyword->Value;
                 Input_Pointer_Check(Func, "Input Function Instruction Allocation Fail");
                 Any* ReturnValue = (Any*) malloc(sizeof(Any));
-                char* ValueBuffer = malloc((InstructionLength - ValuesStartIndex + 1) * sizeof(char));
-                ValueBuffer[InstructionLength - ValuesStartIndex] = '\0';
-                strncpy(ValueBuffer, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
-                char* Parameters = Find_Between(ValueBuffer, "(", ")"); // We need to handle if we find nothing
+                InstructionsValues[InstructionLength - ValuesStartIndex] = '\0';
+                strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
+                char* Parameters = Find_Between(InstructionsValues, "(", ")"); // We need to handle if we find nothing
                 int ParametersLength = strlen(Parameters);
                 if (Parameters[0] == '\"' && Parameters[ParametersLength-1] == '\"'){
                     char* String = Find_Between(Parameters, "\"", "\"");
@@ -261,7 +351,7 @@ Any* Execute_Statement(char* Instruction, char* KeywordBuffer, Any* InstructionK
                     ReturnValue->Value = UserInput;
                     ReturnValue->ValueType = STRING;
                 }
-                free(ValueBuffer);
+                free(InstructionsValues);
                 free(Parameters);
                 return ReturnValue;
             }
