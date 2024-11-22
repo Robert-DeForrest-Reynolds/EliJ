@@ -158,6 +158,9 @@ int Find_Closing_Paranthesis(char* String){
 
 
 char* Resolve_Expression(char* Expression, int ExpressionLength){
+    #if DEBUG
+    printf("\nResolving Expression: %s\n", Expression);
+    #endif
     char* PotentialInnerExpression = Resolve_Paranthesis(Expression, ExpressionLength);
     if (PotentialInnerExpression == NULL){
         // Solve expression
@@ -168,15 +171,18 @@ char* Resolve_Expression(char* Expression, int ExpressionLength){
 }
 
 
-char* Resolve_Paranthesis(char* VariableValue, int VariableValueLength){
+char* Resolve_Paranthesis(char* Expression, int ExpressionLength){
+    #if DEBUG
+    printf("\nResolving Inner Expression: %s\n", Expression);
+    #endif
     int PotentialInnerExpressionIndex;
-    if ((PotentialInnerExpressionIndex = Find(VariableValue, "(")) != -1){
-        char* InnerExpression = Find_Between(VariableValue + PotentialInnerExpressionIndex, "(", ")");
-        int ClosingIndex = Find_Closing_Paranthesis(VariableValue + PotentialInnerExpressionIndex + 1) + PotentialInnerExpressionIndex + 1;
+    if ((PotentialInnerExpressionIndex = Find(Expression, "(")) != -1){
+        char* InnerExpression = Find_Between(Expression + PotentialInnerExpressionIndex, "(", ")");
+        int ClosingIndex = Find_Closing_Paranthesis(Expression + PotentialInnerExpressionIndex + 1) + PotentialInnerExpressionIndex + 1;
         printf("Closing Index: %d\n", ClosingIndex);
 
         int InnerExpressionLength = strlen(InnerExpression);
-        int ProcessedExpressionLength = VariableValueLength - 2;
+        int ProcessedExpressionLength = ExpressionLength - 2;
 
         char* ResolvedExpression = Resolve_Expression(InnerExpression, InnerExpressionLength);
 
@@ -185,21 +191,21 @@ char* Resolve_Paranthesis(char* VariableValue, int VariableValueLength){
         ProcessedExpression[ProcessedExpressionLength] = '\0';
 
         strncpy(ProcessedExpression, // Copy before paranthesis open
-                VariableValue,
+                Expression,
                 PotentialInnerExpressionIndex);
 
         strncpy(ProcessedExpression+PotentialInnerExpressionIndex+InnerExpressionLength, // copy after paranthesis close
-                VariableValue + ClosingIndex + 1,
-                VariableValueLength - ClosingIndex - 1);
+                Expression + ClosingIndex + 1,
+                ExpressionLength - ClosingIndex - 1);
 
-        printf("Passed: %s\n", VariableValue+PotentialInnerExpressionIndex);
+        printf("Passed: %s\n", Expression+PotentialInnerExpressionIndex);
         printf("Inner Expression: %s\n", InnerExpression);
         printf("Processed Expression: %s\n", ProcessedExpression);
-        free(VariableValue);
+        free(Expression);
         free(InnerExpression);
-        VariableValue = ProcessedExpression;
-        VariableValueLength = ProcessedExpressionLength;
-        return VariableValue;
+        Expression = ProcessedExpression;
+        ExpressionLength = ProcessedExpressionLength;
+        return Expression;
     }
     return NULL;
 }
@@ -207,7 +213,7 @@ char* Resolve_Paranthesis(char* VariableValue, int VariableValueLength){
 
 char* Check_If_Expression(char* VariableValue, int LineNumber){
     #if DEBUG
-    printf("Potential Expression: %s\n", VariableValue);
+    printf("\nPotential Expression: %s\n", VariableValue);
     #endif
 
     // Remove all spaces
@@ -216,8 +222,17 @@ char* Check_If_Expression(char* VariableValue, int LineNumber){
     int VariableValueLength = strlen(VariableValue);
 
     char* SpacelessExpression = Remove(VariableValue, " ");
+    int SpacelessExpressionLength = strlen(SpacelessExpression);
+    
+    #if DEBUG
+    printf("Spaceless Expression: %s\n", SpacelessExpression);
+    #endif
 
-    char* OrderedValues = Resolve_Expression(VariableValue, VariableValueLength);
+    char* Result = Resolve_Expression(SpacelessExpression, SpacelessExpressionLength);
+
+    #if DEBUG
+    printf("Expression Result: %s\n", Result);
+    #endif
 
     long SolvedValue = 0;
     
