@@ -8,6 +8,7 @@ StringList* Split(char* String, char SplitCharacter) {
     int SplitCharacterIndexCount = 0;
     int StringSize = strlen(String);
     StringList* SplitBuffer = (StringList*) malloc(sizeof(StringList));
+    SplitBuffer->ElementCount = 0;
     StringList_Pointer_Check(SplitBuffer, "SplitBuffer List Allocation Fail");
     
 
@@ -24,7 +25,7 @@ StringList* Split(char* String, char SplitCharacter) {
         String_Pointer_Check(SplitBuffer->List[0], "SplitBuffer Element Allocation Fail");
         strcpy(SplitBuffer->List[0], String);
         SplitBuffer->List[1] = NULL;
-        SplitBuffer->ElementCount = 2;
+        SplitBuffer->ElementCount = 1;
         return SplitBuffer;
     }
 

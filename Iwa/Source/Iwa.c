@@ -19,6 +19,8 @@
 #include "Reverse.h"
 #include "Split.h"
 #include "Trim.h"
+#include "Count.h"
+#include "Remove.h"
 
 Dictionary* Globals;
 char* ArgumentBuffer;
@@ -27,6 +29,7 @@ char WorkingDirectory[1024 * 1024]; // 1MB
 int WorkingDirectoryLength;
 char* FinalWorkingDirectory;
 StringList* Instructions;
+int SAFE_LONG_LENGTH = 20;
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType);
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber);
@@ -38,10 +41,18 @@ void Run_Interpreter(void);
 void Check_Windows_Style_Path(void);
 void Verify_Valid_Papple_File(char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength);
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]);
+char* Resolve_Expression(char* Expression, int ExpressionLength);
+char* Resolve_Paranthesis(char* VariableValue, int VariableValueLength);
+
+
+void Validate_Int(){
+
+}
+
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
     #if DEBUG
-    printf("Inserting Variable Declaration: %s = %s\n\n", VariableName, VariableValue);
+    printf("Inserting Variable Declaration: %s = %s : %s\n\n", VariableName, VariableValue, TypesAsStrings[VariableValueType]);
     #endif
     int VariableValueLength = strlen(VariableValue);
     switch(VariableValueType){
@@ -60,7 +71,16 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
             break;
         }
         case INT:{
-            Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+            char* EndCharacter;
+            long ValueConverted = strtol(VariableValue, &EndCharacter, 10);
+            if (*EndCharacter != '\0'){
+                printf("INVALID_CONVERSION: Failed to validate Int can convert to long\n");
+                exit(EXIT_FAILURE);
+            }
+            else {
+                printf("This is a valid int: %s\n\n", VariableValue);
+                Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+            }
             break;
         }
         default:{
@@ -114,42 +134,144 @@ char* Check_If_Function(char* VariableValue, int LineNumber){
     return NULL;
 }
 
-// God damn PEMDAS
+
+int Find_Closing_Paranthesis(char* String){
+    printf("Closing Paran String: %s\n", String);
+    int ClosingIndex;
+    int StringLength = strlen(String);
+    int SubClosingCount = 0;
+    for (int Index = 0; Index < StringLength; Index++){
+        if (String[Index] == '('){
+            SubClosingCount++;
+        }
+        if (String[Index] == ')'){
+            if (SubClosingCount > 0){
+                SubClosingCount--;
+            }
+            else {
+                return Index;
+            }
+        }
+    }
+    return -1;
+}
+
+
+char* Resolve_Expression(char* Expression, int ExpressionLength){
+    char* PotentialInnerExpression = Resolve_Paranthesis(Expression, ExpressionLength);
+    if (PotentialInnerExpression == NULL){
+        // Solve expression
+    }
+    else {
+
+    }
+}
+
+
+char* Resolve_Paranthesis(char* VariableValue, int VariableValueLength){
+    int PotentialInnerExpressionIndex;
+    if ((PotentialInnerExpressionIndex = Find(VariableValue, "(")) != -1){
+        char* InnerExpression = Find_Between(VariableValue + PotentialInnerExpressionIndex, "(", ")");
+        int ClosingIndex = Find_Closing_Paranthesis(VariableValue + PotentialInnerExpressionIndex + 1) + PotentialInnerExpressionIndex + 1;
+        printf("Closing Index: %d\n", ClosingIndex);
+
+        int InnerExpressionLength = strlen(InnerExpression);
+        int ProcessedExpressionLength = VariableValueLength - 2;
+
+        char* ResolvedExpression = Resolve_Expression(InnerExpression, InnerExpressionLength);
+
+        char* ProcessedExpression = malloc(((ProcessedExpressionLength) + 1) * sizeof(char));
+        String_Pointer_Check(ProcessedExpression, "ProcessExpression allocation fail");
+        ProcessedExpression[ProcessedExpressionLength] = '\0';
+
+        strncpy(ProcessedExpression, // Copy before paranthesis open
+                VariableValue,
+                PotentialInnerExpressionIndex);
+
+        strncpy(ProcessedExpression+PotentialInnerExpressionIndex+InnerExpressionLength, // copy after paranthesis close
+                VariableValue + ClosingIndex + 1,
+                VariableValueLength - ClosingIndex - 1);
+
+        printf("Passed: %s\n", VariableValue+PotentialInnerExpressionIndex);
+        printf("Inner Expression: %s\n", InnerExpression);
+        printf("Processed Expression: %s\n", ProcessedExpression);
+        free(VariableValue);
+        free(InnerExpression);
+        VariableValue = ProcessedExpression;
+        VariableValueLength = ProcessedExpressionLength;
+        return VariableValue;
+    }
+    return NULL;
+}
+
+
 char* Check_If_Expression(char* VariableValue, int LineNumber){
     #if DEBUG
     printf("Potential Expression: %s\n", VariableValue);
     #endif
-    int ExpressionStackMax = 1024;
-    int*                 * Values = malloc(ExpressionStackMax * sizeof(int*));
-    int DigitCounter = 0;
+
+    // Remove all spaces
+    // Resolve all paranthesis
+    // Resolve the first 3 elements until only the result is left
     int VariableValueLength = strlen(VariableValue);
-    for (int Index = 0; Index < VariableValueLength; Index++){
-        if (isdigit(VariableValue[Index])){
-            printf("Found digit\n");
-            DigitCounter++;
-        }
-        if (Index == (VariableValueLength - 1)){
-            char* Number = malloc((DigitCounter + 1) * sizeof(char));
-            Number[DigitCounter] = '\0';
-            if (DigitCounter == 1){
-                strcpy(Number, (VariableValue+Index));
-                printf("%d, Last Number: %s\n", DigitCounter, Number);
-                DigitCounter = 0;
-            }
-            else {
-                strncpy(Number, (VariableValue+Index)-DigitCounter, DigitCounter);
-                printf("%d, %c, Last Number: %s\n", DigitCounter, VariableValue[Index], Number);
-                DigitCounter = 0;
-            }
-        }
-        else if (DigitCounter != 0 && VariableValue[Index] == ' ' || VariableValue[Index] == '+'){
-            char* Number = malloc((DigitCounter + 1) * sizeof(char));
-            Number[DigitCounter] = '\0';
-            strncpy(Number, (VariableValue+Index)-DigitCounter, DigitCounter);
-            DigitCounter = 0;
-            printf("Number: %s\n", Number);
-        }
-    }
+
+    char* SpacelessExpression = Remove(VariableValue, " ");
+
+    char* OrderedValues = Resolve_Expression(VariableValue, VariableValueLength);
+
+    long SolvedValue = 0;
+    
+    StringList* SplitValues = Split(VariableValue, ' ');
+
+    // for (int Index = 0; Index < SplitValues->ElementCount; Index++){
+    //     printf("StringList Element: %s\n", SplitValues->List[Index]);
+    //     char* EndCharacter;
+    //     long Value = strtol(SplitValues->List[Index], &EndCharacter, 10);
+    //     if (*EndCharacter == '\0'){
+    //         //Get the operator, and get the next number
+    //         if (Index + 1 > (SplitValues->ElementCount - 1) && Index + 2 > (SplitValues->ElementCount - 1)){
+    //             if (strcmp(SplitValues->List[Index+1], "+")){
+                    
+    //             }
+    //             SplitValues->List[Index+1];
+    //         }
+    //         printf("%ld\n", Value);
+    //     }
+    // }
+
+    // int ExpressionStackMax = 1024;
+    // int DigitCounter = 0;
+    // for (int Index = 0; Index < VariableValueLength; Index++){
+    //     char* Number;
+    //     if (isdigit(VariableValue[Index])) {
+    //         DigitCounter++;
+    //     }
+    //     if (DigitCounter > 0 && (!isdigit(VariableValue[Index]) || (Index == VariableValueLength - 1))){
+    //         Number = malloc((DigitCounter + 1) * sizeof(char));
+    //         if (Number == NULL) { printf("Failed to properly allocate number during expression evaluation"); exit(EXIT_FAILURE); } // this needs to be refined
+    //         Number[DigitCounter] = '\0';
+    //         if (!isdigit(VariableValue[Index])){
+    //             strncpy(Number, VariableValue+(Index-DigitCounter), DigitCounter);
+    //         }
+    //         else {
+    //             strncpy(Number, VariableValue+(Index-DigitCounter + 1), DigitCounter);
+    //         }
+    //         if (Number != NULL){
+    //             char* EndCharacter;
+    //             long NumberAsValue = strtol(Number, &EndCharacter, 10);
+    //             if (*EndCharacter == '\0'){
+    //                 SolvedValue += NumberAsValue;
+    //                 free(Number);
+    //             }
+    //         }
+    //         DigitCounter = 0;
+    //     }
+    // }
+    // char* FinalSolvedValue = malloc(SAFE_LONG_LENGTH * sizeof(char));
+    // String_Pointer_Check(FinalSolvedValue, "FinalSolvedValue allocation fail");
+    // snprintf(FinalSolvedValue, SAFE_LONG_LENGTH, "%ld", SolvedValue);
+    // printf("Final: %s\n", FinalSolvedValue);
+    // return FinalSolvedValue;
     return NULL;
 }
 
@@ -223,6 +345,7 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
         free(PotentialExpressionValue);
         return Values;
     }
+    printf("Values: %s, %s\n", Values[0], Values[1]);
 
     return Values;
 }
@@ -231,7 +354,7 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
 Any* Globals_Lookup(char* Parameter){
     Any* ParameterValue = Lookup(Globals, Parameter);
     if (ParameterValue == NULL){
-        printf("%s does not exist\n", Parameter);
+        printf("INVALID_GLOBAL: %s does not exist\n", Parameter);
         exit(EXIT_FAILURE);
     }
     return ParameterValue;

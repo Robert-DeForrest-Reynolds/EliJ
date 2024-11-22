@@ -2,7 +2,8 @@ String lorem = "Fuck"
 
 Int X = 5
 Int Y = 7
-Int Z = 56 + 56
+Int Z = 4 + (56 + 56) * 2
+Int I = 7 + 7
 
 Out(X)
 Out(Y)

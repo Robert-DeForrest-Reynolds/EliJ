@@ -29,6 +29,11 @@ typedef struct StringList{
     int ElementCount;
 } StringList;
 
+typedef struct InnerExpression{
+    char* Expression;
+    int ReplacementIndex;
+} InnerExpression;
+
 typedef struct VariableDeclaration{
     void (*Function)(char* VariableName, char* VariableValue, Type VariableValueType);
     char* FunctionName;
