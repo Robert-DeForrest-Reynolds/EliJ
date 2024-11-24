@@ -149,6 +149,20 @@ int Find_Closing_Parenthesis(char* String){
     return -1;
 }
 
+long Solve_Addition(long OperandOne, long OperandTwo){
+    #if DEBUG
+        printf("\nAddition: %lu + %lu\n", OperandOne, OperandTwo);
+    #endif
+    return OperandOne + OperandTwo;
+}
+
+long Solve_Multiplication(long OperandOne, long OperandTwo){
+    #if DEBUG
+        printf("\nMultiplcation: %lu * %lu\n", OperandOne, OperandTwo);
+    #endif
+    return OperandOne * OperandTwo;
+}
+
 // I hate comments, but this'll definitely need em
 char* Resolve_Expression(char* Expression, int ExpressionLength, bool Recursive){
     if (!Expression || strlen(Expression) == 0) {
@@ -346,26 +360,6 @@ char* Resolve_Expression(char* Expression, int ExpressionLength, bool Recursive)
     }
 
     return WorkingExpression;
-}
-
-char* Check_If_Expression(char* VariableValue, int LineNumber){
-    #if DEBUG
-    printf("\nPotential Expression: %s\n", VariableValue);
-    #endif
-
-    int VariableValueLength = strlen(VariableValue);
-
-    char* SpacelessExpression = Remove(VariableValue, " ");
-    int SpacelessExpressionLength = strlen(SpacelessExpression);
-
-    char* Result = Resolve_Expression(SpacelessExpression, SpacelessExpressionLength, false);
-
-    if (Result != NULL){
-        return Result;
-    }
-    else {
-        return NULL;
-    }
 }
 
 
