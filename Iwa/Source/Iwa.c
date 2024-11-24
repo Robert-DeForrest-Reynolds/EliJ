@@ -23,6 +23,7 @@
 #include "Remove.h"
 
 Dictionary* Globals;
+Dictionary* ValidOperators;
 char* ArgumentBuffer;
 char* FileName;
 char WorkingDirectory[1024 * 1024]; // 1MB
@@ -41,8 +42,8 @@ void Run_Interpreter(void);
 void Check_Windows_Style_Path(void);
 void Verify_Valid_Papple_File(char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength);
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]);
-char* Resolve_Expression(char* Expression, int ExpressionLength);
-char* Resolve_Paranthesis(char* VariableValue, int VariableValueLength);
+char* Resolve_Expression(char* Expression, int ExpressionLength, bool Recursive);
+char* Resolve_Parenthesis(char* VariableValue, int VariableValueLength);
 
 
 void Validate_Int(){
@@ -135,8 +136,7 @@ char* Check_If_Function(char* VariableValue, int LineNumber){
 }
 
 
-int Find_Closing_Paranthesis(char* String){
-    printf("Closing Paran String: %s\n", String);
+int Find_Closing_Parenthesis(char* String){
     int ClosingIndex;
     int StringLength = strlen(String);
     int SubClosingCount = 0;
@@ -156,138 +156,241 @@ int Find_Closing_Paranthesis(char* String){
     return -1;
 }
 
-
-char* Resolve_Expression(char* Expression, int ExpressionLength){
-    #if DEBUG
-    printf("\nResolving Expression: %s\n", Expression);
-    #endif
-    char* PotentialInnerExpression = Resolve_Paranthesis(Expression, ExpressionLength);
-    if (PotentialInnerExpression == NULL){
-        // Solve expression
-    }
-    else {
-
-    }
+bool Is_Operator(char* String){
+    // this needs to search a hash map of valid operators
 }
 
-
-char* Resolve_Paranthesis(char* Expression, int ExpressionLength){
+long Solve_Addition(long OperandOne, long OperandTwo){
     #if DEBUG
-    printf("\nResolving Inner Expression: %s\n", Expression);
+        printf("\nAddition: %lu + %lu\n", OperandOne, OperandTwo);
     #endif
-    int PotentialInnerExpressionIndex;
-    if ((PotentialInnerExpressionIndex = Find(Expression, "(")) != -1){
-        char* InnerExpression = Find_Between(Expression + PotentialInnerExpressionIndex, "(", ")");
-        int ClosingIndex = Find_Closing_Paranthesis(Expression + PotentialInnerExpressionIndex + 1) + PotentialInnerExpressionIndex + 1;
-        printf("Closing Index: %d\n", ClosingIndex);
-
-        int InnerExpressionLength = strlen(InnerExpression);
-        int ProcessedExpressionLength = ExpressionLength - 2;
-
-        char* ResolvedExpression = Resolve_Expression(InnerExpression, InnerExpressionLength);
-
-        char* ProcessedExpression = malloc(((ProcessedExpressionLength) + 1) * sizeof(char));
-        String_Pointer_Check(ProcessedExpression, "ProcessExpression allocation fail");
-        ProcessedExpression[ProcessedExpressionLength] = '\0';
-
-        strncpy(ProcessedExpression, // Copy before paranthesis open
-                Expression,
-                PotentialInnerExpressionIndex);
-
-        strncpy(ProcessedExpression+PotentialInnerExpressionIndex+InnerExpressionLength, // copy after paranthesis close
-                Expression + ClosingIndex + 1,
-                ExpressionLength - ClosingIndex - 1);
-
-        printf("Passed: %s\n", Expression+PotentialInnerExpressionIndex);
-        printf("Inner Expression: %s\n", InnerExpression);
-        printf("Processed Expression: %s\n", ProcessedExpression);
-        free(Expression);
-        free(InnerExpression);
-        Expression = ProcessedExpression;
-        ExpressionLength = ProcessedExpressionLength;
-        return Expression;
-    }
-    return NULL;
+    return OperandOne + OperandTwo;
 }
 
+long Solve_Multiplication(long OperandOne, long OperandTwo){
+    #if DEBUG
+        printf("\nMultiplcation: %lu * %lu\n", OperandOne, OperandTwo);
+    #endif
+    return OperandOne * OperandTwo;
+}
+
+// I hate comments, but this'll definitely need em
+char* Resolve_Expression(char* Expression, int ExpressionLength, bool Recursive){
+    if (!Expression || strlen(Expression) == 0) {
+        return NULL;
+    }
+
+    char* WorkingExpression = strdup(Expression);
+    if (!WorkingExpression) return NULL;
+
+    // Handle nested parentheses first
+    int ParenthesisDepth = 0;
+    int StartIndex = -1;
+    int EndIndex = -1;
+
+    for (int Index = 0; Index < ExpressionLength; Index++) {
+        if (WorkingExpression[Index] == '(') {
+            ParenthesisDepth++;
+            if (ParenthesisDepth == 1) StartIndex = Index;
+        }
+        else if (WorkingExpression[Index] == ')') {
+            ParenthesisDepth--;
+            if (ParenthesisDepth == 0) {
+                EndIndex = Index;
+                
+                // Extract inner expression
+                int InnerLength = EndIndex - StartIndex - 1;
+                char* InnerExpression = malloc(InnerLength + 1);
+                if (!InnerExpression) {
+                    free(WorkingExpression);
+                    return NULL;
+                }
+                strncpy(InnerExpression, WorkingExpression + StartIndex + 1, InnerLength);
+                InnerExpression[InnerLength] = '\0';
+
+                // Recursively evaluate inner expression
+                char* InnerResult = Resolve_Expression(InnerExpression, InnerLength, true);
+                free(InnerExpression);
+
+                if (!InnerResult) {
+                    free(WorkingExpression);
+                    return NULL;
+                }
+
+                // Replace parenthesis expression with result
+                int ResultLength = strlen(InnerResult);
+                int NewLength = ExpressionLength - (EndIndex - StartIndex + 1) + ResultLength;
+                char* NewExpression = malloc(NewLength + 1);
+                if (!NewExpression) {
+                    free(WorkingExpression);
+                    free(InnerResult);
+                    return NULL;
+                }
+
+                // Copy parts before parenthesis
+                strncpy(NewExpression, WorkingExpression, StartIndex);
+                // Copy evaluated result
+                strcpy(NewExpression + StartIndex, InnerResult);
+                // Copy parts after parenthesis
+                strcpy(NewExpression + StartIndex + ResultLength, 
+                      WorkingExpression + EndIndex + 1);
+
+                free(InnerResult);
+                free(WorkingExpression);
+                WorkingExpression = NewExpression;
+                ExpressionLength = NewLength;
+                Index = StartIndex + ResultLength - 1; // Adjust index to continue after inserted result
+            }
+        }
+    }
+
+    // Handle multiplication first (operator precedence)
+    for (int Index = 0; Index < ExpressionLength; Index++) {
+        if (WorkingExpression[Index] == '*') {
+            // Find left operand
+            int LeftStart = Index - 1;
+            while (LeftStart >= 0 && isdigit(WorkingExpression[LeftStart])) {
+                LeftStart--;
+            }
+            LeftStart++;
+
+            // Find right operand
+            int RightEnd = Index + 1;
+            while (RightEnd < ExpressionLength && isdigit(WorkingExpression[RightEnd])) {
+                RightEnd++;
+            }
+
+            // Extract and convert operands
+            char* LeftStr = malloc(Index - LeftStart + 1);
+            char* RightStr = malloc(RightEnd - Index);
+            if (!LeftStr || !RightStr) {
+                free(LeftStr);
+                free(RightStr);
+                free(WorkingExpression);
+                return NULL;
+            }
+
+            strncpy(LeftStr, WorkingExpression + LeftStart, Index - LeftStart);
+            LeftStr[Index - LeftStart] = '\0';
+            strncpy(RightStr, WorkingExpression + Index + 1, RightEnd - (Index + 1));
+            RightStr[RightEnd - (Index + 1)] = '\0';
+
+            char* EndPointer;
+            long OperandOne = strtol(LeftStr, &EndPointer, 10);
+            long OperandTwo = strtol(RightStr, &EndPointer, 10);
+            long Result = Solve_Multiplication(OperandOne, OperandTwo);
+
+            free(LeftStr);
+            free(RightStr);
+
+            // Convert result back to string
+            char ResultStr[32];
+            snprintf(ResultStr, sizeof(ResultStr), "%ld", Result);
+            int ResultLen = strlen(ResultStr);
+
+            // Create new expression with result
+            int NewLength = ExpressionLength - (RightEnd - LeftStart) + ResultLen;
+            char* NewExpression = malloc(NewLength + 1);
+            if (!NewExpression) {
+                free(WorkingExpression);
+                return NULL;
+            }
+
+            strncpy(NewExpression, WorkingExpression, LeftStart);
+            strcpy(NewExpression + LeftStart, ResultStr);
+            strcpy(NewExpression + LeftStart + ResultLen, WorkingExpression + RightEnd);
+
+            free(WorkingExpression);
+            WorkingExpression = NewExpression;
+            ExpressionLength = NewLength;
+            Index = LeftStart + ResultLen - 1; // Adjust index to continue after inserted result
+        }
+    }
+
+    // Handle addition
+    for (int Index = 0; Index < ExpressionLength; Index++) {
+        if (WorkingExpression[Index] == '+') {
+            // Find left operand
+            int LeftStart = Index - 1;
+            while (LeftStart >= 0 && isdigit(WorkingExpression[LeftStart])) {
+                LeftStart--;
+            }
+            LeftStart++;
+
+            // Find right operand
+            int RightEnd = Index + 1;
+            while (RightEnd < ExpressionLength && isdigit(WorkingExpression[RightEnd])) {
+                RightEnd++;
+            }
+
+            // Extract and convert operands
+            char* LeftStr = malloc(Index - LeftStart + 1);
+            char* RightStr = malloc(RightEnd - Index);
+            if (!LeftStr || !RightStr) {
+                free(LeftStr);
+                free(RightStr);
+                free(WorkingExpression);
+                return NULL;
+            }
+
+            strncpy(LeftStr, WorkingExpression + LeftStart, Index - LeftStart);
+            LeftStr[Index - LeftStart] = '\0';
+            strncpy(RightStr, WorkingExpression + Index + 1, RightEnd - (Index + 1));
+            RightStr[RightEnd - (Index + 1)] = '\0';
+
+            char* EndPointer;
+            long OperandOne = strtol(LeftStr, &EndPointer, 10);
+            long OperandTwo = strtol(RightStr, &EndPointer, 10);
+            long Result = Solve_Addition(OperandOne, OperandTwo);
+
+            free(LeftStr);
+            free(RightStr);
+
+            // Convert result back to string
+            char ResultStr[32];
+            snprintf(ResultStr, sizeof(ResultStr), "%ld", Result);
+            int ResultLen = strlen(ResultStr);
+
+            // Create new expression with result
+            int NewLength = ExpressionLength - (RightEnd - LeftStart) + ResultLen;
+            char* NewExpression = malloc(NewLength + 1);
+            if (!NewExpression) {
+                free(WorkingExpression);
+                return NULL;
+            }
+
+            strncpy(NewExpression, WorkingExpression, LeftStart);
+            strcpy(NewExpression + LeftStart, ResultStr);
+            strcpy(NewExpression + LeftStart + ResultLen, WorkingExpression + RightEnd);
+
+            free(WorkingExpression);
+            WorkingExpression = NewExpression;
+            ExpressionLength = NewLength;
+            Index = LeftStart + ResultLen - 1; // Adjust index to continue after inserted result
+        }
+    }
+
+    return WorkingExpression;
+}
 
 char* Check_If_Expression(char* VariableValue, int LineNumber){
     #if DEBUG
     printf("\nPotential Expression: %s\n", VariableValue);
     #endif
 
-    // Remove all spaces
-    // Resolve all paranthesis
-    // Resolve the first 3 elements until only the result is left
     int VariableValueLength = strlen(VariableValue);
 
     char* SpacelessExpression = Remove(VariableValue, " ");
     int SpacelessExpressionLength = strlen(SpacelessExpression);
-    
-    #if DEBUG
-    printf("Spaceless Expression: %s\n", SpacelessExpression);
-    #endif
 
-    char* Result = Resolve_Expression(SpacelessExpression, SpacelessExpressionLength);
+    char* Result = Resolve_Expression(SpacelessExpression, SpacelessExpressionLength, false);
 
-    #if DEBUG
-    printf("Expression Result: %s\n", Result);
-    #endif
-
-    long SolvedValue = 0;
-    
-    StringList* SplitValues = Split(VariableValue, ' ');
-
-    // for (int Index = 0; Index < SplitValues->ElementCount; Index++){
-    //     printf("StringList Element: %s\n", SplitValues->List[Index]);
-    //     char* EndCharacter;
-    //     long Value = strtol(SplitValues->List[Index], &EndCharacter, 10);
-    //     if (*EndCharacter == '\0'){
-    //         //Get the operator, and get the next number
-    //         if (Index + 1 > (SplitValues->ElementCount - 1) && Index + 2 > (SplitValues->ElementCount - 1)){
-    //             if (strcmp(SplitValues->List[Index+1], "+")){
-                    
-    //             }
-    //             SplitValues->List[Index+1];
-    //         }
-    //         printf("%ld\n", Value);
-    //     }
-    // }
-
-    // int ExpressionStackMax = 1024;
-    // int DigitCounter = 0;
-    // for (int Index = 0; Index < VariableValueLength; Index++){
-    //     char* Number;
-    //     if (isdigit(VariableValue[Index])) {
-    //         DigitCounter++;
-    //     }
-    //     if (DigitCounter > 0 && (!isdigit(VariableValue[Index]) || (Index == VariableValueLength - 1))){
-    //         Number = malloc((DigitCounter + 1) * sizeof(char));
-    //         if (Number == NULL) { printf("Failed to properly allocate number during expression evaluation"); exit(EXIT_FAILURE); } // this needs to be refined
-    //         Number[DigitCounter] = '\0';
-    //         if (!isdigit(VariableValue[Index])){
-    //             strncpy(Number, VariableValue+(Index-DigitCounter), DigitCounter);
-    //         }
-    //         else {
-    //             strncpy(Number, VariableValue+(Index-DigitCounter + 1), DigitCounter);
-    //         }
-    //         if (Number != NULL){
-    //             char* EndCharacter;
-    //             long NumberAsValue = strtol(Number, &EndCharacter, 10);
-    //             if (*EndCharacter == '\0'){
-    //                 SolvedValue += NumberAsValue;
-    //                 free(Number);
-    //             }
-    //         }
-    //         DigitCounter = 0;
-    //     }
-    // }
-    // char* FinalSolvedValue = malloc(SAFE_LONG_LENGTH * sizeof(char));
-    // String_Pointer_Check(FinalSolvedValue, "FinalSolvedValue allocation fail");
-    // snprintf(FinalSolvedValue, SAFE_LONG_LENGTH, "%ld", SolvedValue);
-    // printf("Final: %s\n", FinalSolvedValue);
-    // return FinalSolvedValue;
-    return NULL;
+    if (Result != NULL){
+        return Result;
+    }
+    else {
+        return NULL;
+    }
 }
 
 
@@ -360,7 +463,6 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
         free(PotentialExpressionValue);
         return Values;
     }
-    printf("Values: %s, %s\n", Values[0], Values[1]);
 
     return Values;
 }
@@ -547,6 +649,27 @@ void Setup_Internal_Types(){
     
     Insert(InternalTypeMap, strdup("String"), STRING, StringType, TYPE);
     Insert(InternalTypeMap, strdup("Int"), STRING, IntType, TYPE);
+    
+    #if DEBUG
+    puts("\nVerifying Internal Types");
+    for (int Index = 0; Index < InternalTypeMap->Size; Index++){
+        if (InternalTypeMap->Table[Index] != NULL){
+            Pair* KeyValue = InternalTypeMap->Table[Index];
+            Type ValueType = *(Type*) KeyValue->Value;
+            printf("Type Syntax: %s\nRepresentation: %s\n", (char*) KeyValue->Key, TypesAsStrings[ValueType]);
+        }
+    }
+    #endif
+}
+
+
+void Setup_Valid_Operators(){
+    ValidOperators = Create_Dictionary(50);
+    
+    Insert(InternalTypeMap, strdup("+"), STRING, (void*) true, BOOL);
+    Insert(InternalTypeMap, strdup("-"), STRING, (void*) true, BOOL);
+    Insert(InternalTypeMap, strdup("*"), STRING, (void*) true, BOOL);
+    Insert(InternalTypeMap, strdup("/"), STRING, (void*) true, BOOL);
     
     #if DEBUG
     puts("\nVerifying Internal Types");

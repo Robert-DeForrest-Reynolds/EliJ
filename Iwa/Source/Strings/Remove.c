@@ -26,10 +26,7 @@ char* Remove(char* String, char* RemoveCharacter){
         }
     }
 
-    #if DEBUG
-    printf("Removed Amount: %d\n", RemovalAmount);
-    printf("Processed String: %s\n", ProcessedString);
-    #endif
-
     return ProcessedString;
 }
+
+

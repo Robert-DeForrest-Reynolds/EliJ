@@ -22,6 +22,7 @@ typedef enum{
     OUTPUT,
     INPUT,
     STRING_RTN,
+    BOOL,
 } Type;
 
 extern char* TypesAsStrings[];
