@@ -43,13 +43,6 @@ void Check_Windows_Style_Path(void);
 void Verify_Valid_Papple_File(char* PotentialFileName, int ArgumentLength, int WorkingDirectoryLength);
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]);
 char* Resolve_Expression(char* Expression, int ExpressionLength, bool Recursive);
-char* Resolve_Parenthesis(char* VariableValue, int VariableValueLength);
-
-
-void Validate_Int(){
-
-}
-
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
     #if DEBUG
@@ -154,24 +147,6 @@ int Find_Closing_Parenthesis(char* String){
         }
     }
     return -1;
-}
-
-bool Is_Operator(char* String){
-    // this needs to search a hash map of valid operators
-}
-
-long Solve_Addition(long OperandOne, long OperandTwo){
-    #if DEBUG
-        printf("\nAddition: %lu + %lu\n", OperandOne, OperandTwo);
-    #endif
-    return OperandOne + OperandTwo;
-}
-
-long Solve_Multiplication(long OperandOne, long OperandTwo){
-    #if DEBUG
-        printf("\nMultiplcation: %lu * %lu\n", OperandOne, OperandTwo);
-    #endif
-    return OperandOne * OperandTwo;
 }
 
 // I hate comments, but this'll definitely need em
