@@ -10,7 +10,7 @@ Build:
 build: Build
 
 Debug:
-	clang -g $(SourceFiles) -I$(Include) -o Iwa -Wno-deprecated-non-prototype -DDEBUG=1
+	msys64/mingw64/bin/clang -g $(SourceFiles) -I$(Include) -o Iwa -Wno-deprecated-non-prototype -DDEBUG=1 -Wswitch
 debug: Debug
 
 Release:

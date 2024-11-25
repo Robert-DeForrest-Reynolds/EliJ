@@ -74,7 +74,6 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
                 exit(EXIT_FAILURE);
             }
             else {
-                printf("This is a valid int: %s\n\n", VariableValue);
                 Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
             }
             break;
@@ -124,6 +123,8 @@ char* Check_If_Function(char* VariableValue, int LineNumber){
                 }
                 break;
             }
+            default:
+                break;
         }
     }
     free(PotentialFunction);
@@ -282,6 +283,8 @@ Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int Instru
             ReturnValue->ValueType = STRING;
             return ReturnValue;
         }
+        default:
+            break;
     }
     return NULL;
 }
@@ -391,7 +394,7 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
 
 Any* Evaluate_Instruction(char* Instruction, int LineNumber){
     #if DEBUG
-    printf("Executing Instruction: %s\n\n", Instruction);
+    printf("\nExecuting Instruction: %s\n\n", Instruction);
     #endif
     int InstructionLength = strlen(Instruction);
     Any* Return;
@@ -521,6 +524,8 @@ void Setup_Globals(){
                     printf("Key: %s\nValue: %s\n", (char*) KeyValue->Key, InputFuncCheck->FunctionName);
                     break;
                 }
+                default:
+                    break;
             }
         }
     }
