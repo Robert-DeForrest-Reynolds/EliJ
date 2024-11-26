@@ -405,7 +405,9 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
 
 void Run_Interpreter(){
     FILE* FilePointer = fopen(FileName, "r");
-    File_Pointer_Check(FilePointer, "Read File Pointer Allocation Fail");
+    char ErrorMessage[1024];
+    snprintf(ErrorMessage, sizeof(ErrorMessage), "Failed to read %s. Most likely doesn't exist.", FileName);
+    File_Pointer_Check(FilePointer, ErrorMessage);
 
     int LineBufferSize = 1024;
     int LineCount = 0;

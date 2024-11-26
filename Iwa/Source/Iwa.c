@@ -35,15 +35,14 @@
 void Run_Iwa(int ArgumentsCount, char* Arguments[]){
     Setup_Globals();
     Setup_Internal_Types();
+    
+    Parse_User_Arguments(ArgumentsCount, Arguments);
 
-    if (ArgumentsCount > 1){
-        Setup_Working_Directory();
-        Parse_User_Arguments(ArgumentsCount, Arguments);
-        Check_Windows_Style_Path();
+    Setup_Working_Directory();
+    Check_Windows_Style_Path();
 
-        Run_Interpreter();
-        free(FileName);
-    }
+    Run_Interpreter();
+    free(FileName);
 
     Free_Dictionary(Globals);
     Free_Dictionary(InternalTypeMap);

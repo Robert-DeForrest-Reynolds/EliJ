@@ -178,14 +178,24 @@ void Verify_Valid_Papple_File(char* PotentialFileName, int ArgumentLength, int W
         FileName[FileNameLength] = '\0';
         strcpy(FileName, PotentialFileName);
     }
-    if (FileName == NULL){
-        printf("Invalid Pineapple Filename");
+    else {
+        printf("You provided an invalid filename: %s\n", PotentialFileName);
         exit(EXIT_FAILURE);
     }
 }
 
 
 void Parse_User_Arguments(int ArgumentsCount, char* Arguments[]){
+    if (ArgumentsCount == 1){
+        printf("You provided no arguments.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (ArgumentsCount > 3){
+        printf("You provided too many arguments, someting went wrong. Detected %d arguments.\n", ArgumentsCount);
+        exit(EXIT_FAILURE);
+    }
+
     for (int ArgumentIndex = 1; ArgumentIndex < ArgumentsCount; ArgumentIndex++) {
         size_t ArgumentLength = strlen(Arguments[ArgumentIndex]) + 3;
         ArgumentBuffer = malloc((ArgumentLength + 1) * sizeof(char));
