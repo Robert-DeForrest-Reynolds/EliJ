@@ -31,11 +31,12 @@
 #include "Structures.h"
 #include "Globals.h"
 #include "Setup.h"
+#include "Error.h"
 
 void Run_Iwa(int ArgumentsCount, char* Arguments[]){
     Setup_Globals();
     Setup_Internal_Types();
-    
+
     Parse_User_Arguments(ArgumentsCount, Arguments);
 
     Setup_Working_Directory();

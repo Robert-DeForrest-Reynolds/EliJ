@@ -17,13 +17,14 @@
 #include "Globals.h"
 #include "Split.h"
 #include "PointerChecks.h"
+#include "Error.h"
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType);
 char* Check_If_Function(char* VariableValue, int LineNumber);
 char* Check_If_Expression(char* VariableValue, int LineNumber);
 int Find_Wrapped_Parenthesis(char* String);
 char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber);
-Any* Globals_Lookup(char* Parameter);
+Any* Globals_Lookup(char* Parameter, char* Instruction);
 Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber);
 Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber);
 Any* Evaluate_Instruction(char* Instruction, int LineNumber);
@@ -232,10 +233,10 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
 }
 
 
-Any* Globals_Lookup(char* Parameter){
+Any* Globals_Lookup(char* Parameter, char* Instruction){
     Any* ParameterValue = Lookup(Globals, Parameter);
     if (ParameterValue == NULL){
-        printf("INVALID_GLOBAL: %s does not exist\n", Parameter);
+        puts(Create_Error_Message(Instruction, "Identifier does not exist.", Find(Instruction, Parameter), strlen(Parameter)));
         exit(EXIT_FAILURE);
     }
     return ParameterValue;
@@ -317,7 +318,7 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
                     Func->Function(Content);
                 }
                 else {
-                    Any* ParameterValue = Globals_Lookup(Parameter);
+                    Any* ParameterValue = Globals_Lookup(Parameter, Instruction);
                     if (ParameterValue->ValueType == STRING){
                         int ParameterValueLength = strlen((char*) ParameterValue->Value);
                         int StrippedStringLength = ParameterValueLength - 2;
@@ -392,7 +393,7 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
             String_Pointer_Check(KeywordBuffer, "Keyword Buffer Allocation Fail");
             KeywordBuffer[CharacterIndex-SearchIndex] = '\0';
             strncpy(KeywordBuffer, Instruction+SearchIndex, CharacterIndex-SearchIndex);
-            Any* InstructionKeyword = Globals_Lookup(KeywordBuffer);
+            Any* InstructionKeyword = Globals_Lookup(KeywordBuffer, Instruction);
             Return = Execute_Statement(Instruction, KeywordBuffer, InstructionKeyword, InstructionLength, CharacterIndex, LineNumber);
             free(InstructionKeyword);
             free(KeywordBuffer);
