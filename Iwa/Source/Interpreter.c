@@ -343,7 +343,7 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
                         free(StrippedString);
 
                     }
-                    else if (ParameterValue->ValueType == INT | ParameterValue->ValueType == FLOAT) {
+                    else {
                         Func->Function(ParameterValue);
                     }
                 }
