@@ -8,7 +8,7 @@
 #include "Find.h"
 #include "FindBetween.h"
 #include "Split.h"
-#include "LeftTrim.h"
+#include "LeftTrimIndex.h"
 #include "Trim.h"
 #include "Remove.h"
 
@@ -167,7 +167,7 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
     bool NoSeparation = false;
 
-    int SearchIndex = Left_Trim(UnparsedValues);
+    int SearchIndex = Left_Trim_Index(UnparsedValues);
 
     for (int CharacterIndex = SearchIndex; CharacterIndex < strlen(UnparsedValues+SearchIndex); CharacterIndex++){
         if (UnparsedValues[CharacterIndex] == ' ' | UnparsedValues[CharacterIndex] == '='){
@@ -177,15 +177,15 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
             Values[0][NameLength] = '\0';
             strncpy(Values[0], UnparsedValues+SearchIndex, NameLength);
             if (UnparsedValues[CharacterIndex] == '='){
-                SearchIndex = Left_Trim(UnparsedValues+CharacterIndex) + CharacterIndex;
+                SearchIndex = Left_Trim_Index(UnparsedValues+CharacterIndex) + CharacterIndex;
             } else {
-                SearchIndex = Left_Trim(UnparsedValues+CharacterIndex) + CharacterIndex;
+                SearchIndex = Left_Trim_Index(UnparsedValues+CharacterIndex) + CharacterIndex;
                 if (UnparsedValues[SearchIndex] != '='){
                     printf("Missing a = sign at line: %d, index: %d\n", LineNumber, SearchIndex);
                     exit(EXIT_FAILURE);
                 }
                 SearchIndex += 1;
-                SearchIndex = Left_Trim(UnparsedValues+SearchIndex) + SearchIndex;
+                SearchIndex = Left_Trim_Index(UnparsedValues+SearchIndex) + SearchIndex;
             }
             break;
         }
@@ -242,7 +242,7 @@ Any* Globals_Lookup(char* Parameter, char* Instruction){
     return ParameterValue;
 }
 
-
+// This handles any functions that return a String
 Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber){
     switch (InstructionKeyword->FuncType){
         case FIND_BETWEEN:{
@@ -386,13 +386,19 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
     char* KeywordBuffer;
     StringList InstructionSet;
     bool InitialCharacterFound = false;
-    int SearchIndex = Left_Trim(Instruction);
-    for (int CharacterIndex = SearchIndex; CharacterIndex < InstructionLength-SearchIndex; CharacterIndex++){
+    
+    int KeywordIndexStart = Left_Trim_Index(Instruction); // Get rid of whitespace in case we have any tabs
+    for (int CharacterIndex = KeywordIndexStart; CharacterIndex < InstructionLength - KeywordIndexStart; CharacterIndex++){
         if (Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
-            KeywordBuffer = malloc(((CharacterIndex-SearchIndex) + 1) * sizeof(char));
-            String_Pointer_Check(KeywordBuffer, "Keyword Buffer Allocation Fail");
-            KeywordBuffer[CharacterIndex-SearchIndex] = '\0';
-            strncpy(KeywordBuffer, Instruction+SearchIndex, CharacterIndex-SearchIndex);
+            int KeywordLength = CharacterIndex - KeywordIndexStart;
+            KeywordBuffer = malloc((KeywordLength + 1) * sizeof(char));
+            if (!KeywordBuffer){
+                puts("Failed to allocation char* for KeywordBuffer in Evaluate_Instruction");
+                exit(EXIT_FAILURE);
+            }
+            KeywordBuffer[KeywordLength] = '\0';
+            strncpy(KeywordBuffer, Instruction+KeywordIndexStart, KeywordLength);
+    
             Any* InstructionKeyword = Globals_Lookup(KeywordBuffer, Instruction);
             Return = Execute_Statement(Instruction, KeywordBuffer, InstructionKeyword, InstructionLength, CharacterIndex, LineNumber);
             free(InstructionKeyword);
