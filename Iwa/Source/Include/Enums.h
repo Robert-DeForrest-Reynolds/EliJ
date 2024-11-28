@@ -18,6 +18,7 @@ typedef enum{
     ANY,
     FUNCTION,
     DECLARATION,
+    ASSIGNMENT,
     TYPE,
     OUTPUT,
     INPUT,

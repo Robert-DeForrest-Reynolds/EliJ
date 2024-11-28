@@ -23,7 +23,7 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
 char* Check_If_Function(char* VariableValue, int LineNumber);
 char* Check_If_Expression(char* VariableValue, int LineNumber);
 int Find_Wrapped_Parenthesis(char* String);
-char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber);
+char** Find_Declaration_Values(char* UnparsedValues, char* Instruction, int LineNumber);
 Any* Globals_Lookup(char* Parameter, char* Instruction);
 Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber);
 Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber);
@@ -171,9 +171,9 @@ int Find_Wrapped_Parenthesis(char* String){
 }
 
 
-char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* Instruction, int LineNumber){
+char** Find_Declaration_Values(char* UnparsedValues, char* Instruction, int LineNumber){
     #if DEBUG
-        printf("Finding Declaration Values\n");
+        printf("Finding Declaration Values, unparsed values: %s\n", UnparsedValues);
     #endif
     char** Values = malloc(2 * sizeof(char*));
     CharList_Pointer_Check(Values, "Declaration Values Allocation Fail");
@@ -189,13 +189,9 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
             Values[0][NameLength] = '\0';
             strncpy(Values[0], UnparsedValues+SearchIndex, NameLength);
             if (UnparsedValues[CharacterIndex] == '='){
-                SearchIndex = Left_Trim_Index(UnparsedValues+CharacterIndex) + CharacterIndex;
+                SearchIndex += Left_Trim_Index(UnparsedValues+(CharacterIndex+1)) + 1;
             } else {
                 SearchIndex = Left_Trim_Index(UnparsedValues+CharacterIndex) + CharacterIndex;
-                if (UnparsedValues[SearchIndex] != '='){
-                    printf("Missing a = sign at line: %d, index: %d\n", LineNumber, SearchIndex);
-                    exit(EXIT_FAILURE);
-                }
                 SearchIndex += 1;
                 SearchIndex = Left_Trim_Index(UnparsedValues+SearchIndex) + SearchIndex;
             }
@@ -240,7 +236,6 @@ char** Find_Declaration_Values(Type VariableType, char* UnparsedValues, char* In
         free(PotentialExpressionValue);
         return Values;
     }
-
     return Values;
 }
 
@@ -294,13 +289,13 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
     if (InstructionKeyword != NULL){
         int InstructionsValuesLength = InstructionLength - ValuesStartIndex;
         char* InstructionsValues = malloc((InstructionsValuesLength + 1) * sizeof(char));
+        String_Pointer_Check(InstructionsValues, "Value Buffer Allocation Fail");
         InstructionsValues[InstructionsValuesLength] = '\0';
         strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionsValuesLength);
         switch (InstructionKeyword->ValueType){
             case DECLARATION:{
                 VariableDeclaration* VarDecl = (VariableDeclaration*) InstructionKeyword->Value;
                 VariableDeclaration_Pointer_Check(VarDecl, "Variable Declaration Pointer Allocation Fail");
-                String_Pointer_Check(InstructionsValues, "Value Buffer Allocation Fail");
             
                 Any* ValueType = Lookup(InternalTypeMap, VariableDeclarationType);
                 if (!ValueType){
@@ -309,9 +304,18 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
                 }
                 if (ValueType->ValueType == TYPE){
                     Type DeclType = *(Type*) ValueType->Value;
-                    char** Values = Find_Declaration_Values(DeclType, InstructionsValues, Instruction, LineNumber);
+                    char** Values = Find_Declaration_Values(InstructionsValues, Instruction, LineNumber);
                     VarDecl->Function(Values[0], Values[1], DeclType);
                 }
+                free(InstructionsValues);
+                break;
+            }
+            case INT:
+            case FLOAT:
+            case STRING:{
+                Any* ExistingVariable = Globals_Lookup((char*) VariableDeclarationType, Instruction);
+                char** Values = Find_Declaration_Values(Instruction+ValuesStartIndex, Instruction, LineNumber);
+                Replace_Pair(Globals, (char*) VariableDeclarationType, STRING, Values[1], ExistingVariable->ValueType);
                 free(InstructionsValues);
                 break;
             }
@@ -400,7 +404,7 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
     
     int KeywordIndexStart = Left_Trim_Index(Instruction); // Get rid of whitespace in case we have any tabs
     for (int CharacterIndex = KeywordIndexStart; CharacterIndex < InstructionLength - KeywordIndexStart; CharacterIndex++){
-        if (Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '('){
+        if (Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '(' | Instruction[CharacterIndex] == '='){
             int KeywordLength = CharacterIndex - KeywordIndexStart;
             KeywordBuffer = malloc((KeywordLength + 1) * sizeof(char));
             if (!KeywordBuffer){

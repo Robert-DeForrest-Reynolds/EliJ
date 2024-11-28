@@ -67,6 +67,28 @@ void Insert(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueTy
     }
 }
 
+void Replace_Pair(Dictionary* Dict, void* Key, Type KeyType, void* Value, Type ValueType){
+    unsigned int Index = Hash(Key, Dict->Size);
+    
+    Pair* Current = Dict->Table[Index];
+    while (Current != NULL) {
+        if (Current->KeyType == KeyType) {
+            if ((KeyType == STRING && strcmp((char*)Current->Key, (char*)Key) == 0) || 
+                (KeyType != STRING && Current->Key == Key)) {
+                if (Current->ValueType != DECLARATION && Current->Value != NULL) {
+                    free(Current->Value);
+                }
+                Current->Value = Value;
+                Current->ValueType = ValueType;
+                return;
+            }
+        }
+        Current = Current->Next;
+    }
+    printf("No matching key found, instead, simply inserting new pair as hashed index.");
+    Insert(Dict, Key, KeyType, Value, ValueType);
+}
+
 Any* Lookup(Dictionary* Dict, void* Key) {
     unsigned int Index = Hash((char*) Key, Dict->Size);
     if (Dict->Table[Index] != NULL){
