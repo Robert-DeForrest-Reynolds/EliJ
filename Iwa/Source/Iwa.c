@@ -15,7 +15,7 @@
 #include "FindFromEnd.h"
 #include "Hash.h"
 #include "Input.h"
-#include "LeftTrim.h"
+#include "LeftTrimIndex.h"
 #include "Output.h"
 #include "ReadFile.h"
 #include "ReadFileLines.h"

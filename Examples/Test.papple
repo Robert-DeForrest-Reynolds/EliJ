@@ -1,3 +1,7 @@
 String Hello = "Hello"
+Int X = 10
+Float Wallet = 1.244
 
 Out(Hello)
+Out(X)
+Out(Wallet)

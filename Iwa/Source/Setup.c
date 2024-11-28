@@ -18,7 +18,7 @@
 #include "FindFromEnd.h"
 #include "Hash.h"
 #include "Input.h"
-#include "LeftTrim.h"
+#include "LeftTrimIndex.h"
 #include "Output.h"
 #include "ReadFile.h"
 #include "ReadFileLines.h"
@@ -40,15 +40,18 @@ void Setup_Working_Directory(void);
 void Setup_Internal_Types(){
     Type* StringType = (Type*) malloc(sizeof(Type));
     Type* IntType = (Type*) malloc(sizeof(Type));
+    Type* FloatType = (Type*) malloc(sizeof(Type));
     Type* OutputType = (Type*) malloc(sizeof(Type));
     *StringType = STRING;
     *IntType = INT;
+    *FloatType = FLOAT;
     *OutputType = OUTPUT;
 
     InternalTypeMap = Create_Dictionary(50);
     
     Insert(InternalTypeMap, strdup("String"), STRING, StringType, TYPE);
     Insert(InternalTypeMap, strdup("Int"), STRING, IntType, TYPE);
+    Insert(InternalTypeMap, strdup("Float"), STRING, FloatType, TYPE);
     
     #if DEBUG
     puts("\nVerifying Internal Types");

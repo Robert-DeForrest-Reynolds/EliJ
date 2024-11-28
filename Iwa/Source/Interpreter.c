@@ -63,6 +63,18 @@ void Variable_Declaration(char* VariableName, char* VariableValue, Type Variable
             }
             break;
         }
+        case FLOAT:{
+            char* EndCharacter;
+            long ValueConverted = strtof(VariableValue, &EndCharacter);
+            if (*EndCharacter != '\0'){
+                printf("INVALID_CONVERSION: Failed to validate Float can convert to float\n");
+                exit(EXIT_FAILURE);
+            }
+            else {
+                Insert(Globals, strdup(VariableName), STRING, strdup(VariableValue), VariableValueType);
+            }
+            break;
+        }
         default:{
             printf("Couldn't determine variable type during variable declaration");
         }
@@ -280,17 +292,19 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
     printf("Executing Statement: %s\n\n", Instruction);
     #endif
     if (InstructionKeyword != NULL){
-        char* InstructionsValues = malloc((InstructionLength - ValuesStartIndex + 1) * sizeof(char));
+        int InstructionsValuesLength = InstructionLength - ValuesStartIndex;
+        char* InstructionsValues = malloc((InstructionsValuesLength + 1) * sizeof(char));
+        InstructionsValues[InstructionsValuesLength] = '\0';
+        strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionsValuesLength);
         switch (InstructionKeyword->ValueType){
             case DECLARATION:{
                 VariableDeclaration* VarDecl = (VariableDeclaration*) InstructionKeyword->Value;
                 VariableDeclaration_Pointer_Check(VarDecl, "Variable Declaration Pointer Allocation Fail");
                 String_Pointer_Check(InstructionsValues, "Value Buffer Allocation Fail");
-                InstructionsValues[InstructionLength - ValuesStartIndex] = '\0';
-                strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
+            
                 Any* ValueType = Lookup(InternalTypeMap, VariableDeclarationType);
-                if (ValueType == NULL){
-                    puts("You magical fuck, how did you break this? That internal type doesn't exist.");
+                if (!ValueType){
+                    puts("That internal type doesn't exist.");
                     exit(EXIT_FAILURE);
                 }
                 if (ValueType->ValueType == TYPE){
@@ -305,8 +319,6 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
                 OutputFunction* Func = (OutputFunction*) InstructionKeyword->Value;
                 Output_Pointer_Check(Func, "Output Function Instruction Allocation Fail");
                 char* Parameter;
-                InstructionsValues[InstructionLength - ValuesStartIndex] = '\0';
-                strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
                 int InstructionsValuesLength = strlen(InstructionsValues);
                 Parameter = Find_Between(InstructionsValues, "(", ")");
                 
@@ -331,7 +343,7 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
                         free(StrippedString);
 
                     }
-                    else if (ParameterValue->ValueType == INT) {
+                    else if (ParameterValue->ValueType == INT | ParameterValue->ValueType == FLOAT) {
                         Func->Function(ParameterValue);
                     }
                 }
@@ -343,8 +355,7 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
                 InputFunction* Func = (InputFunction*) InstructionKeyword->Value;
                 Input_Pointer_Check(Func, "Input Function Instruction Allocation Fail");
                 Any* ReturnValue = (Any*) malloc(sizeof(Any));
-                InstructionsValues[InstructionLength - ValuesStartIndex] = '\0';
-                strncpy(InstructionsValues, Instruction + ValuesStartIndex, InstructionLength - ValuesStartIndex);
+                
                 char* Parameters = Find_Between(InstructionsValues, "(", ")"); // We need to handle if we find nothing
                 int ParametersLength = strlen(Parameters);
                 if (Parameters[0] == '\"' && Parameters[ParametersLength-1] == '\"'){
