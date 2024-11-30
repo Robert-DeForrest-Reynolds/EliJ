@@ -28,7 +28,6 @@ Any* Globals_Lookup(char* Parameter, char* Instruction);
 Any* Handle_String_Return(char* Instruction, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber);
 Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* InstructionKeyword, int InstructionLength, int ValuesStartIndex, int LineNumber);
 Any* Evaluate_Instruction(char* Instruction, int LineNumber);
-void Run_Interpreter();
 
 void Variable_Declaration(char* VariableName, char* VariableValue, Type VariableValueType){
     #if DEBUG
