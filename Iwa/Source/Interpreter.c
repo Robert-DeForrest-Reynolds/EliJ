@@ -129,16 +129,42 @@ char* Check_If_Function(char* VariableValue, int LineNumber){
 }
 
 
+char* Solve_Concat(char* ConcatenationExpression, int ExpressionLength){
+    #if DEBUG
+        printf("\nConcatenation: %s\n", ConcatenationExpression);
+    #endif
+    StringList* ConcatSplit = Split(ConcatenationExpression, '+');
+    int ConcatLength = 0;
+    for (int Index = 0; Index < ConcatSplit->ElementCount; Index++){
+        ConcatLength += strlen(ConcatSplit->List[Index]);
+    }
+    char* Concatenation = malloc((ConcatLength + 1) * sizeof(char));
+    Concatenation[ConcatLength] = '\0';
+    for (int Index = 0; Index < ConcatSplit->ElementCount; Index++){
+        char* String = Find_Between(ConcatSplit->List[Index], "\"", "\"");
+        strcat(Concatenation, String);
+        free(String);
+    }
+    printf("Final concat: %s\n", Concatenation);
+    return Concatenation;
+}
+
+
 char* Check_If_Expression(char* VariableValue, int LineNumber){
     #if DEBUG
     printf("\nPotential Expression: %s\n", VariableValue);
     #endif
 
     int VariableValueLength = strlen(VariableValue);
+    for (int Index = 0; Index < VariableValueLength; Index++){
+        if (VariableValue[Index] == '"'){
+            char* ConcatenatedString = Solve_Concat(VariableValue, VariableValueLength);
+            return ConcatenatedString;
+        }
+    }
 
     char* SpacelessExpression = Remove(VariableValue, " ");
     int SpacelessExpressionLength = strlen(SpacelessExpression);
-
     char* Result = Resolve_Expression(SpacelessExpression, SpacelessExpressionLength, false);
 
     if (Result != NULL){
@@ -210,10 +236,6 @@ char** Find_Declaration_Values(char* UnparsedValues, char* Instruction, int Line
     printf("Variable Declaration Value: %s\n", Values[1]);
     #endif
     
-    // Yo, this is just a string man, just return, nothing else
-    if (Values[1][0] == '"' && Values[1][ValueLength-1] == '"'){
-        return Values;
-    }
 
     char* PotentialFunctionValue = Check_If_Function(Values[1], LineNumber);
     if (PotentialFunctionValue != NULL){
@@ -236,6 +258,13 @@ char** Find_Declaration_Values(char* UnparsedValues, char* Instruction, int Line
         free(PotentialExpressionValue);
         return Values;
     }
+
+    // Yo, this is just a string man, just return, nothing else
+    if (Values[1][0] == '"' && Values[1][ValueLength-1] == '"'){
+        printf("Just a string\n");
+        return Values;
+    }
+
     return Values;
 }
 

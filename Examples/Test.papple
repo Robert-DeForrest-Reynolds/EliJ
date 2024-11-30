@@ -1,13 +1,2 @@
-String Hello = "Hello"
-Int X = 10 + 10
-Float Wallet = 1.244
-
-Out(X)
-X = 6
-Out(X)
-
+String Hello = "Hello" + " World"
 Out(Hello)
-Hello = "Greetings"
-Out(Hello)
-
-Out(Wallet)

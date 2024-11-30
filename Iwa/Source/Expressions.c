@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "Split.h"
+#include "FindBetween.h"
+#include "Structures.h"
+
 long Solve_Addition(long OperandOne, long OperandTwo){
     #if DEBUG
         printf("\nAddition: %lu + %lu\n", OperandOne, OperandTwo);
