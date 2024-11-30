@@ -144,7 +144,7 @@ char* Solve_Concat(char* ConcatenationExpression, int ExpressionLength){
         strcat(Concatenation, String);
         free(String);
     }
-    printf("Final concat: %s\n", Concatenation);
+    free(ConcatSplit);
     return Concatenation;
 }
 
