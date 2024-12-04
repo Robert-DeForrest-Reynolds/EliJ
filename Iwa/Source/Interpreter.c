@@ -144,6 +144,9 @@ char* Solve_Concat(char* ConcatenationExpression, int ExpressionLength){
         strcat(Concatenation, String);
         free(String);
     }
+    for (int Index = 0; Index < ConcatSplit->ElementCount; Index++){
+        free(ConcatSplit->List[Index]);
+    }
     free(ConcatSplit);
     return Concatenation;
 }
