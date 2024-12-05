@@ -15,21 +15,21 @@ Int Health = 50
 / Imports should feel pretty familiar /
 Import ExampleExternalScript
 
-/ We have lists
+/ We have lists /
 Names = ["Lani",
-         "Lily",
-         "Eleanor"]
+         		  "Lily",
+         		  "Eleanor"]
 
-/ And we have dictionaries
+/ And we have dictionaries /
 Dict People = ["Lani": 23,
-              "Lily": 6]
+             			   "Lily": 6]
 
-/ Out is a built-in function to output to the CLI /
+/ Out is a built-in Fnction to output to the CLI /
 Out(Health)
 
-/ Functions should feel pretty familiar /
-Fnc Addition(int X, int Y) -> Int
-    return X + Y
+/ Fnctions should feel pretty familiar /
+Fnc Addition(Int X, Int Y) -> Int
+    Rtn X + Y
 
 
 Fnc Read_File(String FilePath) -> Rtn
@@ -38,14 +38,14 @@ Fnc Read_File(String FilePath) -> Rtn
     Out(Contents)
 
 
-/ Conditionals
+/ Conditionals /
 Fnc Is_Even(Number) -> Bln
     If Number % 2 == 0
-        return True
+        Rtn True
     Else
-        return False
+        Rtn False
 
-/ Loops
+/ Loops /
 Int Counter = 0
 While
     Counter += 1
@@ -53,11 +53,11 @@ While
     If Counter == 3
         Break
 
-/ Objects, I don't want them, but they'll be implemented in the interest of encapsulation, not inheritance, or polymorphism /
+/ Objects, I don't want them, but they'll be implemented in the Interest of encapsulation, not inheritance, or polymorphism /
 Obj Person
-    func New(_Name, _Age) -> Rtn
+    Fnc New(_Name, _Age) -> Rtn
         String Name =  _Name
-        Integer Age = _Age
+        Int Age = _Age
 
 Person Jack
 Person Jack.New("Jack", 21)
@@ -69,3 +69,4 @@ Jack.Age = 22
 
 Out(Addition(5, 2))
 Out(Subtraction(5, 2))
+
