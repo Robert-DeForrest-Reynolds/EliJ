@@ -1,5 +1,6 @@
 / This is a comment /
 
+
 / 
 This
 is
@@ -16,13 +17,10 @@ Int Health = 50
 Import ExampleExternalScript
 
 / We have lists /
-Names = ["Lani",
-         		  "Lily",
-         		  "Eleanor"]
+Names = ["Lani", "Lily", "Eleanor"]
 
 / And we have dictionaries /
-Dict People = ["Lani": 23,
-             			   "Lily": 6]
+Dict{String:Int} People = ["Lani": 23, "Lily": 6]
 
 / Out is a built-in Fnction to output to the CLI /
 Out(Health)
