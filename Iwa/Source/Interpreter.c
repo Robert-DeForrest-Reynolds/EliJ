@@ -425,7 +425,7 @@ Any* Execute_Statement(char* Instruction, char* VariableDeclarationType, Any* In
 
 Any* Evaluate_Instruction(char* Instruction, int LineNumber){
     #if DEBUG
-    printf("\nExecuting Instruction: %s\n\n", Instruction);
+    printf("\n Evaluating Instruction: %s\n\n", Instruction);
     #endif
     int InstructionLength = strlen(Instruction);
     Any* Return;
@@ -433,9 +433,13 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
     StringList InstructionSet;
     bool InitialCharacterFound = false;
     
-    int KeywordIndexStart = Left_Trim_Index(Instruction); // Get rid of whitespace in case we have any tabs
+    int KeywordIndexStart = Left_Trim_Index(Instruction); // Get rid of whitespace in case we have any tabs or spaces
     for (int CharacterIndex = KeywordIndexStart; CharacterIndex < InstructionLength - KeywordIndexStart; CharacterIndex++){
-        if (Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '(' | Instruction[CharacterIndex] == '='){
+        if (Instruction[CharacterIndex] == ' ' | Instruction[CharacterIndex] == '(' | Instruction[CharacterIndex] == '=' | Instruction[CharacterIndex] == '/'){
+            if (Instruction[CharacterIndex] == '/'){
+                printf("Comment: %s", Instruction);
+                continue;
+            }
             int KeywordLength = CharacterIndex - KeywordIndexStart;
             KeywordBuffer = malloc((KeywordLength + 1) * sizeof(char));
             if (!KeywordBuffer){
@@ -474,7 +478,10 @@ void Run_Interpreter(){
             LineBuffer[LineLength-1] = '\0';
             LineLength--;
         }
-        Evaluate_Instruction(LineBuffer, LineCount);
+        Any* Evaluation = Evaluate_Instruction(LineBuffer, LineCount);
+        if (Evaluation->ValueType == MULTILINE){
+            
+        }
         LineCount += 1;
     }
 

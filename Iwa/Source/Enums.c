@@ -15,4 +15,5 @@ char* TypesAsStrings[] = {
     "INPUT",
     "STRING_RTN",
     "BOOL",
+    "MULTILINE",
 };

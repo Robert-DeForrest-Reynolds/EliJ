@@ -24,6 +24,7 @@ typedef enum{
     INPUT,
     STRING_RTN,
     BOOL,
+    MULTILINE,
 } Type;
 
 extern char* TypesAsStrings[];
