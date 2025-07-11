@@ -461,6 +461,12 @@ Any* Evaluate_Instruction(char* Instruction, int LineNumber){
 
 
 void Run_Interpreter(){
+    /*
+    Need to parse whole file, check for errors, and format into exectuable instructions
+
+    Int X = 5
+    INT X 5
+    */
     FILE* FilePointer = fopen(FileName, "r");
     char ErrorMessage[1024];
     snprintf(ErrorMessage, sizeof(ErrorMessage), "Failed to read %s. Most likely doesn't exist.", FileName);
@@ -479,9 +485,9 @@ void Run_Interpreter(){
             LineLength--;
         }
         Any* Evaluation = Evaluate_Instruction(LineBuffer, LineCount);
-        if (Evaluation->ValueType == MULTILINE){
+        // if (Evaluation->ValueType == MULTILINE){
             
-        }
+        // }
         LineCount += 1;
     }
 

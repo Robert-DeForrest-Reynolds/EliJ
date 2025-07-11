@@ -1,3 +1,1 @@
-/ Comment /
-String Hello = "Hello" + " World"
-Out(Hello)
+Int X = 10 + 10
