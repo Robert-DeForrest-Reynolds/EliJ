@@ -17,7 +17,7 @@ typedef struct Pair {
     struct Pair* Next;  // Pointer for handling collisions (linked list)
 } Pair;
 
-typedef struct List {
+typedef struct Dictionary {
     Pair** Table;
     int Filled;
     int Size;

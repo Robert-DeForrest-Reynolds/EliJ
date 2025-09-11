@@ -1,0 +1,15 @@
+{
+    "C_Cpp.default.compilerPath": "${workspaceFolder}\\msys64\\mingw64\\bin\\clang.exe",
+    "terminal.integrated.profiles.windows": {
+            "mingw64": {
+                "path": "${workspaceFolder}\\msys64\\usr\\bin\\bash.exe", // Adjust this path
+                "args": ["--login", "-i", "-c", "cd $(cygpath -u '${workspaceFolder}') && exec bash"],
+                "env": {
+                    "MSYSTEM": "MINGW64"
+                },
+                "icon": "terminal-bash",
+            }
+        },
+    "terminal.integrated.defaultProfile.windows": "mingw64",
+    "terminal.integrated.cwd": "${workspaceFolder}"
+}

@@ -34,7 +34,7 @@
 #include "Error.h"
 
 
-void Run_Iwa(int ArgumentsCount, char* Arguments[]){
+int main(int ArgumentsCount, char* Arguments[]) {
     Setup_Globals();
     Setup_Internal_Types();
 
@@ -48,10 +48,5 @@ void Run_Iwa(int ArgumentsCount, char* Arguments[]){
 
     Free_Dictionary(Globals);
     Free_Dictionary(InternalTypeMap);
-}
-
-
-int main(int ArgumentsCount, char* Arguments[]) {
-    Run_Iwa(ArgumentsCount, Arguments);
     return 0;
 }
