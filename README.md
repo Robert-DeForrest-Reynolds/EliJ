@@ -1,3 +1,7 @@
+EliJ is pronounced el-i-jay.
+“el” as in the letter l, “i” as in "in", “jay” as in the letter J.
+
+
 Pineapple is the name of the language. Iwa is the name of the interpreter I built for it.
 Most of this currently is thought vomit. If you wish to provide any input, create a pull request, or reach out to me on Discord, user: `robertdeforrest`
 
